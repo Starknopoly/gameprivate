@@ -12,10 +12,54 @@ export function defineContractComponents(world: World) {
           joined_time: RecsType.Number,
           direction: RecsType.Number,
           gold: RecsType.Number,
-          position: RecsType.Number,  
-          steps: RecsType.Number, 
-          last_point: RecsType.Number, // 最近一次掷出的点数
-          last_time: RecsType.Number, //
+          position: RecsType.Number,
+          steps: RecsType.Number,
+          last_point: RecsType.Number,
+          last_time: RecsType.Number,
+        },
+        {
+          metadata: {
+            name: name,
+          },
+        }
+      );
+    })(),
+    Land: (() => {
+      const name = "Land";
+      return defineComponent(
+        world,
+        {
+          owner: RecsType.Number,
+          building_type: RecsType.Number,
+          price: RecsType.Number,
+        },
+        {
+          metadata: {
+            name: name,
+          },
+        }
+      );
+    })(),
+    Building: (() => {
+      const name = "Building";
+      return defineComponent(
+        world,
+        {
+          price: RecsType.Number,
+        },
+        {
+          metadata: {
+            name: name,
+          },
+        }
+      );
+    })(),
+    Townhall: (() => {
+      const name = "Townhall";
+      return defineComponent(
+        world,
+        {
+          gold: RecsType.Number,
         },
         {
           metadata: {
