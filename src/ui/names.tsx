@@ -12,31 +12,39 @@ export default function NamesUI() {
     const {
         world,
         scenes: {
-            Main: { },
+            Main: { objectPool },
         },
         networkLayer: {
             components: { Player }
         },
     } = layer;
 
-    class NameLabel {
-        public name: string | undefined
-        public entity: EntityIndex | undefined
-        public x: number = 0
-        public y: number = 0
-    }
+    useEffect(() => {
+        console.log("nameui playersAddress change");
+        // console.log(playersAddress);
+        playersAddress?.forEach((value, key) => {
+            const player_ = getComponentValueStrict(Player, key);
+            const nameObj = objectPool.get("text_" + key, "Text")
+            const position = player_.position - 1
+            const { x, y } = positionToCoorp(position)
 
-    // const [nameLables,setNameLabels]=useState<NameLabel[]>([])
-    const [nameLablesMap, setNameLabels] = useState<Map<EntityIndex, NameLabel>>(new Map());
-
-    const addOrUpdateName = (entity: EntityIndex, value: NameLabel) => {
-        setNameLabels(prevMap => {
-            // 创建一个新的Map对象，以确保状态的不可变性
-            const newMap = new Map(prevMap);
-            newMap.set(entity, value);
-            return newMap;
-        });
-    };
+            const pixelPosition = tileCoordToPixelCoord({ x, y }, TILE_WIDTH, TILE_HEIGHT);
+            nameObj.setComponent({
+                id: 'position',
+                once: (text) => {
+                    text.setPosition(pixelPosition?.x, pixelPosition?.y - 14);
+                    text.setBackgroundColor("rgba(0,0,0,0.6)")
+                    text.setFontSize(12)
+                    const entity = parseInt(account?.address!) as EntityIndex
+                    if (entity == key) {
+                        text.setText("Me")
+                    } else {
+                        text.setText(truncateString(value, 4, 3))
+                    }
+                }
+            })
+        })
+    }, [playersAddress])
 
     useEffect(() => {
         if (!layer || !account) {
@@ -45,41 +53,26 @@ export default function NamesUI() {
 
         defineSystem(world, [Has(Player)], ({ entity }) => {
             const player_ = getComponentValueStrict(Player, entity);
-            // const address = playersAddress?.get(entity)
-            // if (account) {
-            //     const entityId = parseInt(account.address) as EntityIndex;
-            //     if (entity == entityId) {
-            //         store.setState({ player: player_ })
-            //     } else {
-            //         return
-            //     }
-            // }
-            // console.log("defineSystem account:" + account);
-            // if (player_) {
-            //     setPlayer(player_)
-            // }
+            const nameObj = objectPool.get("text_" + entity, "Text")
             const position = player_.position - 1
             const { x, y } = positionToCoorp(position)
 
             const pixelPosition = tileCoordToPixelCoord({ x, y }, TILE_WIDTH, TILE_HEIGHT);
-            const nameLabel = new NameLabel()
-            nameLabel.entity = entity
-            // nameLabel.name = address
-            nameLabel.x = pixelPosition.x
-            nameLabel.y = pixelPosition.y
-            addOrUpdateName(entity, nameLabel)
-            // const ycount = Math.floor(position / size)
-
-            // var x = position % size
-            // if (ycount % 2 == 0) {
-            //     x = position % size
-            // }
-            // if (ycount % 2 == 1) {
-            //     x = size - position % size
-            // }
-            // const y = ycount * 2 + 1
-            // defineSystem position:5580,x=-31,y=61
-            console.log("defineSystem position:" + player_.position + ",x=" + x + ",y=" + y);
+            nameObj.setComponent({
+                id: 'position',
+                once: (text) => {
+                    text.setPosition(pixelPosition?.x, pixelPosition?.y - 14);
+                    // text.setBackgroundColor("rgba(0,0,0,0.6)")
+                    // text.setFontSize(12)
+                    // const entity = parseInt(account?.address!) as EntityIndex
+                    // if (entity == entity) {
+                    //     text.setText("Me")
+                    // } else {
+                    //     text.setText(truncateString(value, 4, 3))
+                    // }
+                }
+            })
+            // console.log("defineSystem position:" + player_.position + ",x=" + x + ",y=" + y);
         });
     }, [layer, account])
 
@@ -97,13 +90,13 @@ export default function NamesUI() {
     // }, [nameLablesMap])
 
     return (<div>
-        {Array.from(nameLablesMap.entries()).map(([key, value]) => (
+        {/* {Array.from(nameLablesMap.entries()).map(([key, value]) => (
             <p key={key} style={{backgroundColor:"rgba(0,0,0,0.5)",borderRadius:20,color:"white",width:"100px",paddingLeft:"15px"}}>
                 {
                     truncateString(playersAddress?.get(key)!,4,4)
                 }
             </p>
-        ))}
+        ))} */}
 
     </div>)
 }

@@ -41,7 +41,7 @@ export const UI = () => {
             <BottomRightContainer>
                 <BottomIcons/>
             </BottomRightContainer>
-            {/* <NamesUI/> */}
+            <NamesUI/>
         </Wrapper>
     );
 };

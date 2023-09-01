@@ -1,10 +1,8 @@
-import { EntityIndex, Has, defineSystem, getComponentValueStrict } from "@latticexyz/recs";
+import { Has, defineSystem, getComponentValueStrict } from "@latticexyz/recs";
 import { PhaserLayer } from "..";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { TILE_HEIGHT, TILE_WIDTH, Animations, MAP_WIDTH } from "../constants";
-import { store } from "../../store/store";
 import { positionToCoorp } from "../../utils";
-
 export const spawn = (layer: PhaserLayer) => {
     // const {account} = store()
     const {
@@ -32,6 +30,7 @@ export const spawn = (layer: PhaserLayer) => {
     defineSystem(world, [Has(Player)], ({ entity }) => {
         const player_ = getComponentValueStrict(Player, entity);
         const playerObj = objectPool.get(entity, "Sprite")
+
         const size = MAP_WIDTH
 
         const position = player_.position - 1
@@ -53,8 +52,8 @@ export const spawn = (layer: PhaserLayer) => {
                 }
             });
         }
-        const {x,y}=positionToCoorp(position)
-        console.log("defineSystem position:" + player_.position + ",x=" + x + ",y=" + y+",ycount:"+ycount);
+        const { x, y } = positionToCoorp(position)
+        // console.log("defineSystem position:" + player_.position + ",x=" + x + ",y=" + y+",ycount:"+ycount);
 
         const pixelPosition = tileCoordToPixelCoord({ x, y }, TILE_WIDTH, TILE_HEIGHT);
 
@@ -65,6 +64,7 @@ export const spawn = (layer: PhaserLayer) => {
                 camera.centerOn(pixelPosition?.x!, pixelPosition?.y!);
             }
         })
+        
     });
     // input.onKeyPress(
     //     keys => keys.has("SPACE"),
