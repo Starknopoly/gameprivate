@@ -5,6 +5,9 @@ export enum Tileset {
     Mountains = 1,
     Forest = 2,
     Road = 3,
+    Bank=4,
+    Starkbucks=5,
+    Hotel=6
 }
 export enum TileAnimationKey { }
 export const TileAnimations: { [key in TileAnimationKey]: number[] } = {};
