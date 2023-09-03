@@ -6,6 +6,7 @@ import { ClientComponents } from "./createClientComponents";
 import { updatePositionWithDirection } from "../utils";
 import { POSITION_OFFSET } from "../phaser/constants";
 import { WorldCoord } from "@latticexyz/phaserx/dist/types";
+import { number } from "echarts";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
@@ -14,35 +15,57 @@ export function createSystemCalls(
     { Player }: ClientComponents
 ) {
     //TODO : Roll the dice on chain
-    const roll =async (signer:Account) => {
+    const roll = async (signer: Account) => {
+        console.log(signer.address)
+
+        const entityId = parseInt(signer.address) as EntityIndex;
         
+        // TODO: override steps
+
+        try {
+            const tx = await execute(signer, "roll", []);
+
+            console.log(tx)
+            const receipt = await signer.waitForTransaction(tx.transaction_hash, { retryInterval: 100 })
+
+            console.log(receipt)
+
+            const events = parseEvent(receipt)
+            const entity = parseInt(events[0].entity.toString()) as EntityIndex
+
+            const playerEvent = events[0] as Player
+            setComponent(contractComponents.Player, entity, {
+                position: playerEvent.position,
+                joined_time: playerEvent.position,
+                direction: playerEvent.position,
+                gold: playerEvent.position,
+                steps: playerEvent.position,
+                last_point: playerEvent.position,
+                last_time: playerEvent.position
+            })
+        } catch (e) {
+            console.log(e)
+            // Position.removeOverride(positionId);
+            // Moves.removeOverride(movesId);
+        } finally {
+            // Position.removeOverride(positionId);
+            // Moves.removeOverride(movesId);
+        }
     }
 
     //TODO : buy building on chain
-    const buyBuilding =async (signer:Account,coord:WorldCoord,buidingId:number) => {
-        
+    const buyBuilding = async (signer: Account, coord: WorldCoord, buidingId: number) => {
+
     }
 
     //TODO : buy back on chain
-    const buyBack =async (signer:Account,coord:WorldCoord) => {
-        
+    const buyBack = async (signer: Account, coord: WorldCoord) => {
+
     }
 
     const spawn = async (signer: Account) => {
 
         const entityId = parseInt(signer.address) as EntityIndex;
-
-        // const positionId = uuid();
-        // Position.addOverride(positionId, {
-        //     entity: entityId,
-        //     value: { x: 0, y: 1 },
-        // });
-
-        // const movesId = uuid();
-        // Moves.addOverride(movesId, {
-        //     entity: entityId,
-        //     value: { remaining: 100 },
-        // });
 
         try {
             const tx = await execute(signer, "spawn", []);
@@ -55,70 +78,27 @@ export function createSystemCalls(
             const entity = parseInt(events[0].entity.toString()) as EntityIndex
 
             const playerEvent = events[0] as Player;
-            setComponent(contractComponents.Player, entity, { position: playerEvent.position })
-
-            // const movesEvent = events[0] as Moves;
-            // setComponent(contractComponents.Moves, entity, { remaining: movesEvent.remaining })
-
-            // const positionEvent = events[1] as Position;
-            // setComponent(contractComponents.Position, entity, { x: positionEvent.x, y: positionEvent.y+1 })
+            setComponent(contractComponents.Player, entity, {
+                position: playerEvent.position,
+                joined_time: playerEvent.position,
+                direction: playerEvent.position,
+                gold: playerEvent.position,
+                steps: playerEvent.position,
+                last_point: playerEvent.position,
+                last_time: playerEvent.position
+            })
         } catch (e) {
             console.log(e)
-            // Position.removeOverride(positionId);
+            // Player.removeOverride(positionId);
             // Moves.removeOverride(movesId);
         } finally {
             // Position.removeOverride(positionId);
             // Moves.removeOverride(movesId);
-        }
-    };
-
-    const move = async (signer: Account, direction: Direction) => {
-
-        console.log(signer.address)
-
-        const entityId = parseInt(signer.address) as EntityIndex;
-
-        const positionId = uuid();
-        Position.addOverride(positionId, {
-            entity: entityId,
-            value: updatePositionWithDirection(direction, getComponentValue(Position, entityId) as Position),
-        });
-
-        const movesId = uuid();
-        Moves.addOverride(movesId, {
-            entity: entityId,
-            value: { remaining: (getComponentValue(Moves, entityId)?.remaining || 0) - 1 },
-        });
-
-        try {
-            const tx = await execute(signer, "move", [direction]);
-
-            console.log(tx)
-            const receipt = await signer.waitForTransaction(tx.transaction_hash, { retryInterval: 100 })
-
-            console.log(receipt)
-
-            const events = parseEvent(receipt)
-            const entity = parseInt(events[0].entity.toString()) as EntityIndex
-
-            const movesEvent = events[0] as Moves;
-            setComponent(contractComponents.Moves, entity, { remaining: movesEvent.remaining })
-
-            const positionEvent = events[1] as Position;
-            setComponent(contractComponents.Position, entity, { x: positionEvent.x, y: positionEvent.y+1 })
-        } catch (e) {
-            console.log(e)
-            Position.removeOverride(positionId);
-            Moves.removeOverride(movesId);
-        } finally {
-            Position.removeOverride(positionId);
-            Moves.removeOverride(movesId);
         }
     };
 
     return {
         spawn,
-        move,
         roll,
         buyBuilding,
         buyBack
@@ -147,7 +127,14 @@ export interface BaseEvent {
 }
 
 export interface Player extends BaseEvent {
-    position: number
+    position: number,
+    joined_time: number,
+    direction: number,
+    gold: number,
+    steps: number,
+    last_point: number,
+    last_time: number,
+
 }
 
 export interface Moves extends BaseEvent {
@@ -180,7 +167,13 @@ export const parseEvent = (
                 const playerData: Player = {
                     type: ComponentEvents.Player,
                     entity: raw.data[2],
-                    position: Number(raw.data[4]),
+                    joined_time: Number(raw.data[5]),
+                    direction: Number(raw.data[6]),
+                    gold: Number(raw.data[7]),
+                    position: Number(raw.data[8]),
+                    steps: Number(raw.data[9]),
+                    last_point: Number(raw.data[10]),
+                    last_time: Number(raw.data[11]),
                 };
 
                 events.push(playerData);

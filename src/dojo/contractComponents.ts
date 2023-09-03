@@ -9,7 +9,6 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
-          id: RecsType.Entity,
           joined_time: RecsType.Number,
           direction: RecsType.Number,
           gold: RecsType.Number,
