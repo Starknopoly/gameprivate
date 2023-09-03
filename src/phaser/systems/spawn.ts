@@ -49,7 +49,7 @@ export const spawn = (layer: PhaserLayer) => {
             x = 50 - player_.position % 100 - 1
         }
         const y = ycount * 2 - 50 + 1
-
+        // defineSystem position:5580,x=-31,y=61
         console.log("defineSystem position:" + player_.position + ",x=" + x + ",y=" + y);
 
         const pixelPosition = tileCoordToPixelCoord({ x, y }, TILE_WIDTH, TILE_HEIGHT);
