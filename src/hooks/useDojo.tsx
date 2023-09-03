@@ -8,7 +8,6 @@ export type UIStore = ReturnType<typeof useDojo>;
 
 export const useDojo = () => {
     const { networkLayer, phaserLayer } = store();
-
     const provider = new RpcProvider({
         nodeUrl: import.meta.env.VITE_PUBLIC_NODE_URL,
     });

@@ -27,7 +27,6 @@ export function mapSystem(layer: PhaserLayer) {
                     putTileAt(coord, Tileset.Forest, "Foreground");
                 }
                 const id = Math.ceil(seed * 100) % 12
-                // console.log("id:"+id);
                 
                 if (id == 0) {
                     putTileAt(coord, Tileset.Bank, "Foreground");
