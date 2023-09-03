@@ -70,8 +70,8 @@ export const phaserConfig = {
                 {
                     key: Animations.SwordsmanIdleReverse,
                     assetKey: Assets.MainAtlas,
-                    startFrame: 0,
-                    endFrame: 3,
+                    startFrame: 4,
+                    endFrame: 7,
                     frameRate: 6,
                     repeat: -1,
                     prefix: "sprites/soldier/idle/",
