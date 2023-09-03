@@ -11,8 +11,6 @@ Subsequently, clone this project and execute the following commands in the termi
 ```console
 yarn
 
-yarn generate
-
 yarn dev
 ```
 
