@@ -3,11 +3,12 @@ import { BuildingList, OptionType } from "./buildinglist";
 import { ClickWrapper } from "./clickWrapper";
 import { useDojo } from "../hooks/useDojo";
 import { Tileset } from "../artTypes/world";
-import { EntityIndex, getComponentValue, getEntityComponents } from "@latticexyz/recs";
+import { EntityIndex, getComponentValue } from "@latticexyz/recs";
 
 export default function ActionsUI() {
     // usePhaserLayer()
-    const {phaserLayer,networkLayer} = useDojo()
+    const { phaserLayer, networkLayer } = useDojo()
+
     const {
         scenes: {
             Main: {
@@ -17,11 +18,14 @@ export default function ActionsUI() {
             },
         },
         networkLayer: {
-            account
+            account,
+            systemCalls: { buyBuilding,buyBack },
         },
     } = phaserLayer;
 
-    const [selectBuild,setSelectBuild] = useState("Hotel")
+
+
+    const [selectBuild, setSelectBuild] = useState("Hotel")
     const options: OptionType[] = [
         { value: 'Hotel', label: 'Hotel($100)' },
         { value: 'Bank', label: 'Bank($500)' },
@@ -35,29 +39,42 @@ export default function ActionsUI() {
 
 
     const buildClick = () => {
-        const entityId = parseInt(account.address) as EntityIndex;
-        const position = getComponentValue(networkLayer.components.Position,entityId) as any
-        console.log(position);
-        const x = position.x
-        const y = position.y-1
-        const coord = { x, y };
-        switch(selectBuild){
-            case "Bank":putTileAt(coord, Tileset.Bank, "Foreground");break;
-            case "Hotel":putTileAt(coord, Tileset.Hotel, "Foreground");break;
-            case "Starkbucks":putTileAt(coord, Tileset.Starkbucks, "Foreground");break;
+        const coord = getCoordNow()
+        //TODO : check there is building
+
+        var buildingId = Tileset.Bank
+        switch (selectBuild) {
+            case "Bank": buildingId = Tileset.Bank; break;
+            case "Hotel": buildingId = Tileset.Hotel; break;
+            case "Starkbucks": buildingId = Tileset.Starkbucks; break;
         }
-        
+        putTileAt(coord, buildingId, "Foreground");
+
+        buyBuilding(account, coord, buildingId)
     }
 
     const buyBackClick = () => {
+        const coord = getCoordNow()
+        //TODO : check there is building
 
+        buyBack(account,coord)
+    }
+
+    const getCoordNow = () => {
+        const entityId = parseInt(account.address) as EntityIndex;
+        const position = getComponentValue(networkLayer.components.Position, entityId) as any
+        console.log(position);
+        const x = position.x
+        const y = position.y - 1
+        const coord = { x, y };
+        return coord
     }
 
     return (<ClickWrapper style={{ display: "flex", flexDirection: "column" }}>
-       
-        <BuildingList options={options} onChange={handleSelectionChange} defaultValue="Hotel"/>
+
+        <BuildingList options={options} onChange={handleSelectionChange} defaultValue="Hotel" />
         <button onClick={() => buildClick()}>Build {selectBuild}</button>
-        
+
         <button onClick={() => buyBackClick()} style={{ marginTop: 15 }}>Buy Back</button>
     </ClickWrapper>)
 }

@@ -5,6 +5,7 @@ import { uuid } from "@latticexyz/utils";
 import { ClientComponents } from "./createClientComponents";
 import { updatePositionWithDirection } from "../utils";
 import { POSITION_OFFSET } from "../phaser/constants";
+import { WorldCoord } from "@latticexyz/phaserx/dist/types";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
@@ -14,6 +15,16 @@ export function createSystemCalls(
 ) {
     //TODO : Roll the dice on chain
     const roll =async (signer:Account) => {
+        
+    }
+
+    //TODO : buy building on chain
+    const buyBuilding =async (signer:Account,coord:WorldCoord,buidingId:number) => {
+        
+    }
+
+    //TODO : buy back on chain
+    const buyBack =async (signer:Account,coord:WorldCoord) => {
         
     }
 
@@ -105,7 +116,9 @@ export function createSystemCalls(
     return {
         spawn,
         move,
-        roll
+        roll,
+        buyBuilding,
+        buyBack
     };
 }
 
