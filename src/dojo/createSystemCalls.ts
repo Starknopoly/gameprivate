@@ -1,12 +1,9 @@
 import { SetupNetworkResult } from "./setupNetwork";
 import { Account, InvokeTransactionReceiptResponse, num, shortString } from "starknet";
 import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs";
-import { uuid } from "@latticexyz/utils";
 import { ClientComponents } from "./createClientComponents";
-import { updatePositionWithDirection } from "../utils";
 import { POSITION_OFFSET } from "../phaser/constants";
 import { WorldCoord } from "@latticexyz/phaserx/dist/types";
-import { number } from "echarts";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
@@ -14,7 +11,6 @@ export function createSystemCalls(
     { execute, contractComponents }: SetupNetworkResult,
     { Player }: ClientComponents
 ) {
-    //TODO : Roll the dice on chain
     const roll = async (signer: Account) => {
         console.log(signer.address)
 
@@ -51,6 +47,7 @@ export function createSystemCalls(
             // Position.removeOverride(positionId);
             // Moves.removeOverride(movesId);
         }
+        return 0
     }
 
     //TODO : buy building on chain

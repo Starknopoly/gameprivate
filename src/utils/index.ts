@@ -42,3 +42,7 @@ export function updatePositionWithDirection(direction: Direction, value: { x: nu
     }
     return value;
 }
+
+export function getRandomIntBetween(m: number, n: number): number {
+    return m + Math.floor(Math.random() * (n - m + 1));
+}
