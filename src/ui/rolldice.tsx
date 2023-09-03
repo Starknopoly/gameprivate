@@ -8,6 +8,7 @@ import dice6 from "../assets/dices/dice6.png"
 import { useDojo } from "../hooks/useDojo";
 import { ClickWrapper } from "./clickWrapper"
 import '../App.css';
+import { Direction } from "../dojo/createSystemCalls"
 
 export default function RollDice() {
     const MaxRollTimes = 12
@@ -18,7 +19,9 @@ export default function RollDice() {
     const rollCountRef = useRef(0)
 
     //wait for roll dice result on chain
-    const [chainDice, setChainDice] = useState(0)
+    const chainDiceRef = useRef(0)
+    const walkInternalIdRef = useRef<NodeJS.Timer>()
+    const walkCountRef = useRef(0)
 
     const dices = [dice1, dice2, dice3, dice4, dice5, dice6]
     const {
@@ -26,7 +29,7 @@ export default function RollDice() {
             account
         },
         networkLayer: {
-            systemCalls: { roll },
+            systemCalls: { roll,move },
         },
     } = useDojo();
 
@@ -38,26 +41,44 @@ export default function RollDice() {
         rollCountRef.current = rollCountRef.current + 1;
         if (rollCountRef.current <= MaxRollTimes) {
             var random1 = getRandomIntBetween(0, 5);
-            if(dices[random1]==diceImg1){
+            if (dices[random1] == diceImg1) {
                 random1 = getRandomIntBetween(0, 5);
             }
             setDice1(dices[random1])
 
-            var random2 = getRandomIntBetween(0, 5);
-            if(dices[random2]==diceImg2){
-                random2 = getRandomIntBetween(0, 5);
-            }
-            setDice2(dices[random2])
+            // var random2 = getRandomIntBetween(0, 5);
+            // if (dices[random2] == diceImg2) {
+            //     random2 = getRandomIntBetween(0, 5);
+            // }
+            // setDice2(dices[random2])
+            chainDiceRef.current = random1 + 1
         } else {
             clearInterval(rollInternalIdRef.current)
             rollCountRef.current = 0;
+            const intervalId = setInterval(walk, 600);
+            walkInternalIdRef.current = intervalId
         }
+    }
+
+    const walk = async () => {
+        if (walkCountRef.current == chainDiceRef.current) {
+            walkCountRef.current = 0
+            chainDiceRef.current = 0
+            clearInterval(walkInternalIdRef.current)
+            return
+        }
+
+        walkCountRef.current = walkCountRef.current + 1
+        move(account,Direction.Right)
     }
 
     const rollDice = () => {
         console.log("rolldice " + rollCountRef.current);
 
         if (rollCountRef.current != 0) {
+            return
+        }
+        if(walkCountRef.current!=0){
             return
         }
         console.log("rollDice");
@@ -70,7 +91,7 @@ export default function RollDice() {
     return (
         <ClickWrapper>
             <img src={diceImg1} />
-            <img style={{marginLeft:30}} src={diceImg2} />
+            {/* <img style={{ marginLeft: 30 }} src={diceImg2} /> */}
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => rollDice()}>Roll</button>
         </ClickWrapper>
     )

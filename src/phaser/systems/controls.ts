@@ -19,12 +19,12 @@ export const controls = (layer: PhaserLayer) => {
     //         move(account, Direction.Up);
     //     });
 
-    input.onKeyPress(
-        keys => keys.has("A"),
-        () => {
-            move(account, Direction.Left);
-        }
-    );
+    // input.onKeyPress(
+    //     keys => keys.has("A"),
+    //     () => {
+    //         move(account, Direction.Left);
+    //     }
+    // );
 
     // input.onKeyPress(
     //     keys => keys.has("S"),
@@ -33,10 +33,10 @@ export const controls = (layer: PhaserLayer) => {
     //     }
     // );
 
-    input.onKeyPress(
-        keys => keys.has("D"),
-        () => {
-            move(account, Direction.Right);
-        }
-    );
+    // input.onKeyPress(
+    //     keys => keys.has("D"),
+    //     () => {
+    //         move(account, Direction.Right);
+    //     }
+    // );
 };
