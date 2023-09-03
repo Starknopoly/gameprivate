@@ -14,7 +14,6 @@ import { getRandomIntBetween } from "../utils"
 export default function RollDice() {
     const MaxRollTimes = 12
     const [diceImg1, setDice1] = useState(dice1)
-    const [diceImg2, setDice2] = useState(dice1)
 
     const rollInternalIdRef = useRef<NodeJS.Timer>()
     const rollCountRef = useRef(0)
@@ -31,7 +30,6 @@ export default function RollDice() {
             account
         },
         networkLayer: {
-            network:{graphSdk},
             systemCalls: { roll,move },
         },
     } = useDojo();

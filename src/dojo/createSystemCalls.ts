@@ -1,8 +1,7 @@
 import { SetupNetworkResult } from "./setupNetwork";
-import { Account, InvokeTransactionReceiptResponse, num, shortString } from "starknet";
+import { Account, InvokeTransactionReceiptResponse, shortString } from "starknet";
 import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs";
 import { ClientComponents } from "./createClientComponents";
-import { POSITION_OFFSET } from "../phaser/constants";
 import { WorldCoord } from "@latticexyz/phaserx/dist/types";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
@@ -45,7 +44,7 @@ export function createSystemCalls(
     const roll = async (signer: Account) => {
         console.log(signer.address)
 
-        const entityId = parseInt(signer.address) as EntityIndex;
+        // const entityId = parseInt(signer.address) as EntityIndex;
 
         // TODO: override steps
 
@@ -58,7 +57,7 @@ export function createSystemCalls(
             console.log(receipt)
 
             const events = parseEvent(receipt)
-            const entity = parseInt(events[0].entity.toString()) as EntityIndex
+            // const entity = parseInt(events[0].entity.toString()) as EntityIndex
 
             const playerEvent = events[0] as Player
             // setComponent(contractComponents.Player, entity, {
@@ -93,8 +92,9 @@ export function createSystemCalls(
     }
 
     const spawn = async (signer: Account) => {
-
-        const entityId = parseInt(signer.address) as EntityIndex;
+        console.log(Player);
+        
+        // const entityId = parseInt(signer.address) as EntityIndex;
         try {
             const tx = await execute(signer, "spawn", []);
 
@@ -207,22 +207,6 @@ export const parseEvent = (
 
                 events.push(playerData);
                 break;
-
-            case ComponentEvents.Position:
-                if (raw.data.length < 7) {
-                    throw new Error('Insufficient data for Position event.');
-                }
-
-                const positionData: Position = {
-                    type: ComponentEvents.Position,
-                    entity: raw.data[2],
-                    x: Number(raw.data[5]) - POSITION_OFFSET,
-                    y: Number(raw.data[6]) - POSITION_OFFSET,
-                };
-
-                // events.push(positionData);
-                break;
-
             default:
                 throw new Error('Unsupported event type.');
         }

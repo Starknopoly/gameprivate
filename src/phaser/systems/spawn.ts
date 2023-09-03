@@ -1,4 +1,4 @@
-import { Has, defineEnterSystem, defineSystem, getComponentValueStrict } from "@latticexyz/recs";
+import { Has, defineSystem, getComponentValueStrict } from "@latticexyz/recs";
 import { PhaserLayer } from "..";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { TILE_HEIGHT, TILE_WIDTH, Animations } from "../constants";
@@ -14,17 +14,17 @@ export const spawn = (layer: PhaserLayer) => {
         },
     } = layer;
 
-    defineEnterSystem(world, [Has(Player)], ({ entity }) => {
-    //     const playerObj = objectPool.get(entity, "Sprite");
-    //     console.log("defineEnterSystem");
+    // defineEnterSystem(world, [Has(Player)], ({ entity }) => {
+    // //     const playerObj = objectPool.get(entity, "Sprite");
+    // //     console.log("defineEnterSystem");
 
-    //     playerObj.setComponent({
-    //         id: 'animation',
-    //         once: (sprite) => {
-    //             sprite.play(Animations.SwordsmanIdle);
-    //         }
-    //     });
-    });
+    // //     playerObj.setComponent({
+    // //         id: 'animation',
+    // //         once: (sprite) => {
+    // //             sprite.play(Animations.SwordsmanIdle);
+    // //         }
+    // //     });
+    // });
 
     defineSystem(world, [Has(Player)], ({ entity }) => {
         const player_ = getComponentValueStrict(Player, entity);

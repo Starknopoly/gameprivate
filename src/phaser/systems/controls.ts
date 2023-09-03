@@ -1,16 +1,9 @@
 import { PhaserLayer } from "..";
-import { Direction } from "../../dojo/createSystemCalls";
 
 export const controls = (layer: PhaserLayer) => {
 
     const {
-        scenes: {
-            Main: { input },
-        },
-        networkLayer: {
-            systemCalls: { },
-            account
-        },
+
     } = layer;
 
     // input.onKeyPress(

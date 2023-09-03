@@ -1,5 +1,5 @@
 // SelectList.tsx
-import React, { FC, ChangeEvent } from 'react';
+import  { FC, ChangeEvent } from 'react';
 // import { OptionType } from './types';
 
 export interface OptionType {
