@@ -36,12 +36,12 @@ export function createSystemCalls(
             const playerEvent = events[0] as Player
             setComponent(contractComponents.Player, entity, {
                 position: playerEvent.position,
-                joined_time: playerEvent.position,
-                direction: playerEvent.position,
-                gold: playerEvent.position,
-                steps: playerEvent.position,
-                last_point: playerEvent.position,
-                last_time: playerEvent.position
+                joined_time: playerEvent.joined_time,
+                direction: playerEvent.direction,
+                gold: playerEvent.gold,
+                steps: playerEvent.steps,
+                last_point: playerEvent.last_point,
+                last_time: playerEvent.last_time
             })
         } catch (e) {
             console.log(e)
@@ -80,12 +80,12 @@ export function createSystemCalls(
             const playerEvent = events[0] as Player;
             setComponent(contractComponents.Player, entity, {
                 position: playerEvent.position,
-                joined_time: playerEvent.position,
-                direction: playerEvent.position,
-                gold: playerEvent.position,
-                steps: playerEvent.position,
-                last_point: playerEvent.position,
-                last_time: playerEvent.position
+                joined_time: playerEvent.joined_time,
+                direction: playerEvent.direction,
+                gold: playerEvent.gold,
+                steps: playerEvent.steps,
+                last_point: playerEvent.last_point,
+                last_time: playerEvent.last_time
             })
         } catch (e) {
             console.log(e)
