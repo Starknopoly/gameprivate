@@ -4,6 +4,7 @@ import { Wrapper } from "./wrapper";
 import { SpawnBtn } from "./spawnbtn";
 import RollDice from "./rolldice";
 import ActionsUI from "./actions";
+import PlayerPanel from "./playerpanel";
 
 export const UI = () => {
     const layers = store((state) => {
@@ -17,6 +18,9 @@ export const UI = () => {
 
     return (
         <Wrapper>
+            <TopLeftContainer>
+                <PlayerPanel/>
+            </TopLeftContainer>
             <HeaderContainer>
                 <SpawnBtn />
             </HeaderContainer>
@@ -40,6 +44,17 @@ const HeaderContainer = styled.div`
     display: flex;
     flex-direaction: row;
     gap: 20px;
+`;
+
+const TopLeftContainer = styled.div`
+    position: absolute;
+    top: 130px;
+    left: 130px;
+    transform: translate(-50%, -50%);
+    color: white;
+    display: flex;
+    flex-direaction: row;
+    gap: 10px;
 `;
 
 

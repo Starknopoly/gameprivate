@@ -17,9 +17,6 @@ export default function RollDice() {
     const rollInternalIdRef = useRef<NodeJS.Timer>()
     const rollCountRef = useRef(0)
 
-    // const [rollInternalId, setRollInternalId] = useState<NodeJS.Timer>()
-    // const [rollCount, setRollCount] = useState(0)
-
     //wait for roll dice result on chain
     const [chainDice, setChainDice] = useState(0)
 
@@ -64,10 +61,8 @@ export default function RollDice() {
             return
         }
         console.log("rollDice");
-        // 每隔100ms执行一次myMethod
         const intervalId = setInterval(waitForChainResult, 200);
         rollInternalIdRef.current = intervalId
-        // setRollInternalId(intervalId)
 
         roll(account)
     }

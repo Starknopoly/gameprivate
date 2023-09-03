@@ -6,13 +6,12 @@ export const SpawnBtn = () => {
         account: {
             create,
             list,
-            get,
             account,
             select,
             isDeploying
         },
         networkLayer: {
-            systemCalls: { spawn,roll },
+            systemCalls: { spawn },
         },
     } = useDojo();
 
@@ -32,7 +31,7 @@ export const SpawnBtn = () => {
                     spawn(account);
                 }}
             >
-                Spawn
+                Start Game
             </button>
         </ClickWrapper>
     );
