@@ -1,7 +1,6 @@
 import { EntityIndex, setComponent } from "@latticexyz/recs";
 import { useDojo } from "../hooks/useDojo";
 import { ClickWrapper } from "./clickWrapper";
-import { Player } from "../dojo/createSystemCalls";
 
 export const SpawnBtn = () => {
     const {
