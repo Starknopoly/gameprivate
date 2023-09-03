@@ -8,6 +8,7 @@ export enum Maps {
 
 export enum Animations {
     SwordsmanIdle = "SwordsmanIdle",
+    SwordsmanIdleReverse = "SwordsmanIdleReverse",
 }
 export enum Sprites {
     Soldier,

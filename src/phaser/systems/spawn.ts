@@ -14,39 +14,45 @@ export const spawn = (layer: PhaserLayer) => {
         },
     } = layer;
 
-    const {
-        scenes: {
-            Main: { input },
-        },
-        networkLayer: {
-            systemCalls: { spawn },
-            account
-        },
-    } = layer;
-
     defineEnterSystem(world, [Has(Player)], ({ entity }) => {
-        const playerObj = objectPool.get(entity, "Sprite");
-        console.log("defineEnterSystem");
+    //     const playerObj = objectPool.get(entity, "Sprite");
+    //     console.log("defineEnterSystem");
 
-        playerObj.setComponent({
-            id: 'animation',
-            once: (sprite) => {
-                sprite.play(Animations.SwordsmanIdle);
-            }
-        });
+    //     playerObj.setComponent({
+    //         id: 'animation',
+    //         once: (sprite) => {
+    //             sprite.play(Animations.SwordsmanIdle);
+    //         }
+    //     });
     });
 
     defineSystem(world, [Has(Player)], ({ entity }) => {
         const player_ = getComponentValueStrict(Player, entity);
+
+        const playerObj = objectPool.get(entity, "Sprite")
 
         const ycount = Math.floor(player_.position / 100)
 
         var x = player_.position % 100 - 50
         if (ycount % 2 == 0) {
             x = player_.position % 100 - 50
+
+            playerObj.setComponent({
+                id: 'animation',
+                once: (sprite) => {
+                    sprite.play(Animations.SwordsmanIdle);
+                }
+            });
         }
         if (ycount % 2 == 1) {
             x = 50 - player_.position % 100 - 1
+
+            playerObj.setComponent({
+                id: 'animation',
+                once: (sprite) => {
+                    sprite.play(Animations.SwordsmanIdleReverse);
+                }
+            });
         }
         const y = ycount * 2 - 50 + 1
         // defineSystem position:5580,x=-31,y=61
@@ -57,9 +63,7 @@ export const spawn = (layer: PhaserLayer) => {
         console.log(entity.toString())
         console.log(pixelPosition?.x, pixelPosition?.y)
 
-        const player = objectPool.get(entity, "Sprite")
-
-        player.setComponent({
+        playerObj.setComponent({
             id: 'position',
             once: (sprite) => {
                 sprite.setPosition(pixelPosition?.x, pixelPosition?.y);
