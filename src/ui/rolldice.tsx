@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
 import dice1 from "../assets/dices/dice1.png"
 import dice2 from "../assets/dices/dice2.png"
 import dice3 from "../assets/dices/dice3.png"
@@ -7,11 +7,23 @@ import dice5 from "../assets/dices/dice5.png"
 import dice6 from "../assets/dices/dice6.png"
 import { useDojo } from "../hooks/useDojo";
 import { ClickWrapper } from "./clickWrapper"
+import '../App.css';
 
-export default function RollDice(){
-    const [diceImg1,setDice1] =  useState(dice1)
-    const [diceImg2,setDice2] =  useState(dice1)
+export default function RollDice() {
+    const MaxRollTimes = 12
+    const [diceImg1, setDice1] = useState(dice1)
+    const [diceImg2, setDice2] = useState(dice1)
 
+    const rollInternalIdRef = useRef<NodeJS.Timer>()
+    const rollCountRef = useRef(0)
+
+    // const [rollInternalId, setRollInternalId] = useState<NodeJS.Timer>()
+    // const [rollCount, setRollCount] = useState(0)
+
+    //wait for roll dice result on chain
+    const [chainDice, setChainDice] = useState(0)
+
+    const dices = [dice1, dice2, dice3, dice4, dice5, dice6]
     const {
         account: {
             account
@@ -21,19 +33,50 @@ export default function RollDice(){
         },
     } = useDojo();
 
-    const rollDice = ()=>{
+    function getRandomIntBetween(m: number, n: number): number {
+        return m + Math.floor(Math.random() * (n - m + 1));
+    }
+
+    const waitForChainResult = async () => {
+        rollCountRef.current = rollCountRef.current + 1;
+        if (rollCountRef.current <= MaxRollTimes) {
+            var random1 = getRandomIntBetween(0, 5);
+            if(dices[random1]==diceImg1){
+                random1 = getRandomIntBetween(0, 5);
+            }
+            setDice1(dices[random1])
+
+            var random2 = getRandomIntBetween(0, 5);
+            if(dices[random2]==diceImg2){
+                random2 = getRandomIntBetween(0, 5);
+            }
+            setDice2(dices[random2])
+        } else {
+            clearInterval(rollInternalIdRef.current)
+            rollCountRef.current = 0;
+        }
+    }
+
+    const rollDice = () => {
+        console.log("rolldice " + rollCountRef.current);
+
+        if (rollCountRef.current != 0) {
+            return
+        }
         console.log("rollDice");
-        
-        setDice1(dice2)
-        setDice2(dice6)
+        // 每隔100ms执行一次myMethod
+        const intervalId = setInterval(waitForChainResult, 200);
+        rollInternalIdRef.current = intervalId
+        // setRollInternalId(intervalId)
+
         roll(account)
     }
 
-    return(
+    return (
         <ClickWrapper>
-            <img src={diceImg1}/>
-            <img src={diceImg2}/>
-            <button onClick={()=>rollDice()}>Roll</button>
+            <img src={diceImg1} />
+            <img style={{marginLeft:30}} src={diceImg2} />
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => rollDice()}>Roll</button>
         </ClickWrapper>
     )
 }
