@@ -83,7 +83,7 @@ export function createSystemCalls(
 
     //TODO : buy building on chain
     const buyBuilding = async (signer: Account, coord: WorldCoord, buidingId: number) => {
-
+        
     }
 
     //TODO : buy back on chain
