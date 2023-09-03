@@ -78,6 +78,9 @@ export default function RollDice() {
         if (rollCountRef.current != 0) {
             return
         }
+        if(walkCountRef.current!=0){
+            return
+        }
         console.log("rollDice");
         const intervalId = setInterval(waitForChainResult, 200);
         rollInternalIdRef.current = intervalId

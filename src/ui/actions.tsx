@@ -36,7 +36,6 @@ export default function ActionsUI() {
 
     const buildClick = () => {
         const entityId = parseInt(account.address) as EntityIndex;
-        // getEntityComponents(phaserLayer.world,entityId)
         const position = getComponentValue(networkLayer.components.Position,entityId) as any
         console.log(position);
         const x = position.x
