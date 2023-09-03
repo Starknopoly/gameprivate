@@ -5,6 +5,7 @@ import { SpawnBtn } from "./spawnbtn";
 import RollDice from "./rolldice";
 import ActionsUI from "./actions";
 import PlayerPanel from "./playerpanel";
+import LandStatusPanel from "./landstatuspanel";
 
 export const UI = () => {
     const layers = store((state) => {
@@ -31,6 +32,9 @@ export const UI = () => {
             <RightContainer>
                 <ActionsUI/>
             </RightContainer>
+            <TopRightContainer>
+                <LandStatusPanel/>
+            </TopRightContainer>
         </Wrapper>
     );
 };
@@ -50,6 +54,17 @@ const TopLeftContainer = styled.div`
     position: absolute;
     top: 130px;
     left: 130px;
+    transform: translate(-50%, -50%);
+    color: white;
+    display: flex;
+    flex-direaction: row;
+    gap: 10px;
+`;
+
+const TopRightContainer = styled.div`
+    position: absolute;
+    top: 100px;
+    right: -80px;
     transform: translate(-50%, -50%);
     color: white;
     display: flex;
