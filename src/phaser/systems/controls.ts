@@ -8,7 +8,7 @@ export const controls = (layer: PhaserLayer) => {
             Main: { input },
         },
         networkLayer: {
-            systemCalls: { move },
+            systemCalls: { },
             account
         },
     } = layer;
@@ -22,7 +22,7 @@ export const controls = (layer: PhaserLayer) => {
     // input.onKeyPress(
     //     keys => keys.has("A"),
     //     () => {
-    //         move(account, Direction.Left);
+    //         movetest(account, Direction.Left);
     //     }
     // );
 
@@ -36,7 +36,7 @@ export const controls = (layer: PhaserLayer) => {
     // input.onKeyPress(
     //     keys => keys.has("D"),
     //     () => {
-    //         move(account, Direction.Right);
+    //         movetest(account, Direction.Right);
     //     }
     // );
 };

@@ -11,11 +11,42 @@ export function createSystemCalls(
     { execute, contractComponents }: SetupNetworkResult,
     { Player }: ClientComponents
 ) {
+    const move = (signer: Account, direction: Direction, playerEvent: Player) => {
+        const entityId = parseInt(signer.address) as EntityIndex;
+
+        //TODO : request Player on chain
+        const value = getComponentValue(contractComponents.Player, entityId)
+        console.log(value);
+        if (!value) {
+            return
+        }
+        var position = value.position
+        if (direction == Direction.Left) {
+            position -= 1
+            if (position < 0) {
+                position = 10000
+            }
+        }
+        if (direction == Direction.Right) {
+            position += 1
+        }
+
+        setComponent(contractComponents.Player, entityId, {
+            position: position,
+            joined_time: playerEvent.joined_time,
+            direction: playerEvent.direction,
+            gold: playerEvent.gold,
+            steps: playerEvent.steps,
+            last_point: playerEvent.last_point,
+            last_time: playerEvent.last_time
+        })
+    }
+
     const roll = async (signer: Account) => {
         console.log(signer.address)
 
         const entityId = parseInt(signer.address) as EntityIndex;
-        
+
         // TODO: override steps
 
         try {
@@ -30,16 +61,16 @@ export function createSystemCalls(
             const entity = parseInt(events[0].entity.toString()) as EntityIndex
 
             const playerEvent = events[0] as Player
-            setComponent(contractComponents.Player, entity, {
-                position: playerEvent.position,
-                joined_time: playerEvent.joined_time,
-                direction: playerEvent.direction,
-                gold: playerEvent.gold,
-                steps: playerEvent.steps,
-                last_point: playerEvent.last_point,
-                last_time: playerEvent.last_time
-            })
-            return playerEvent.last_point
+            // setComponent(contractComponents.Player, entity, {
+            //     position: playerEvent.position,
+            //     joined_time: playerEvent.joined_time,
+            //     direction: playerEvent.direction,
+            //     gold: playerEvent.gold,
+            //     steps: playerEvent.steps,
+            //     last_point: playerEvent.last_point,
+            //     last_time: playerEvent.last_time
+            // })
+            return playerEvent
         } catch (e) {
             console.log(e)
             // Position.removeOverride(positionId);
@@ -48,7 +79,7 @@ export function createSystemCalls(
             // Position.removeOverride(positionId);
             // Moves.removeOverride(movesId);
         }
-        return 0
+        return undefined
     }
 
     //TODO : buy building on chain
@@ -64,16 +95,6 @@ export function createSystemCalls(
     const spawn = async (signer: Account) => {
 
         const entityId = parseInt(signer.address) as EntityIndex;
-
-        //TODO : request Player on chain
-        const value = getComponentValue(contractComponents.Player,entityId)
-        console.log(value);
-
-        if(value){
-            // setComponent()
-            return
-        }
-
         try {
             const tx = await execute(signer, "spawn", []);
 
@@ -105,6 +126,7 @@ export function createSystemCalls(
     };
 
     return {
+        move,
         spawn,
         roll,
         buyBuilding,

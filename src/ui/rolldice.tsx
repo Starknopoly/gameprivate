@@ -8,7 +8,7 @@ import dice6 from "../assets/dices/dice6.png"
 import { useDojo } from "../hooks/useDojo";
 import { ClickWrapper } from "./clickWrapper"
 import '../App.css';
-import { Direction } from "../dojo/createSystemCalls"
+import { Direction, Player } from "../dojo/createSystemCalls"
 import { getRandomIntBetween } from "../utils"
 
 export default function RollDice() {
@@ -20,7 +20,8 @@ export default function RollDice() {
     const rollCountRef = useRef(0)
 
     //wait for roll dice result on chain
-    const chainDiceRef = useRef(0)
+    // const chainDiceRef = useRef(0)
+    const playerEventRef = useRef<Player>()
     const walkInternalIdRef = useRef<NodeJS.Timer>()
     const walkCountRef = useRef(0)
 
@@ -30,13 +31,14 @@ export default function RollDice() {
             account
         },
         networkLayer: {
-            systemCalls: { roll },
+            network:{graphSdk},
+            systemCalls: { roll,move },
         },
     } = useDojo();
 
     const waitForChainResult = async () => {
         rollCountRef.current = rollCountRef.current + 1;
-        if (rollCountRef.current <= MaxRollTimes || chainDiceRef.current == 0) {
+        if (rollCountRef.current <= MaxRollTimes || !playerEventRef.current) {
             var random1 = getRandomIntBetween(0, 5);
             if (dices[random1] == diceImg1) {
                 random1 = getRandomIntBetween(0, 5);
@@ -52,22 +54,25 @@ export default function RollDice() {
         } else {
             clearInterval(rollInternalIdRef.current)
             rollCountRef.current = 0;
-            setDice1(dices[chainDiceRef.current-1])
+            if(playerEventRef.current){
+                setDice1(dices[playerEventRef.current.last_point-1])
+            }
             const intervalId = setInterval(walk, 600);
             walkInternalIdRef.current = intervalId
         }
     }
 
     const walk = async () => {
-        if (walkCountRef.current == chainDiceRef.current) {
+        if (walkCountRef.current == playerEventRef.current?.last_point) {
             walkCountRef.current = 0
-            chainDiceRef.current = 0
+            playerEventRef.current = undefined
             clearInterval(walkInternalIdRef.current)
             return
         }
 
         walkCountRef.current = walkCountRef.current + 1
-        // move(account, Direction.Right)
+        if(playerEventRef.current)
+        move(account, Direction.Right,playerEventRef.current)
     }
 
     const rollDice = async () => {
@@ -85,8 +90,11 @@ export default function RollDice() {
 
         const result = await roll(account)
         console.log("rolldice result:"+result);
-        
-        chainDiceRef.current = result
+        if(result){
+            // chainDiceRef.current = result.last_point
+            playerEventRef.current = result
+        }
+        // chainDiceRef.current = result
     }
 
     return (

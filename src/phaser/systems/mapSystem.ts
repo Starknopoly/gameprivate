@@ -15,8 +15,8 @@ export function mapSystem(layer: PhaserLayer) {
 
     const noise = createNoise2D();
 
-    for (let x = -500; x < 500; x++) {
-        for (let y = -500; y < 500; y++) {
+    for (let x = -50; x < 50; x++) {
+        for (let y = -50; y < 50; y++) {
             if (y % 2 == 0) {
                 const coord = { x, y };
                 const seed = noise(x, y);
