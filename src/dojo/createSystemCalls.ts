@@ -39,6 +39,7 @@ export function createSystemCalls(
                 last_point: playerEvent.last_point,
                 last_time: playerEvent.last_time
             })
+            return playerEvent.last_point
         } catch (e) {
             console.log(e)
             // Position.removeOverride(positionId);
@@ -63,6 +64,15 @@ export function createSystemCalls(
     const spawn = async (signer: Account) => {
 
         const entityId = parseInt(signer.address) as EntityIndex;
+
+        //TODO : request Player on chain
+        const value = getComponentValue(contractComponents.Player,entityId)
+        console.log(value);
+
+        if(value){
+            // setComponent()
+            return
+        }
 
         try {
             const tx = await execute(signer, "spawn", []);

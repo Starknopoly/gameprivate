@@ -11,11 +11,11 @@ export const move = (layer: PhaserLayer) => {
             Main: { objectPool, camera },
         },
         networkLayer: {
-            components: { Position }
+            components: { Player }
         },
     } = layer;
 
-    defineEnterSystem(world, [Has(Position)], ({ entity }) => {
+    defineEnterSystem(world, [Has(Player)], ({ entity }) => {
         const playerObj = objectPool.get(entity, "Sprite");
 
         playerObj.setComponent({
@@ -26,9 +26,11 @@ export const move = (layer: PhaserLayer) => {
         });
     });
 
-    defineSystem(world, [Has(Position)], ({ entity }) => {
-        const position = getComponentValueStrict(Position, entity);
-        const pixelPosition = tileCoordToPixelCoord(position, TILE_WIDTH, TILE_HEIGHT);
+    defineSystem(world, [Has(Player)], ({ entity }) => {
+        const player_ = getComponentValueStrict(Player, entity);
+        const x = player_.position%100
+        const y = player_.position/100
+        const pixelPosition = tileCoordToPixelCoord({x,y}, TILE_WIDTH, TILE_HEIGHT);
         console.log(entity.toString())
         console.log(pixelPosition?.x, pixelPosition?.y)
 

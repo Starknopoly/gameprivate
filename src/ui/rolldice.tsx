@@ -30,7 +30,7 @@ export default function RollDice() {
             account
         },
         networkLayer: {
-            systemCalls: { roll, move },
+            systemCalls: { roll },
         },
     } = useDojo();
 
@@ -67,7 +67,7 @@ export default function RollDice() {
         }
 
         walkCountRef.current = walkCountRef.current + 1
-        move(account, Direction.Right)
+        // move(account, Direction.Right)
     }
 
     const rollDice = async () => {
