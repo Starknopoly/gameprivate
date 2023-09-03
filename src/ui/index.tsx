@@ -3,6 +3,7 @@ import { store } from "../store/store";
 import { Wrapper } from "./wrapper";
 import { SpawnBtn } from "./spawnbtn";
 import RollDice from "./rolldice";
+import ActionsUI from "./actions";
 
 export const UI = () => {
     const layers = store((state) => {
@@ -23,6 +24,9 @@ export const UI = () => {
             <BottomContainer>
                 <RollDice/>
             </BottomContainer>
+            <RightContainer>
+                <ActionsUI/>
+            </RightContainer>
         </Wrapper>
     );
 };
@@ -48,4 +52,13 @@ const BottomContainer = styled.div`
     display: flex;
     flex-direaction: row;
     gap: 20px;
+`;
+
+
+const RightContainer = styled.div`
+    position: absolute;
+    bottom: 50%;
+    right: 2%;
+    transform: translate(-50%, -50%);
+    color: white;
 `;

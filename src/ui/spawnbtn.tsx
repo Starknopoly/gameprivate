@@ -34,8 +34,6 @@ export const SpawnBtn = () => {
             >
                 Spawn
             </button>
-
-            <button>Roll</button>
         </ClickWrapper>
     );
 };
