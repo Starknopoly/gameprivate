@@ -62,10 +62,20 @@ export default function ActionsUI() {
 
     const getCoordNow = () => {
         const entityId = parseInt(account.address) as EntityIndex;
-        const position = getComponentValue(networkLayer.components.Player, entityId) as any
-        console.log(position);
-        const x = position.x
-        const y = position.y - 1
+        const player = getComponentValue(networkLayer.components.Player, entityId) as any
+        console.log(player);
+        const position = player.position
+
+        const ycount = Math.floor(position / 100)
+
+        var x = position % 100 - 50
+        if (ycount % 2 == 0) {
+            x = position % 100 - 50
+        }
+        if (ycount % 2 == 1) {
+            x = 50 - position % 100 - 1
+        }
+        const y = ycount * 2 - 50
         const coord = { x, y };
         return coord
     }
