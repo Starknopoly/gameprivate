@@ -34,7 +34,8 @@ export const SpawnBtn = () => {
             >
                 Spawn
             </button>
-            <button onClick={()=>roll(account)}>Roll</button>
+
+            <button>Roll</button>
         </ClickWrapper>
     );
 };

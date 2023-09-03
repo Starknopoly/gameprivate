@@ -99,7 +99,6 @@ export function createSystemCalls(
             Position.removeOverride(positionId);
             Moves.removeOverride(movesId);
         }
-
     };
 
     return {
