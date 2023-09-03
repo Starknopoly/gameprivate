@@ -5,7 +5,7 @@ import { controls } from "./controls";
 import { mapSystem } from "./mapSystem";
 
 export const registerSystems = (layer: PhaserLayer) => {
-    move(layer);
+    // move(layer);
     spawn(layer);
     controls(layer);
     mapSystem(layer)

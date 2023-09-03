@@ -16,14 +16,55 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  ContractAddress: { input: any; output: any; }
   Cursor: { input: any; output: any; }
   DateTime: { input: any; output: any; }
   felt252: { input: any; output: any; }
-  u8: { input: any; output: any; }
-  u32: { input: any; output: any; }
+  u64: { input: any; output: any; }
 };
 
-export type ComponentUnion = Moves | Position;
+export type Building = {
+  __typename?: 'Building';
+  entity?: Maybe<Entity>;
+  price?: Maybe<Scalars['u64']['output']>;
+};
+
+export type BuildingConnection = {
+  __typename?: 'BuildingConnection';
+  edges?: Maybe<Array<Maybe<BuildingEdge>>>;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type BuildingEdge = {
+  __typename?: 'BuildingEdge';
+  cursor: Scalars['Cursor']['output'];
+  node?: Maybe<Building>;
+};
+
+export type BuildingOrder = {
+  direction: Direction;
+  field: BuildingOrderOrderField;
+};
+
+export enum BuildingOrderOrderField {
+  Price = 'PRICE'
+}
+
+export type BuildingWhereInput = {
+  price?: InputMaybe<Scalars['Int']['input']>;
+  priceGT?: InputMaybe<Scalars['Int']['input']>;
+  priceGTE?: InputMaybe<Scalars['Int']['input']>;
+  priceLT?: InputMaybe<Scalars['Int']['input']>;
+  priceLTE?: InputMaybe<Scalars['Int']['input']>;
+  priceNEQ?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type ComponentUnion = Building | Land | Player | Townhall;
+
+export enum Direction {
+  Asc = 'ASC',
+  Desc = 'DESC'
+}
 
 export type Entity = {
   __typename?: 'Entity';
@@ -31,7 +72,7 @@ export type Entity = {
   components?: Maybe<Array<Maybe<ComponentUnion>>>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
-  keys?: Maybe<Scalars['String']['output']>;
+  keys?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
@@ -69,55 +110,166 @@ export type EventEdge = {
   node?: Maybe<Event>;
 };
 
-export type Moves = {
-  __typename?: 'Moves';
+export type Land = {
+  __typename?: 'Land';
+  building_type?: Maybe<Scalars['u64']['output']>;
   entity?: Maybe<Entity>;
-  remaining?: Maybe<Scalars['u8']['output']>;
+  owner?: Maybe<Scalars['ContractAddress']['output']>;
+  price?: Maybe<Scalars['u64']['output']>;
 };
 
-export type MovesConnection = {
-  __typename?: 'MovesConnection';
-  edges?: Maybe<Array<Maybe<MovesEdge>>>;
+export type LandConnection = {
+  __typename?: 'LandConnection';
+  edges?: Maybe<Array<Maybe<LandEdge>>>;
   totalCount: Scalars['Int']['output'];
 };
 
-export type MovesEdge = {
-  __typename?: 'MovesEdge';
+export type LandEdge = {
+  __typename?: 'LandEdge';
   cursor: Scalars['Cursor']['output'];
-  node?: Maybe<Moves>;
+  node?: Maybe<Land>;
 };
 
-export type Position = {
-  __typename?: 'Position';
+export type LandOrder = {
+  direction: Direction;
+  field: LandOrderOrderField;
+};
+
+export enum LandOrderOrderField {
+  BuildingType = 'BUILDING_TYPE',
+  Owner = 'OWNER',
+  Price = 'PRICE'
+}
+
+export type LandWhereInput = {
+  building_type?: InputMaybe<Scalars['Int']['input']>;
+  building_typeGT?: InputMaybe<Scalars['Int']['input']>;
+  building_typeGTE?: InputMaybe<Scalars['Int']['input']>;
+  building_typeLT?: InputMaybe<Scalars['Int']['input']>;
+  building_typeLTE?: InputMaybe<Scalars['Int']['input']>;
+  building_typeNEQ?: InputMaybe<Scalars['Int']['input']>;
+  owner?: InputMaybe<Scalars['String']['input']>;
+  ownerGT?: InputMaybe<Scalars['String']['input']>;
+  ownerGTE?: InputMaybe<Scalars['String']['input']>;
+  ownerLT?: InputMaybe<Scalars['String']['input']>;
+  ownerLTE?: InputMaybe<Scalars['String']['input']>;
+  ownerNEQ?: InputMaybe<Scalars['String']['input']>;
+  price?: InputMaybe<Scalars['Int']['input']>;
+  priceGT?: InputMaybe<Scalars['Int']['input']>;
+  priceGTE?: InputMaybe<Scalars['Int']['input']>;
+  priceLT?: InputMaybe<Scalars['Int']['input']>;
+  priceLTE?: InputMaybe<Scalars['Int']['input']>;
+  priceNEQ?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type Player = {
+  __typename?: 'Player';
+  direction?: Maybe<Scalars['u64']['output']>;
   entity?: Maybe<Entity>;
-  x?: Maybe<Scalars['u32']['output']>;
-  y?: Maybe<Scalars['u32']['output']>;
+  gold?: Maybe<Scalars['u64']['output']>;
+  joined_time?: Maybe<Scalars['u64']['output']>;
+  last_point?: Maybe<Scalars['u64']['output']>;
+  last_time?: Maybe<Scalars['u64']['output']>;
+  position?: Maybe<Scalars['u64']['output']>;
+  steps?: Maybe<Scalars['u64']['output']>;
 };
 
-export type PositionConnection = {
-  __typename?: 'PositionConnection';
-  edges?: Maybe<Array<Maybe<PositionEdge>>>;
+export type PlayerConnection = {
+  __typename?: 'PlayerConnection';
+  edges?: Maybe<Array<Maybe<PlayerEdge>>>;
   totalCount: Scalars['Int']['output'];
 };
 
-export type PositionEdge = {
-  __typename?: 'PositionEdge';
+export type PlayerEdge = {
+  __typename?: 'PlayerEdge';
   cursor: Scalars['Cursor']['output'];
-  node?: Maybe<Position>;
+  node?: Maybe<Player>;
+};
+
+export type PlayerOrder = {
+  direction: Direction;
+  field: PlayerOrderOrderField;
+};
+
+export enum PlayerOrderOrderField {
+  Direction = 'DIRECTION',
+  Gold = 'GOLD',
+  JoinedTime = 'JOINED_TIME',
+  LastPoint = 'LAST_POINT',
+  LastTime = 'LAST_TIME',
+  Position = 'POSITION',
+  Steps = 'STEPS'
+}
+
+export type PlayerWhereInput = {
+  direction?: InputMaybe<Scalars['Int']['input']>;
+  directionGT?: InputMaybe<Scalars['Int']['input']>;
+  directionGTE?: InputMaybe<Scalars['Int']['input']>;
+  directionLT?: InputMaybe<Scalars['Int']['input']>;
+  directionLTE?: InputMaybe<Scalars['Int']['input']>;
+  directionNEQ?: InputMaybe<Scalars['Int']['input']>;
+  gold?: InputMaybe<Scalars['Int']['input']>;
+  goldGT?: InputMaybe<Scalars['Int']['input']>;
+  goldGTE?: InputMaybe<Scalars['Int']['input']>;
+  goldLT?: InputMaybe<Scalars['Int']['input']>;
+  goldLTE?: InputMaybe<Scalars['Int']['input']>;
+  goldNEQ?: InputMaybe<Scalars['Int']['input']>;
+  joined_time?: InputMaybe<Scalars['Int']['input']>;
+  joined_timeGT?: InputMaybe<Scalars['Int']['input']>;
+  joined_timeGTE?: InputMaybe<Scalars['Int']['input']>;
+  joined_timeLT?: InputMaybe<Scalars['Int']['input']>;
+  joined_timeLTE?: InputMaybe<Scalars['Int']['input']>;
+  joined_timeNEQ?: InputMaybe<Scalars['Int']['input']>;
+  last_point?: InputMaybe<Scalars['Int']['input']>;
+  last_pointGT?: InputMaybe<Scalars['Int']['input']>;
+  last_pointGTE?: InputMaybe<Scalars['Int']['input']>;
+  last_pointLT?: InputMaybe<Scalars['Int']['input']>;
+  last_pointLTE?: InputMaybe<Scalars['Int']['input']>;
+  last_pointNEQ?: InputMaybe<Scalars['Int']['input']>;
+  last_time?: InputMaybe<Scalars['Int']['input']>;
+  last_timeGT?: InputMaybe<Scalars['Int']['input']>;
+  last_timeGTE?: InputMaybe<Scalars['Int']['input']>;
+  last_timeLT?: InputMaybe<Scalars['Int']['input']>;
+  last_timeLTE?: InputMaybe<Scalars['Int']['input']>;
+  last_timeNEQ?: InputMaybe<Scalars['Int']['input']>;
+  position?: InputMaybe<Scalars['Int']['input']>;
+  positionGT?: InputMaybe<Scalars['Int']['input']>;
+  positionGTE?: InputMaybe<Scalars['Int']['input']>;
+  positionLT?: InputMaybe<Scalars['Int']['input']>;
+  positionLTE?: InputMaybe<Scalars['Int']['input']>;
+  positionNEQ?: InputMaybe<Scalars['Int']['input']>;
+  steps?: InputMaybe<Scalars['Int']['input']>;
+  stepsGT?: InputMaybe<Scalars['Int']['input']>;
+  stepsGTE?: InputMaybe<Scalars['Int']['input']>;
+  stepsLT?: InputMaybe<Scalars['Int']['input']>;
+  stepsLTE?: InputMaybe<Scalars['Int']['input']>;
+  stepsNEQ?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type Query = {
   __typename?: 'Query';
+  buildingComponents?: Maybe<BuildingConnection>;
   entities?: Maybe<EntityConnection>;
   entity: Entity;
   event: Event;
   events?: Maybe<EventConnection>;
-  movesComponents?: Maybe<MovesConnection>;
-  positionComponents?: Maybe<PositionConnection>;
+  landComponents?: Maybe<LandConnection>;
+  playerComponents?: Maybe<PlayerConnection>;
   system: System;
   systemCall: SystemCall;
   systemCalls?: Maybe<SystemCallConnection>;
   systems?: Maybe<SystemConnection>;
+  townhallComponents?: Maybe<TownhallConnection>;
+};
+
+
+export type QueryBuildingComponentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  order?: InputMaybe<BuildingOrder>;
+  where?: InputMaybe<BuildingWhereInput>;
 };
 
 
@@ -125,7 +277,7 @@ export type QueryEntitiesArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
-  keys: Array<Scalars['String']['input']>;
+  keys?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   last?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -140,19 +292,23 @@ export type QueryEventArgs = {
 };
 
 
-export type QueryMovesComponentsArgs = {
+export type QueryLandComponentsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  order?: InputMaybe<LandOrder>;
+  where?: InputMaybe<LandWhereInput>;
 };
 
 
-export type QueryPositionComponentsArgs = {
+export type QueryPlayerComponentsArgs = {
   after?: InputMaybe<Scalars['Cursor']['input']>;
   before?: InputMaybe<Scalars['Cursor']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+  order?: InputMaybe<PlayerOrder>;
+  where?: InputMaybe<PlayerWhereInput>;
 };
 
 
@@ -163,6 +319,16 @@ export type QuerySystemArgs = {
 
 export type QuerySystemCallArgs = {
   id: Scalars['Int']['input'];
+};
+
+
+export type QueryTownhallComponentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  order?: InputMaybe<TownhallOrder>;
+  where?: InputMaybe<TownhallWhereInput>;
 };
 
 export type System = {
@@ -209,26 +375,88 @@ export type SystemEdge = {
   node?: Maybe<System>;
 };
 
-export type GetEntitiesQueryVariables = Exact<{ [key: string]: never; }>;
+export type Townhall = {
+  __typename?: 'Townhall';
+  entity?: Maybe<Entity>;
+  gold?: Maybe<Scalars['u64']['output']>;
+};
+
+export type TownhallConnection = {
+  __typename?: 'TownhallConnection';
+  edges?: Maybe<Array<Maybe<TownhallEdge>>>;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type TownhallEdge = {
+  __typename?: 'TownhallEdge';
+  cursor: Scalars['Cursor']['output'];
+  node?: Maybe<Townhall>;
+};
+
+export type TownhallOrder = {
+  direction: Direction;
+  field: TownhallOrderOrderField;
+};
+
+export enum TownhallOrderOrderField {
+  Gold = 'GOLD'
+}
+
+export type TownhallWhereInput = {
+  gold?: InputMaybe<Scalars['Int']['input']>;
+  goldGT?: InputMaybe<Scalars['Int']['input']>;
+  goldGTE?: InputMaybe<Scalars['Int']['input']>;
+  goldLT?: InputMaybe<Scalars['Int']['input']>;
+  goldLTE?: InputMaybe<Scalars['Int']['input']>;
+  goldNEQ?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type GetAllPlayersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetEntitiesQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: string | null, components?: Array<{ __typename: 'Moves', remaining?: any | null } | { __typename: 'Position', x?: any | null, y?: any | null } | null> | null } | null } | null> | null } | null };
+export type GetAllPlayersQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, components?: Array<{ __typename: 'Building' } | { __typename: 'Land' } | { __typename: 'Player', joined_time?: any | null, direction?: any | null, gold?: any | null, position?: any | null, steps?: any | null, last_point?: any | null, last_time?: any | null } | { __typename: 'Townhall' } | null> | null } | null } | null> | null } | null };
+
+export type GetAllBuildingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export const GetEntitiesDocument = gql`
-    query getEntities {
+export type GetAllBuildingsQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, components?: Array<{ __typename: 'Building' } | { __typename: 'Land', building_type?: any | null, price?: any | null, owner?: any | null } | { __typename: 'Player' } | { __typename: 'Townhall' } | null> | null } | null } | null> | null } | null };
+
+
+export const GetAllPlayersDocument = gql`
+    query getAllPlayers {
   entities(keys: ["%"]) {
     edges {
       node {
         keys
         components {
           __typename
-          ... on Moves {
-            remaining
+          ... on Player {
+            joined_time
+            direction
+            gold
+            position
+            steps
+            last_point
+            last_time
           }
-          ... on Position {
-            x
-            y
+        }
+      }
+    }
+  }
+}
+    `;
+export const GetAllBuildingsDocument = gql`
+    query getAllBuildings {
+  entities(keys: ["%"]) {
+    edges {
+      node {
+        keys
+        components {
+          __typename
+          ... on Land {
+            building_type
+            price
+            owner
           }
         }
       }
@@ -241,11 +469,15 @@ export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, str
 
 
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
-const GetEntitiesDocumentString = print(GetEntitiesDocument);
+const GetAllPlayersDocumentString = print(GetAllPlayersDocument);
+const GetAllBuildingsDocumentString = print(GetAllBuildingsDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
-    getEntities(variables?: GetEntitiesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetEntitiesQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
-        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetEntitiesQuery>(GetEntitiesDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getEntities', 'query');
+    getAllPlayers(variables?: GetAllPlayersQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetAllPlayersQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetAllPlayersQuery>(GetAllPlayersDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getAllPlayers', 'query');
+    },
+    getAllBuildings(variables?: GetAllBuildingsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetAllBuildingsQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetAllBuildingsQuery>(GetAllBuildingsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getAllBuildings', 'query');
     }
   };
 }

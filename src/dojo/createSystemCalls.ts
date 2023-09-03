@@ -1,5 +1,5 @@
 import { SetupNetworkResult } from "./setupNetwork";
-import { Account, InvokeTransactionReceiptResponse, shortString } from "starknet";
+import { Account, InvokeTransactionReceiptResponse, num, shortString } from "starknet";
 import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs";
 import { uuid } from "@latticexyz/utils";
 import { ClientComponents } from "./createClientComponents";
@@ -10,7 +10,7 @@ export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
 export function createSystemCalls(
     { execute, contractComponents }: SetupNetworkResult,
-    { Position, Moves }: ClientComponents
+    { Player }: ClientComponents
 ) {
     const roll =async (signer:Account) => {
         
@@ -20,17 +20,17 @@ export function createSystemCalls(
 
         const entityId = parseInt(signer.address) as EntityIndex;
 
-        const positionId = uuid();
-        Position.addOverride(positionId, {
-            entity: entityId,
-            value: { x: 0, y: 1 },
-        });
+        // const positionId = uuid();
+        // Position.addOverride(positionId, {
+        //     entity: entityId,
+        //     value: { x: 0, y: 1 },
+        // });
 
-        const movesId = uuid();
-        Moves.addOverride(movesId, {
-            entity: entityId,
-            value: { remaining: 100 },
-        });
+        // const movesId = uuid();
+        // Moves.addOverride(movesId, {
+        //     entity: entityId,
+        //     value: { remaining: 100 },
+        // });
 
         try {
             const tx = await execute(signer, "spawn", []);
@@ -42,18 +42,21 @@ export function createSystemCalls(
             console.log(events);
             const entity = parseInt(events[0].entity.toString()) as EntityIndex
 
-            const movesEvent = events[0] as Moves;
-            setComponent(contractComponents.Moves, entity, { remaining: movesEvent.remaining })
+            const playerEvent = events[0] as Player;
+            setComponent(contractComponents.Player, entity, { position: playerEvent.position })
 
-            const positionEvent = events[1] as Position;
-            setComponent(contractComponents.Position, entity, { x: positionEvent.x, y: positionEvent.y+1 })
+            // const movesEvent = events[0] as Moves;
+            // setComponent(contractComponents.Moves, entity, { remaining: movesEvent.remaining })
+
+            // const positionEvent = events[1] as Position;
+            // setComponent(contractComponents.Position, entity, { x: positionEvent.x, y: positionEvent.y+1 })
         } catch (e) {
             console.log(e)
-            Position.removeOverride(positionId);
-            Moves.removeOverride(movesId);
+            // Position.removeOverride(positionId);
+            // Moves.removeOverride(movesId);
         } finally {
-            Position.removeOverride(positionId);
-            Moves.removeOverride(movesId);
+            // Position.removeOverride(positionId);
+            // Moves.removeOverride(movesId);
         }
     };
 
@@ -121,11 +124,16 @@ export enum Direction {
 export enum ComponentEvents {
     Moves = "Moves",
     Position = "Position",
+    Player = "Player"
 }
 
 export interface BaseEvent {
     type: ComponentEvents;
     entity: string;
+}
+
+export interface Player extends BaseEvent {
+    position: number
 }
 
 export interface Moves extends BaseEvent {
@@ -139,29 +147,29 @@ export interface Position extends BaseEvent {
 
 export const parseEvent = (
     receipt: InvokeTransactionReceiptResponse
-): Array<Moves | Position> => {
+): Array<Player | Moves> => {
     if (!receipt.events) {
         throw new Error(`No events found`);
     }
 
-    let events: Array<Moves | Position> = [];
+    let events: Array<Player | Moves> = [];
 
     for (let raw of receipt.events) {
         const decodedEventType = shortString.decodeShortString(raw.data[0]);
 
         switch (decodedEventType) {
-            case ComponentEvents.Moves:
+            case ComponentEvents.Player:
                 if (raw.data.length < 6) {
                     throw new Error('Insufficient data for Moves event.');
                 }
 
-                const movesData: Moves = {
-                    type: ComponentEvents.Moves,
+                const playerData: Player = {
+                    type: ComponentEvents.Player,
                     entity: raw.data[2],
-                    remaining: Number(raw.data[5]),
+                    position: Number(raw.data[4]),
                 };
 
-                events.push(movesData);
+                events.push(playerData);
                 break;
 
             case ComponentEvents.Position:
@@ -176,7 +184,7 @@ export const parseEvent = (
                     y: Number(raw.data[6]) - POSITION_OFFSET,
                 };
 
-                events.push(positionData);
+                // events.push(positionData);
                 break;
 
             default:

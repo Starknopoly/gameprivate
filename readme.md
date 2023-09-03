@@ -4,7 +4,14 @@ The pattern here is inherited from mud.dev and is a simple example of how to use
 
 ### Steps to Execute the Example
 
-Firstly, clone the [dojo-starter](https://github.com/dojoengine/dojo-starter) project and follow the given instructions to ensure it's functioning correctly. This step is crucial as this client displays data obtained from the project.
+Clone repository
+`
+git clone https://github.com/Starknopoly/gameprivate --recursive
+`
+
+* Build contracts
+
+* Build Frontend
 
 Subsequently, clone this project and execute the following commands in the terminal:
 

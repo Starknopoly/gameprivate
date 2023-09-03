@@ -1,16 +1,36 @@
-query getEntities {
+query getAllPlayers {
   entities(keys: ["%"]) {
     edges {
       node {
         keys
         components {
           __typename
-          ... on Moves {
-            remaining
+          ... on Player {
+            joined_time
+            direction
+            gold
+            position
+            steps
+            last_point
+            last_time
           }
-          ... on Position {
-            x
-            y
+        }
+      }
+    }
+  }
+}
+
+query getAllBuildings {
+  entities(keys: ["%"]) {
+    edges {
+      node {
+        keys
+        components {
+          __typename
+          ... on Land {
+            building_type
+            price
+            owner
           }
         }
       }

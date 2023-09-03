@@ -4,55 +4,19 @@ import { defineComponent, Type as RecsType, World } from "@latticexyz/recs";
 
 export function defineContractComponents(world: World) {
   return {
-    Moves: (() => {
-      const name = "Moves";
+    Player: (() => {
+      const name = "Player";
       return defineComponent(
         world,
         {
-          remaining: RecsType.Number,
-        },
-        {
-          metadata: {
-            name: name,
-          },
-        }
-      );
-    })(),
-    Position: (() => {
-      const name = "Position";
-      return defineComponent(
-        world,
-        {
-          x: RecsType.Number,
-          y: RecsType.Number,
-        },
-        {
-          metadata: {
-            name: name,
-          },
-        }
-      );
-    })(),
-    AuthStatus: (() => {
-      const name = "AuthStatus";
-      return defineComponent(
-        world,
-        {
-          is_authorized: RecsType.Boolean,
-        },
-        {
-          metadata: {
-            name: name,
-          },
-        }
-      );
-    })(),
-    AuthRole: (() => {
-      const name = "AuthRole";
-      return defineComponent(
-        world,
-        {
-          id: RecsType.Number,
+          id: RecsType.Entity,
+          joined_time: RecsType.Number,
+          direction: RecsType.Number,
+          gold: RecsType.Number,
+          position: RecsType.Number,  
+          steps: RecsType.Number, 
+          last_point: RecsType.Number, // 最近一次掷出的点数
+          last_time: RecsType.Number, //
         },
         {
           metadata: {
