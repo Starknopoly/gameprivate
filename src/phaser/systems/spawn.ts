@@ -3,6 +3,7 @@ import { PhaserLayer } from "..";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { TILE_HEIGHT, TILE_WIDTH, Animations, MAP_WIDTH } from "../constants";
 import { store } from "../../store/store";
+import { positionToCoorp } from "../../utils";
 
 export const spawn = (layer: PhaserLayer) => {
     // const {account} = store()
@@ -36,10 +37,7 @@ export const spawn = (layer: PhaserLayer) => {
         const position = player_.position - 1
         const ycount = Math.floor(position / size)
 
-        var x = position % size
         if (ycount % 2 == 0) {
-            x = position % size
-
             playerObj.setComponent({
                 id: 'animation',
                 once: (sprite) => {
@@ -48,8 +46,6 @@ export const spawn = (layer: PhaserLayer) => {
             });
         }
         if (ycount % 2 == 1) {
-            x = size - position % size - 1
-
             playerObj.setComponent({
                 id: 'animation',
                 once: (sprite) => {
@@ -57,7 +53,7 @@ export const spawn = (layer: PhaserLayer) => {
                 }
             });
         }
-        const y = ycount * 2 + 1
+        const {x,y}=positionToCoorp(position)
         // console.log("");
         
         // defineSystem position:5580,x=-31,y=61

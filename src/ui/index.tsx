@@ -6,6 +6,7 @@ import RollDice from "./rolldice";
 import ActionsUI from "./actions";
 import PlayerPanel from "./playerpanel";
 import LandStatusPanel from "./landstatuspanel";
+import BottomIcons from "./bottomicons";
 
 export const UI = () => {
     const layers = store((state) => {
@@ -35,6 +36,10 @@ export const UI = () => {
             <TopRightContainer>
                 <LandStatusPanel/>
             </TopRightContainer>
+
+            <BottomRightContainer>
+                <BottomIcons/>
+            </BottomRightContainer>
         </Wrapper>
     );
 };
@@ -77,6 +82,17 @@ const BottomContainer = styled.div`
     position: absolute;
     bottom: 5%;
     left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    display: flex;
+    flex-direaction: row;
+    gap: 20px;
+`;
+
+const BottomRightContainer = styled.div`
+    position: absolute;
+    bottom: 2%;
+    right: 2%;
     transform: translate(-50%, -50%);
     color: white;
     display: flex;

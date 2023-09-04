@@ -1,4 +1,6 @@
+import { Coord } from "@latticexyz/utils";
 import { Direction } from "../dojo/createSystemCalls";
+import { MAP_WIDTH } from "../phaser/constants";
 
 export function isValidArray(input: any): input is any[] {
     return Array.isArray(input) && input != null;
@@ -45,4 +47,18 @@ export function updatePositionWithDirection(direction: Direction, value: { x: nu
 
 export function getRandomIntBetween(m: number, n: number): number {
     return m + Math.floor(Math.random() * (n - m + 1));
+}
+
+export function positionToCoorp(position: number): Coord {
+    const size = MAP_WIDTH
+    const ycount = Math.floor(position / size)
+    var x = position % size
+    if (ycount % 2 == 0) {
+        x = position % size;
+    }
+    if (ycount % 2 == 1) {
+        x = size - position % size - 1
+    }
+    const y = ycount * 2 + 1
+    return { x: x, y: y };
 }
