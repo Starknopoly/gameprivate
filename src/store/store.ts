@@ -2,7 +2,8 @@ import { create } from "zustand";
 import { NetworkLayer } from "../dojo/createNetworkLayer";
 import { PhaserLayer } from "../phaser";
 import { Account } from "starknet";
-import { Player } from "../dojo/createSystemCalls";
+import { Player } from "../generated/graphql";
+// import { Player } from "../dojo/createSystemCalls";
 
 export type Store = {
     networkLayer: NetworkLayer | null;

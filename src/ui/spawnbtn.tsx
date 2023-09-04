@@ -60,7 +60,7 @@ export const SpawnBtn = () => {
                                     last_point: player.last_point,
                                     last_time: player.last_time
                                 })
-                                store.setState({player})
+                                // store.setState({player})
                                 return
                             }
                         }
@@ -71,9 +71,9 @@ export const SpawnBtn = () => {
         console.log("click spwan account:"+account.address);
         
         const result  = await spawn(account)
-        if(result){
-            store.setState({player:result})
-        }
+        // if(result){
+        //     store.setState({player:result})
+        // }
     }
 
     return (

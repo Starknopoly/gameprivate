@@ -166,7 +166,6 @@ export interface Player extends BaseEvent {
     steps: number,
     last_point: number,
     last_time: number,
-
 }
 
 export interface Moves extends BaseEvent {

@@ -2,6 +2,7 @@ import { Has, defineSystem, getComponentValueStrict } from "@latticexyz/recs";
 import { PhaserLayer } from "..";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { TILE_HEIGHT, TILE_WIDTH, Animations } from "../constants";
+import { store } from "../../store/store";
 
 export const spawn = (layer: PhaserLayer) => {
     const {
@@ -28,6 +29,8 @@ export const spawn = (layer: PhaserLayer) => {
 
     defineSystem(world, [Has(Player)], ({ entity }) => {
         const player_ = getComponentValueStrict(Player, entity);
+
+        store.setState({player:player_})
 
         const playerObj = objectPool.get(entity, "Sprite")
 
