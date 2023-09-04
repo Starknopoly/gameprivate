@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BuildingList, OptionType } from "./buildinglist";
 import { ClickWrapper } from "./clickWrapper";
 import { useDojo } from "../hooks/useDojo";
@@ -6,6 +6,8 @@ import { Tileset } from "../artTypes/world";
 import { EntityIndex, getComponentValue } from "@latticexyz/recs";
 import { store } from "../store/store";
 import { Player } from "../generated/graphql";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { MAP_WIDTH, TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
 
 export default function ActionsUI() {
     const {account,player} = store();
@@ -14,6 +16,7 @@ export default function ActionsUI() {
     const {
         scenes: {
             Main: {
+                camera,
                 maps: {
                     Main: { putTileAt },
                 },
@@ -24,7 +27,12 @@ export default function ActionsUI() {
         },
     } = phaserLayer;
 
-
+    useEffect(()=>{
+        const x = MAP_WIDTH/2
+        const y = x
+        const pixelPosition = tileCoordToPixelCoord({ x, y }, TILE_WIDTH, TILE_HEIGHT);
+        camera.centerOn(pixelPosition?.x!, pixelPosition?.y!);
+    },[])
 
     const [selectBuild, setSelectBuild] = useState("Hotel")
     const options: OptionType[] = [
