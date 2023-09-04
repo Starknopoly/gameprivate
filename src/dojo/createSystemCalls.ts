@@ -11,41 +11,6 @@ export function createSystemCalls(
     { execute, contractComponents }: SetupNetworkResult,
     { Player }: ClientComponents
 ) {
-    const move = (signer: Account, direction: Direction, playerEvent: Player) => {
-        const entityId = parseInt(signer.address) as EntityIndex;
-
-        //TODO : request Player on chain
-        const value = getComponentValue(contractComponents.Player, entityId)
-        console.log(value);
-        if (!value) {
-            return
-        }
-        const size = MAP_WIDTH
-        var position = value.position
-        if (direction == Direction.Left) {
-            position -= 1
-            if (position < 0) {
-                position = size * size
-            }
-        }
-        if (direction == Direction.Right) {
-            position += 1
-            if (position == size * size+1) {
-                position = 1
-            }
-        }
-
-        setComponent(contractComponents.Player, entityId, {
-            position: position,
-            joined_time: playerEvent.joined_time,
-            direction: playerEvent.direction,
-            gold: playerEvent.gold,
-            steps: playerEvent.steps,
-            last_point: playerEvent.last_point,
-            last_time: playerEvent.last_time
-        })
-    }
-
     const roll = async (signer: Account) => {
         console.log("roll signer:" + signer.address);
         // const entityId = parseInt(signer.address) as EntityIndex;
@@ -133,7 +98,6 @@ export function createSystemCalls(
     };
 
     return {
-        move,
         spawn,
         roll,
         buyBuilding,

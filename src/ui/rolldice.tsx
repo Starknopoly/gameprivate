@@ -11,6 +11,9 @@ import '../App.css';
 import { Direction, Player } from "../dojo/createSystemCalls"
 import { getRandomIntBetween } from "../utils"
 import { store } from "../store/store";
+import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs"
+import { MAP_WIDTH } from "../phaser/constants"
+import { Account } from "starknet"
 
 export default function RollDice() {
     const MaxRollTimes = 12
@@ -29,7 +32,8 @@ export default function RollDice() {
     const dices = [dice1, dice2, dice3, dice4, dice5, dice6]
     const {
         networkLayer: {
-            systemCalls: { roll,move },
+            components,
+            systemCalls: { roll },
         },
     } = useDojo();
 
@@ -41,13 +45,6 @@ export default function RollDice() {
                 random1 = getRandomIntBetween(0, 5);
             }
             setDice1(dices[random1])
-
-            // var random2 = getRandomIntBetween(0, 5);
-            // if (dices[random2] == diceImg2) {
-            //     random2 = getRandomIntBetween(0, 5);
-            // }
-            // setDice2(dices[random2])
-
         } else {
             clearInterval(rollInternalIdRef.current)
             rollCountRef.current = 0;
@@ -79,6 +76,42 @@ export default function RollDice() {
         if(playerEventRef.current)
         move(account, Direction.Right,playerEventRef.current)
     }
+
+    const move = (signer: Account, direction: Direction, playerEvent: Player) => {
+        const entityId = parseInt(signer.address) as EntityIndex;
+
+        //TODO : request Player on chain
+        const value = getComponentValue(components.Player, entityId)
+        console.log(value);
+        if (!value) {
+            return
+        }
+        const size = MAP_WIDTH
+        var position = value.position
+        if (direction == Direction.Left) {
+            position -= 1
+            if (position < 0) {
+                position = size * size
+            }
+        }
+        if (direction == Direction.Right) {
+            position += 1
+            if (position == size * size+1) {
+                position = 1
+            }
+        }
+
+        setComponent(components.Player, entityId, {
+            position: position,
+            joined_time: playerEvent.joined_time,
+            direction: playerEvent.direction,
+            gold: playerEvent.gold,
+            steps: playerEvent.steps,
+            last_point: playerEvent.last_point,
+            last_time: playerEvent.last_time
+        })
+    }
+
 
     const rollDice = async () => {
         if(!account){
