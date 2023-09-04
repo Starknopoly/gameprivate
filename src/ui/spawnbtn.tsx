@@ -1,13 +1,16 @@
 import { EntityIndex, setComponent } from "@latticexyz/recs";
 import { useDojo } from "../hooks/useDojo";
 import { ClickWrapper } from "./clickWrapper";
+import { useEffect } from "react";
+import { store } from "../store/store";
 
 export const SpawnBtn = () => {
+    const {account} = store();
+
     const {
         account: {
             create,
             list,
-            account,
             select,
             isDeploying
         },
@@ -18,7 +21,19 @@ export const SpawnBtn = () => {
         },
     } = useDojo();
 
+    useEffect(()=>{
+        if(account){
+            console.log("spawn account change : "+account.address);
+        }else{
+            console.log("spawn account change : null");
+        }
+    },[account])
+
     const startGame = async () => {
+        if(!account){
+            alert("Create burner wallet first.")
+            return
+        }
         const allPlayers = await graphSdk.getAllPlayers()
         console.log(allPlayers);
         const edges = allPlayers.data.entities?.edges
@@ -52,6 +67,8 @@ export const SpawnBtn = () => {
                 }
             }
         }
+        console.log("click spwan account:"+account.address);
+        
         spawn(account)
     }
 

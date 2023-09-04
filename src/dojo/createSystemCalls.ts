@@ -42,8 +42,7 @@ export function createSystemCalls(
     }
 
     const roll = async (signer: Account) => {
-        console.log(signer.address)
-
+        console.log("roll signer:"+signer.address);
         // const entityId = parseInt(signer.address) as EntityIndex;
 
         // TODO: override steps
@@ -93,6 +92,7 @@ export function createSystemCalls(
 
     const spawn = async (signer: Account) => {
         console.log(Player);
+        console.log("spawn signer:"+signer.address);
         
         // const entityId = parseInt(signer.address) as EntityIndex;
         try {

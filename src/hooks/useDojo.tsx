@@ -3,11 +3,13 @@ import { NetworkLayer } from "../dojo/createNetworkLayer";
 import { PhaserLayer } from "../phaser";
 import { store } from "../store/store";
 import { useBurner } from "@dojoengine/create-burner";
+import { useEffect, useState } from "react";
 
 export type UIStore = ReturnType<typeof useDojo>;
 
 export const useDojo = () => {
     const { networkLayer, phaserLayer } = store();
+    // const [realAccount,setRealAccount] = useState<Account>()
     const provider = new RpcProvider({
         nodeUrl: import.meta.env.VITE_PUBLIC_NODE_URL,
     });
@@ -22,6 +24,12 @@ export const useDojo = () => {
         }
     );
 
+    useEffect(()=>{
+        console.log("usedojo account "+account);
+        // setRealAccount(account)
+        store.setState({account})
+    },[account])
+
     if (phaserLayer === null) {
         throw new Error("Store not initialized");
     }
@@ -33,7 +41,7 @@ export const useDojo = () => {
             create,
             list,
             get,
-            account: account ? account : masterAccount,
+            // account:realAccount,
             select,
             isDeploying
         }

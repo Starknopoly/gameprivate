@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import dice1 from "../assets/dices/dice1.png"
 import dice2 from "../assets/dices/dice2.png"
 import dice3 from "../assets/dices/dice3.png"
@@ -10,6 +10,7 @@ import { ClickWrapper } from "./clickWrapper"
 import '../App.css';
 import { Direction, Player } from "../dojo/createSystemCalls"
 import { getRandomIntBetween } from "../utils"
+import { store } from "../store/store";
 
 export default function RollDice() {
     const MaxRollTimes = 12
@@ -24,15 +25,22 @@ export default function RollDice() {
     const walkInternalIdRef = useRef<NodeJS.Timer>()
     const walkCountRef = useRef(0)
 
+    const {account} = store();
     const dices = [dice1, dice2, dice3, dice4, dice5, dice6]
     const {
-        account: {
-            account
-        },
         networkLayer: {
             systemCalls: { roll,move },
         },
     } = useDojo();
+
+
+    useEffect(()=>{
+        if(account){
+            console.log("rolldice account change : "+account.address);
+        }else{
+            console.log("rolldice account change : null");
+        }
+    },[account])
 
     const waitForChainResult = async () => {
         rollCountRef.current = rollCountRef.current + 1;
@@ -61,6 +69,10 @@ export default function RollDice() {
     }
 
     const walk = async () => {
+        if(!account){
+            alert("Create burner wallet first.")
+            return
+        }
         if (walkCountRef.current == playerEventRef.current?.last_point) {
             walkCountRef.current = 0
             playerEventRef.current = undefined
@@ -74,6 +86,10 @@ export default function RollDice() {
     }
 
     const rollDice = async () => {
+        if(!account){
+            alert("Create burner wallet first.")
+            return
+        }
         console.log("rolldice " + rollCountRef.current);
 
         if (rollCountRef.current != 0) {
@@ -86,6 +102,7 @@ export default function RollDice() {
         const intervalId = setInterval(waitForChainResult, 200);
         rollInternalIdRef.current = intervalId
 
+        console.log("click roll account:"+account.address);
         const result = await roll(account)
         console.log("rolldice result:"+result);
         if(result){
