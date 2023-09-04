@@ -27,15 +27,16 @@ export default function PlayerPanel() {
 
         defineSystem(world, [Has(Player)], ({ entity }) => {
             const player_ = getComponentValueStrict(Player, entity);
-            console.log("defineSystem account:"+account);
             
             if (account) {
                 const entityId = parseInt(account.address) as EntityIndex;
                 if (entity == entityId) {
                     store.setState({ player: player_ })
+                }else{
+                    return
                 }
             }
-
+            console.log("defineSystem account:"+account);
             if (player_) {
                 setPlayer(player_)
             }
