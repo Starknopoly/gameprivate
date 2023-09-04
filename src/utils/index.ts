@@ -63,6 +63,22 @@ export function positionToCoorp(position: number): Coord {
     return { x: x, y: y };
 }
 
+export function positionToBuildingCoorp(position:number):Coord{
+    const size = MAP_WIDTH
+    position = position - 1
+    const ycount = Math.floor(position / size)
+    var x = position % size
+    if (ycount % 2 == 0) {
+        x = position % size;
+    }
+    if (ycount % 2 == 1) {
+        x = size - position % size - 1
+    }
+    const y = ycount * 2
+
+    return {x:x,y:y}
+}
+
 export function truncateString(str: string, frontLen: number, endLen: number) {
     return str.slice(0, frontLen) + '...' + str.slice(-endLen);
   }

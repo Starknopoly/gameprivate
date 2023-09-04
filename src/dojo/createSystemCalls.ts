@@ -51,12 +51,12 @@ export function createSystemCalls(
     }
 
     //TODO : buy building on chain
-    const buyBuilding = async (signer: Account, coord: WorldCoord, buidingId: number) => {
+    const buyBuilding = async (signer: Account, position: number, buidingId: number) => {
 
     }
 
     //TODO : buy back on chain
-    const buyBack = async (signer: Account, coord: WorldCoord) => {
+    const buyBack = async (signer: Account, position: number) => {
 
     }
 

@@ -7,9 +7,10 @@ import { store } from "../store/store";
 import { Player } from "../generated/graphql";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { MAP_WIDTH, TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
+import { positionToBuildingCoorp, positionToCoorp } from "../utils";
 
 export default function ActionsUI() {
-    const {account,player} = store();
+    const { account, player } = store();
     const { phaserLayer } = useDojo()
 
     const {
@@ -22,16 +23,16 @@ export default function ActionsUI() {
             },
         },
         networkLayer: {
-            systemCalls: { buyBuilding,buyBack },
+            systemCalls: { buyBuilding, buyBack },
         },
     } = phaserLayer;
 
-    useEffect(()=>{
-        const x = MAP_WIDTH/2
+    useEffect(() => {
+        const x = MAP_WIDTH / 2
         const y = x
         const pixelPosition = tileCoordToPixelCoord({ x, y }, TILE_WIDTH, TILE_HEIGHT);
         camera.centerOn(pixelPosition?.x!, pixelPosition?.y!);
-    },[])
+    }, [])
 
     const [selectBuild, setSelectBuild] = useState("Hotel")
     const options: OptionType[] = [
@@ -47,15 +48,16 @@ export default function ActionsUI() {
 
 
     const buildClick = () => {
-        if(!account){
+        if (!account) {
             alert("Create burner wallet first.")
             return
         }
-        if(!player){
+        if (!player) {
             alert("Start game first.")
             return
         }
-        const coord = getCoordNow(player)
+
+        const coord = positionToBuildingCoorp(player.position)
         //TODO : check there is building
 
         var buildingId = Tileset.Bank
@@ -64,44 +66,26 @@ export default function ActionsUI() {
             case "Hotel": buildingId = Tileset.Hotel; break;
             case "Starkbucks": buildingId = Tileset.Starkbucks; break;
         }
-        putTileAt(coord, buildingId, "Foreground");
+        console.log("buildClick");
+        console.log(coord);
+        putTileAt({ x: coord.x, y: coord.y }, buildingId, "Foreground");
 
-        buyBuilding(account, coord, buildingId)
+        buyBuilding(account, player.position, buildingId)
     }
 
     const buyBackClick = () => {
-        if(!account){
+        if (!account) {
             alert("Create burner wallet first.")
             return
         }
-        if(!player){
+        if (!player) {
             alert("Start game first.")
             return
         }
-        const coord = getCoordNow(player)
+        // const coord = positionToCoorp(player.position)
         //TODO : check there is building
 
-        buyBack(account,coord)
-    }
-
-    const getCoordNow = (player:Player) => {
-        // const entityId = parseInt(address) as EntityIndex;
-        // const player = getComponentValue(networkLayer.components.Player, entityId) as any
-        console.log(player);
-        const position = player.position
-
-        const ycount = Math.floor(position / 100)
-
-        var x = position % 100 - 50
-        if (ycount % 2 == 0) {
-            x = position % 100 - 50
-        }
-        if (ycount % 2 == 1) {
-            x = 50 - position % 100 - 1
-        }
-        const y = ycount * 2 - 50
-        const coord = { x, y };
-        return coord
+        buyBack(account, player.position)
     }
 
     return (<ClickWrapper style={{ display: "flex", flexDirection: "column" }}>

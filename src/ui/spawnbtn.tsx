@@ -2,7 +2,6 @@ import { EntityIndex, setComponent } from "@latticexyz/recs";
 import { useDojo } from "../hooks/useDojo";
 import { ClickWrapper } from "./clickWrapper";
 import { store } from "../store/store";
-import { useEffect } from "react";
 
 export const SpawnBtn = () => {
     const {account,player} = store();
