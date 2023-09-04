@@ -115,6 +115,8 @@ export function createSystemCalls(
                 last_point: playerEvent.last_point,
                 last_time: playerEvent.last_time
             })
+            return playerEvent
+            // store.setState({player})
         } catch (e) {
             console.log(e)
             // Player.removeOverride(positionId);
@@ -123,6 +125,7 @@ export function createSystemCalls(
             // Position.removeOverride(positionId);
             // Moves.removeOverride(movesId);
         }
+        return null
     };
 
     return {

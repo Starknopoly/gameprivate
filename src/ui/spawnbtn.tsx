@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { store } from "../store/store";
 
 export const SpawnBtn = () => {
-    const {account} = store();
+    const {account,player} = store();
 
     const {
         account: {
@@ -60,6 +60,7 @@ export const SpawnBtn = () => {
                                     last_point: player.last_point,
                                     last_time: player.last_time
                                 })
+                                store.setState({player})
                                 return
                             }
                         }
@@ -69,7 +70,10 @@ export const SpawnBtn = () => {
         }
         console.log("click spwan account:"+account.address);
         
-        spawn(account)
+        const result  = await spawn(account)
+        if(result){
+            store.setState({player:result})
+        }
     }
 
     return (
@@ -79,20 +83,23 @@ export const SpawnBtn = () => {
             }
             
             <div className="card">
-                select signer:{" "}
+                Account : {" "}
                 <select onChange={e => select(e.target.value)}>
                     {list().map((account, index) => {
                         return <option value={account.address} key={index}>{account.address}</option>
                     })}
                 </select>
             </div>
-            <button
+            {
+                player?<></>: <button
                 onClick={() => {
                     startGame();
                 }}
             >
                 Start Game
             </button>
+            }
+           
         </ClickWrapper>
     );
 };

@@ -25,7 +25,7 @@ export default function RollDice() {
     const walkInternalIdRef = useRef<NodeJS.Timer>()
     const walkCountRef = useRef(0)
 
-    const {account} = store();
+    const {account,player} = store();
     const dices = [dice1, dice2, dice3, dice4, dice5, dice6]
     const {
         networkLayer: {
@@ -73,6 +73,10 @@ export default function RollDice() {
             alert("Create burner wallet first.")
             return
         }
+        if(!player){
+            alert("Start game first.")
+            return
+        }
         if (walkCountRef.current == playerEventRef.current?.last_point) {
             walkCountRef.current = 0
             playerEventRef.current = undefined
@@ -88,6 +92,10 @@ export default function RollDice() {
     const rollDice = async () => {
         if(!account){
             alert("Create burner wallet first.")
+            return
+        }
+        if(!player){
+            alert("Start game first.")
             return
         }
         console.log("rolldice " + rollCountRef.current);

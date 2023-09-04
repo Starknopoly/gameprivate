@@ -4,10 +4,12 @@ import { ClickWrapper } from "./clickWrapper";
 import { useDojo } from "../hooks/useDojo";
 import { Tileset } from "../artTypes/world";
 import { EntityIndex, getComponentValue } from "@latticexyz/recs";
+import { store } from "../store/store";
+import { Player } from "../dojo/createSystemCalls";
 
 export default function ActionsUI() {
-    // usePhaserLayer()
-    const { phaserLayer, networkLayer } = useDojo()
+    const {account,player} = store();
+    const { phaserLayer } = useDojo()
 
     const {
         scenes: {
@@ -18,7 +20,6 @@ export default function ActionsUI() {
             },
         },
         networkLayer: {
-            account,
             systemCalls: { buyBuilding,buyBack },
         },
     } = phaserLayer;
@@ -39,7 +40,15 @@ export default function ActionsUI() {
 
 
     const buildClick = () => {
-        const coord = getCoordNow()
+        if(!account){
+            alert("Create burner wallet first.")
+            return
+        }
+        if(!player){
+            alert("Start game first.")
+            return
+        }
+        const coord = getCoordNow(player)
         //TODO : check there is building
 
         var buildingId = Tileset.Bank
@@ -54,15 +63,23 @@ export default function ActionsUI() {
     }
 
     const buyBackClick = () => {
-        const coord = getCoordNow()
+        if(!account){
+            alert("Create burner wallet first.")
+            return
+        }
+        if(!player){
+            alert("Start game first.")
+            return
+        }
+        const coord = getCoordNow(player)
         //TODO : check there is building
 
         buyBack(account,coord)
     }
 
-    const getCoordNow = () => {
-        const entityId = parseInt(account.address) as EntityIndex;
-        const player = getComponentValue(networkLayer.components.Player, entityId) as any
+    const getCoordNow = (player:Player) => {
+        // const entityId = parseInt(address) as EntityIndex;
+        // const player = getComponentValue(networkLayer.components.Player, entityId) as any
         console.log(player);
         const position = player.position
 
