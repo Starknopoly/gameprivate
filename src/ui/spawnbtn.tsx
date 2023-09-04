@@ -74,7 +74,10 @@ export const SpawnBtn = () => {
 
     return (
         <ClickWrapper>
-            <button onClick={create}>{isDeploying ? "deploying burner" : "create burner"}</button>
+            {
+                account?<></>:<button onClick={create}>{isDeploying ? "deploying burner" : "create burner"}</button>
+            }
+            
             <div className="card">
                 select signer:{" "}
                 <select onChange={e => select(e.target.value)}>
