@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react"
-import dice1 from "../assets/dices/dice1.png"
-import dice2 from "../assets/dices/dice2.png"
-import dice3 from "../assets/dices/dice3.png"
-import dice4 from "../assets/dices/dice4.png"
-import dice5 from "../assets/dices/dice5.png"
-import dice6 from "../assets/dices/dice6.png"
+import dice1 from "/assets/dices/dice1.png"
+import dice2 from "/assets/dices/dice2.png"
+import dice3 from "/assets/dices/dice3.png"
+import dice4 from "/assets/dices/dice4.png"
+import dice5 from "/assets/dices/dice5.png"
+import dice6 from "/assets/dices/dice6.png"
 import { useDojo } from "../hooks/useDojo";
 import { ClickWrapper } from "./clickWrapper"
 import '../App.css';

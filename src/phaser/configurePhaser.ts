@@ -5,7 +5,7 @@ import {
     defineMapConfig,
     defineCameraConfig,
 } from "@latticexyz/phaserx";
-import worldTileset from "../assets/tilesets/world.png";
+import worldTileset from "/assets/tilesets/world.png";
 import { TileAnimations, Tileset } from "../artTypes/world";
 import { Sprites, Assets, Maps, Scenes, TILE_HEIGHT, TILE_WIDTH, Animations } from "./constants";
 
@@ -41,9 +41,9 @@ export const phaserConfig = {
                     type: AssetType.MultiAtlas,
                     key: Assets.MainAtlas,
                     // Add a timestamp to the end of the path to prevent caching
-                    path: `src/assets/atlases/atlas.json?timestamp=${Date.now()}`,
+                    path: `assets/atlases/atlas.json?timestamp=${Date.now()}`,
                     options: {
-                        imagePath: "src/assets/atlases/",
+                        imagePath: "assets/atlases/",
                     },
                 },
             },

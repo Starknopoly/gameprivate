@@ -90,7 +90,6 @@ export const SpawnBtn = () => {
                                     last_point: player.last_point,
                                     last_time: player.last_time
                                 })
-                                // store.setState({player})
                                 return
                             }
                         }
