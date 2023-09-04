@@ -7,6 +7,7 @@ import ActionsUI from "./actions";
 import PlayerPanel from "./playerpanel";
 import LandStatusPanel from "./landstatuspanel";
 import BottomIcons from "./bottomicons";
+import NamesUI from "./names";
 
 export const UI = () => {
     const layers = store((state) => {
@@ -40,6 +41,7 @@ export const UI = () => {
             <BottomRightContainer>
                 <BottomIcons/>
             </BottomRightContainer>
+            <NamesUI/>
         </Wrapper>
     );
 };

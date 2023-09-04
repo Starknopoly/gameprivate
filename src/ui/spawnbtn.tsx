@@ -22,6 +22,8 @@ export const SpawnBtn = () => {
     } = useDojo();
 
     const showAllPlayers =async (edges:any) => {
+        const playersAddress = new Map<EntityIndex,string>()
+
         for (let index = 0; index < edges.length; index++) {
             const element = edges[index];
             // console.log(element);
@@ -31,6 +33,7 @@ export const SpawnBtn = () => {
                         const player = element.node.components[0]
                         if (player && player.__typename=="Player") {
                             const entityId = parseInt(element.node.keys[0]) as EntityIndex;
+                            playersAddress.set(entityId,element.node.keys[0])
                             // console.log("entityId:"+entityId);
                             
                             setComponent(components.Player, entityId, {
@@ -47,6 +50,7 @@ export const SpawnBtn = () => {
                 }
             }
         }
+        store.setState({playersAddress:playersAddress})
     }
 
     const startGame = async () => {

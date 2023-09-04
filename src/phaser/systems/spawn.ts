@@ -54,15 +54,9 @@ export const spawn = (layer: PhaserLayer) => {
             });
         }
         const {x,y}=positionToCoorp(position)
-        // console.log("");
-        
-        // defineSystem position:5580,x=-31,y=61
         console.log("defineSystem position:" + player_.position + ",x=" + x + ",y=" + y+",ycount:"+ycount);
 
         const pixelPosition = tileCoordToPixelCoord({ x, y }, TILE_WIDTH, TILE_HEIGHT);
-        // console.log("defineSystem");
-        // console.log(entity.toString())
-        // console.log(pixelPosition?.x, pixelPosition?.y)
 
         playerObj.setComponent({
             id: 'position',
@@ -71,7 +65,6 @@ export const spawn = (layer: PhaserLayer) => {
                 camera.centerOn(pixelPosition?.x!, pixelPosition?.y!);
             }
         })
-
     });
     // input.onKeyPress(
     //     keys => keys.has("SPACE"),

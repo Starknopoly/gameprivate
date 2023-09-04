@@ -62,3 +62,8 @@ export function positionToCoorp(position: number): Coord {
     const y = ycount * 2 + 1
     return { x: x, y: y };
 }
+
+export function truncateString(str: string, frontLen: number, endLen: number) {
+    return str.slice(0, frontLen) + '...' + str.slice(-endLen);
+  }
+  

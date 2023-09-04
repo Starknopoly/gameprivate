@@ -3,7 +3,6 @@ import { BuildingList, OptionType } from "./buildinglist";
 import { ClickWrapper } from "./clickWrapper";
 import { useDojo } from "../hooks/useDojo";
 import { Tileset } from "../artTypes/world";
-import { EntityIndex, getComponentValue } from "@latticexyz/recs";
 import { store } from "../store/store";
 import { Player } from "../generated/graphql";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";

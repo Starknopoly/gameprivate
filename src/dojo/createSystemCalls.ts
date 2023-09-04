@@ -96,7 +96,6 @@ export function createSystemCalls(
     }
 
     const spawn = async (signer: Account) => {
-        console.log(Player);
         console.log("spawn signer:" + signer.address);
 
         // const entityId = parseInt(signer.address) as EntityIndex;

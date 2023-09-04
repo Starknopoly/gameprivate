@@ -5,6 +5,7 @@ import { useNetworkLayer } from './hooks/useNetworkLayer';
 import { PhaserLayer } from './phaser/phaserLayer';
 import { store } from "./store/store";
 import { UI } from './ui';
+import NamesUI from './ui/names';
 
 function App() {
   const networkLayer = useNetworkLayer();
@@ -22,7 +23,6 @@ function App() {
   return (
     <div>
       <PhaserLayer networkLayer={networkLayer} />
-
       <UI />
     </div>
   );
