@@ -3,6 +3,7 @@ import { useDojo } from "../hooks/useDojo";
 import { useEffect, useState } from "react";
 import { Player } from "../generated/graphql";
 import { store } from "../store/store";
+import { MAP_WIDTH } from "../phaser/constants";
 
 export default function PlayerPanel() {
     const { account, player: storePlayer } = store();
@@ -40,17 +41,19 @@ export default function PlayerPanel() {
             if (player_) {
                 setPlayer(player_)
             }
+            const size = MAP_WIDTH
+            
+        const position = player_.position - 1
+        const ycount = Math.floor(position / size)
 
-            const ycount = Math.floor(player_.position / 100)
-
-            var x = player_.position % 100 - 50
-            if (ycount % 2 == 0) {
-                x = player_.position % 100 - 50
-            }
-            if (ycount % 2 == 1) {
-                x = 50 - player_.position % 100 - 1
-            }
-            const y = ycount * 2 - 50 + 1
+        var x = position % size
+        if (ycount % 2 == 0) {
+            x = position % size
+        }
+        if (ycount % 2 == 1) {
+            x = size - position % size
+        }
+        const y = ycount * 2 + 1
             // defineSystem position:5580,x=-31,y=61
             console.log("defineSystem position:" + player_.position + ",x=" + x + ",y=" + y);
 

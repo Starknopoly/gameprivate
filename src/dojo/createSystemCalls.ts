@@ -3,6 +3,7 @@ import { Account, InvokeTransactionReceiptResponse, shortString } from "starknet
 import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs";
 import { ClientComponents } from "./createClientComponents";
 import { WorldCoord } from "@latticexyz/phaserx/dist/types";
+import { MAP_WIDTH } from "../phaser/constants";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
@@ -19,15 +20,19 @@ export function createSystemCalls(
         if (!value) {
             return
         }
+        const size = MAP_WIDTH
         var position = value.position
         if (direction == Direction.Left) {
             position -= 1
             if (position < 0) {
-                position = 10000
+                position = size * size
             }
         }
         if (direction == Direction.Right) {
             position += 1
+            if (position == size * size+1) {
+                position = 1
+            }
         }
 
         setComponent(contractComponents.Player, entityId, {
@@ -42,7 +47,7 @@ export function createSystemCalls(
     }
 
     const roll = async (signer: Account) => {
-        console.log("roll signer:"+signer.address);
+        console.log("roll signer:" + signer.address);
         // const entityId = parseInt(signer.address) as EntityIndex;
 
         // TODO: override steps
@@ -82,7 +87,7 @@ export function createSystemCalls(
 
     //TODO : buy building on chain
     const buyBuilding = async (signer: Account, coord: WorldCoord, buidingId: number) => {
-        
+
     }
 
     //TODO : buy back on chain
@@ -92,8 +97,8 @@ export function createSystemCalls(
 
     const spawn = async (signer: Account) => {
         console.log(Player);
-        console.log("spawn signer:"+signer.address);
-        
+        console.log("spawn signer:" + signer.address);
+
         // const entityId = parseInt(signer.address) as EntityIndex;
         try {
             const tx = await execute(signer, "spawn", []);

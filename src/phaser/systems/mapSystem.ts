@@ -1,6 +1,7 @@
 import { Tileset } from "../../artTypes/world";
 import { PhaserLayer } from "..";
 import { createNoise2D } from "simplex-noise";
+import { MAP_WIDTH } from "../constants";
 
 export function mapSystem(layer: PhaserLayer) {
     const {
@@ -14,9 +15,10 @@ export function mapSystem(layer: PhaserLayer) {
     } = layer;
 
     const noise = createNoise2D();
+    const size = MAP_WIDTH
 
-    for (let x = -50; x < 50; x++) {
-        for (let y = -100; y < 100; y++) {
+    for (let x = 0; x < size; x++) {
+        for (let y = 0; y < size * 2; y++) {
             if (y % 2 == 0) {
                 const coord = { x, y };
                 const seed = noise(x, y);
@@ -27,7 +29,7 @@ export function mapSystem(layer: PhaserLayer) {
                     putTileAt(coord, Tileset.Forest, "Foreground");
                 }
                 const id = Math.ceil(seed * 100) % 12
-                
+
                 if (id == 0) {
                     putTileAt(coord, Tileset.Bank, "Foreground");
                 } else if (id == 1) {

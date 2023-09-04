@@ -53,7 +53,11 @@ export const SpawnBtn = () => {
             alert("Create burner wallet first.")
             return
         }
+        // await spawn(account)
+        console.log("startGame");
+        
         const allPlayers = await graphSdk.getAllPlayers()
+        console.log("startGame allPlayers:");
         console.log(allPlayers);
         const edges = allPlayers.data.entities?.edges
 
@@ -91,10 +95,7 @@ export const SpawnBtn = () => {
         }
         console.log("click spwan account:"+account.address);
         
-        const result  = await spawn(account)
-        // if(result){
-        //     store.setState({player:result})
-        // }
+        await spawn(account)
     }
 
     return (
