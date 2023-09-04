@@ -33,15 +33,6 @@ export default function RollDice() {
         },
     } = useDojo();
 
-
-    useEffect(()=>{
-        if(account){
-            console.log("rolldice account change : "+account.address);
-        }else{
-            console.log("rolldice account change : null");
-        }
-    },[account])
-
     const waitForChainResult = async () => {
         rollCountRef.current = rollCountRef.current + 1;
         if (rollCountRef.current <= MaxRollTimes || !playerEventRef.current) {

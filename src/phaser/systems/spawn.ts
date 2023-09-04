@@ -1,10 +1,11 @@
-import { Has, defineSystem, getComponentValueStrict } from "@latticexyz/recs";
+import { EntityIndex, Has, defineSystem, getComponentValueStrict } from "@latticexyz/recs";
 import { PhaserLayer } from "..";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { TILE_HEIGHT, TILE_WIDTH, Animations } from "../constants";
 import { store } from "../../store/store";
 
 export const spawn = (layer: PhaserLayer) => {
+    // const {account} = store()
     const {
         world,
         scenes: {
@@ -29,9 +30,6 @@ export const spawn = (layer: PhaserLayer) => {
 
     defineSystem(world, [Has(Player)], ({ entity }) => {
         const player_ = getComponentValueStrict(Player, entity);
-
-        store.setState({player:player_})
-
         const playerObj = objectPool.get(entity, "Sprite")
 
         const ycount = Math.floor(player_.position / 100)
@@ -59,12 +57,12 @@ export const spawn = (layer: PhaserLayer) => {
         }
         const y = ycount * 2 - 50 + 1
         // defineSystem position:5580,x=-31,y=61
-        console.log("defineSystem position:" + player_.position + ",x=" + x + ",y=" + y);
+        // console.log("defineSystem position:" + player_.position + ",x=" + x + ",y=" + y);
 
         const pixelPosition = tileCoordToPixelCoord({ x, y }, TILE_WIDTH, TILE_HEIGHT);
-        console.log("defineSystem");
-        console.log(entity.toString())
-        console.log(pixelPosition?.x, pixelPosition?.y)
+        // console.log("defineSystem");
+        // console.log(entity.toString())
+        // console.log(pixelPosition?.x, pixelPosition?.y)
 
         playerObj.setComponent({
             id: 'position',

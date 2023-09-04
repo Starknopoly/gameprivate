@@ -21,13 +21,32 @@ export const SpawnBtn = () => {
         },
     } = useDojo();
 
-    useEffect(()=>{
-        if(account){
-            console.log("spawn account change : "+account.address);
-        }else{
-            console.log("spawn account change : null");
+    const showAllPlayers =async (edges:any) => {
+        for (let index = 0; index < edges.length; index++) {
+            const element = edges[index];
+            if (element) {
+                if (element.node?.keys) {
+                    if (element.node.keys[0]) {
+                        const players = element.node.components
+                        if (players && players[0]) {
+                            console.log(players[0]);
+                            const player = players[0] as any
+                            // setComponent(components.Player, entityId, {
+                            //     position: player.position,
+                            //     joined_time: player.joined_time,
+                            //     direction: player.direction,
+                            //     gold: player.gold,
+                            //     steps: player.steps,
+                            //     last_point: player.last_point,
+                            //     last_time: player.last_time
+                            // })
+                            return
+                        }
+                    }
+                }
+            }
         }
-    },[account])
+    }
 
     const startGame = async () => {
         if(!account){
@@ -42,6 +61,8 @@ export const SpawnBtn = () => {
         console.log("startGame account.address:" + account.address + ",entityId:" + entityId);
 
         if (edges) {
+            console.log("start game total players:"+edges.length);
+            showAllPlayers(edges)
             for (let index = 0; index < edges.length; index++) {
                 const element = edges[index];
                 if (element) {

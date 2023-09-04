@@ -1,9 +1,11 @@
-import { Has, defineSystem, getComponentValueStrict } from "@latticexyz/recs";
+import { EntityIndex, Has, defineSystem, getComponentValueStrict } from "@latticexyz/recs";
 import { useDojo } from "../hooks/useDojo";
 import { useEffect, useState } from "react";
 import { Player } from "../generated/graphql";
+import { store } from "../store/store";
 
 export default function PlayerPanel() {
+    const { account, player: storePlayer } = store();
     const { phaserLayer: layer } = useDojo()
     const {
         world,
@@ -15,17 +17,26 @@ export default function PlayerPanel() {
         },
     } = layer;
 
-    const [player,setPlayer] = useState<Player>()
-    const [position,setPosition] = useState<any>({x:0,y:0})
+    const [player, setPlayer] = useState<Player>()
+    const [position, setPosition] = useState<any>({ x: 0, y: 0 })
 
     useEffect(() => {
-        if (!layer) {
+        if (!layer || !account) {
             return
         }
 
         defineSystem(world, [Has(Player)], ({ entity }) => {
             const player_ = getComponentValueStrict(Player, entity);
-            if(player_){
+            console.log("defineSystem account:"+account);
+            
+            if (account) {
+                const entityId = parseInt(account.address) as EntityIndex;
+                if (entity == entityId) {
+                    store.setState({ player: player_ })
+                }
+            }
+
+            if (player_) {
                 setPlayer(player_)
             }
 
@@ -42,10 +53,9 @@ export default function PlayerPanel() {
             // defineSystem position:5580,x=-31,y=61
             console.log("defineSystem position:" + player_.position + ",x=" + x + ",y=" + y);
 
-
-            setPosition({x:x,y:y})
+            setPosition({ x: x, y: y })
         });
-    }, [layer])
+    }, [layer,account])
 
 
     return (
