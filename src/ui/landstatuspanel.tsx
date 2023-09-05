@@ -7,14 +7,49 @@ import { buildingIdToMapid, positionToBuildingCoorp } from "../utils";
 export default function LandStatusPanel() {
     const { account, buildings } = store();
 
+    // subscribe building change
     const {
         phaserLayer,
         networkLayer: {
-            components,
-            network: { graphSdk },
+            components:{
+                Player,
+                Building : BuildingComponent,
+                Land: LandComponent,
+            },
+            network: { graphSdk ,wsClient},
             systemCalls: { spawn },
         },
     } = useDojo();
+
+    useEffect(()=>{
+        const query = `subscription {
+            entityUpdated{
+              id
+                keys
+                componentNames
+              updatedAt
+            }
+          }`;
+          const subscription = wsClient
+          .request({ query })
+          // so lets actually do something with the response
+          .subscribe({
+            next({ data }) {
+              if (data) {
+                let entityUpdated = data.entityUpdated;
+                if(entityUpdated.componentNames == LandComponent.metadata.name) {
+
+                } else if(entityUpdated.componentNames == BuildingComponent.metadata.name){
+
+                }
+                console.log("We got something!", data);
+              }
+            },
+          });
+          return ()=>{
+            subscription.unsubscribe()
+          }
+    }, [])
 
     const {
         scenes: {
