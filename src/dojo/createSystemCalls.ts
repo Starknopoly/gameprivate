@@ -60,7 +60,6 @@ export function createSystemCalls(
 
   const buyBuilding = async (
     signer: Account,
-    position: number,
     buidingId: number
   ) => {
     const tx = await execute(signer, "buy", [buidingId]);
@@ -81,7 +80,7 @@ export function createSystemCalls(
   };
 
   //TODO : buy back on chain
-  const buyBack = async (signer: Account, position: number) => {};
+  const buyBack = async (signer: Account) => {};
 
   const spawn = async (signer: Account) => {
     console.log("spawn signer:" + signer.address);

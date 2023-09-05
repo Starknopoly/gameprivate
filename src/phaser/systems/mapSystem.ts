@@ -36,6 +36,8 @@ export function mapSystem(layer: PhaserLayer) {
                     putTileAt(coord, Tileset.Starkbucks, "Foreground");
                 } else if (id == 2) {
                     putTileAt(coord, Tileset.Hotel, "Foreground");
+                }else if(id==3){
+                    putTileAt(coord, Tileset.Bomb, "Foreground");
                 }
             } else {
                 const coord = { x, y };

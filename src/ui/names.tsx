@@ -37,6 +37,7 @@ export default function NamesUI() {
                     text.setFontSize(12)
                     const entity = parseInt(account?.address!) as EntityIndex
                     if (entity == key) {
+                        console.log("set name me");
                         text.setText("Me")
                     } else {
                         text.setText(truncateString(value, 4, 3))
