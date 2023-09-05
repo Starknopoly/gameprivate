@@ -6,7 +6,7 @@ import { Tileset } from "../artTypes/world";
 import { store } from "../store/store";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { MAP_WIDTH, TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
-import { positionToBuildingCoorp, positionToCoorp } from "../utils";
+import { mapIdToBuildingId, positionToBuildingCoorp, positionToCoorp } from "../utils";
 import { BANK_ID, BUILDING_PRICES, HOTEL_ID, STARKBUCKS_ID } from "../config";
 
 export default function ActionsUI() {
@@ -62,17 +62,6 @@ export default function ActionsUI() {
         putTileAt({ x: coord.x, y: coord.y }, Tileset.Bomb, "Foreground");
     }
 
-    const parseBuildingId = (id: number): number => {
-        var buildingId = 1
-        switch (id) {
-            case Tileset.Bank: buildingId = BANK_ID; break;
-            case Tileset.Hotel: buildingId = HOTEL_ID; break;
-            case Tileset.Starkbucks: buildingId = STARKBUCKS_ID; break;
-        }
-
-        return buildingId;
-    }
-
     const buildClick = () => {
         if (!account) {
             alert("Create burner wallet first.")
@@ -97,7 +86,7 @@ export default function ActionsUI() {
         }
         console.log("buildClick gold:"+player.gold+",price:"+price);
         console.log(coord);
-        var buildingId = parseBuildingId(id)
+        var buildingId = mapIdToBuildingId(id)
         if (player.gold < price) {
             alert("Gold is not enough")
             return

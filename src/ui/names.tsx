@@ -23,7 +23,7 @@ export default function NamesUI() {
         console.log("nameui playersAddress change");
         // console.log(playersAddress);
         playersAddress?.forEach((value, key) => {
-            console.log("name value:"+value);
+            // console.log("name value:"+value);
             
             const player_ = getComponentValueStrict(Player, key);
             const nameObj = objectPool.get("text_" + key, "Text")
@@ -38,9 +38,9 @@ export default function NamesUI() {
                     text.setBackgroundColor("rgba(0,0,0,0.6)")
                     text.setFontSize(12)
                     const entity = parseInt(account?.address!) as EntityIndex
-                    console.log("entity:"+entity+",key:"+key);
+                    // console.log("entity:"+entity+",key:"+key);
                     if (entity == key) {
-                        console.log("set name me");
+                        // console.log("set name me");
                         text.setText("Me")
                     } else {
                         text.setText(truncateString(value, 4, 3))
@@ -48,7 +48,7 @@ export default function NamesUI() {
                 }
             })
         })
-    }, [playersAddress])
+    }, [playersAddress.keys()])
 
     useEffect(() => {
         if (!layer || !account) {
@@ -68,7 +68,7 @@ export default function NamesUI() {
                     text.setPosition(pixelPosition?.x, pixelPosition?.y - 14);
                     const key = parseInt(account?.address!) as EntityIndex
                     if (entity == key) {
-                        console.log("set name me");
+                        // console.log("set name me");
                         text.setText("Me")
                     }
                 }
