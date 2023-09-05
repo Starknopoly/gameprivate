@@ -25,7 +25,6 @@ export const SpawnBtn = () => {
 
         for (let index = 0; index < edges.length; index++) {
             const element = edges[index];
-            // console.log(element);
             if (element) {
                 if (element.node?.keys) {
                     if (element.node.keys[0]) {
@@ -33,8 +32,23 @@ export const SpawnBtn = () => {
                         if (player && player.__typename=="Player") {
                             const entityId = parseInt(element.node.keys[0]) as EntityIndex;
                             playersAddress.set(entityId,element.node.keys[0])
-                            // console.log("entityId:"+entityId);
-                            
+                        }
+                    }
+                }
+            }
+        }
+        store.setState({playersAddress:playersAddress})
+        // while(realAddress?.size!=playersAddress.size){
+        //     console.log(realAddress?.size,playersAddress.size);
+        // }
+        for (let index = 0; index < edges.length; index++) {
+            const element = edges[index];
+            if (element) {
+                if (element.node?.keys) {
+                    if (element.node.keys[0]) {
+                        const player = element.node.components[0]
+                        if (player && player.__typename=="Player") {
+                            const entityId = parseInt(element.node.keys[0]) as EntityIndex;
                             setComponent(components.Player, entityId, {
                                 position: player.position,
                                 joined_time: player.joined_time,
@@ -49,7 +63,6 @@ export const SpawnBtn = () => {
                 }
             }
         }
-        store.setState({playersAddress:playersAddress})
     }
 
     const startGame = async () => {
