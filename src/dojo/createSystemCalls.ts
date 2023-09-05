@@ -5,11 +5,8 @@ import {
   num,
   shortString,
 } from "starknet";
-import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs";
+import { EntityIndex, setComponent } from "@latticexyz/recs";
 import { ClientComponents } from "./createClientComponents";
-import { WorldCoord } from "@latticexyz/phaserx/dist/types";
-import { MAP_WIDTH } from "../phaser/constants";
-import { groupCollapsed } from "console";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
@@ -75,13 +72,26 @@ export function createSystemCalls(
 
     const events = parseEvent(receipt);
     console.log(events);
+
+    const playerEvent = events[0] as Player;
+    const entity = parseInt(events[0].entity.toString()) as EntityIndex;
+    setComponent(contractComponents.Player, entity, {
+      position: playerEvent.position,
+      joined_time: playerEvent.joined_time,
+      direction: playerEvent.direction,
+      gold: playerEvent.gold,
+      steps: playerEvent.steps,
+      last_point: playerEvent.last_point,
+      last_time: playerEvent.last_time,
+    });
+
     // return player,land
     return events;
   };
 
   //TODO : buy back on chain
-  const buyBack = async (signer: Account, buidingId: number) => {
-    const tx = await execute(signer, "buy", [buidingId]);
+  const buyBack = async (signer: Account) => {
+    const tx = await execute(signer, "buy", [1]);
 
     // TODO: override gold
 
@@ -94,6 +104,19 @@ export function createSystemCalls(
 
     const events = parseEvent(receipt);
     console.log(events);
+
+    const playerEvent = events[0] as Player;
+    const entity = parseInt(events[0].entity.toString()) as EntityIndex;
+    setComponent(contractComponents.Player, entity, {
+      position: playerEvent.position,
+      joined_time: playerEvent.joined_time,
+      direction: playerEvent.direction,
+      gold: playerEvent.gold,
+      steps: playerEvent.steps,
+      last_point: playerEvent.last_point,
+      last_time: playerEvent.last_time,
+    });
+
     // return player1 player2 townhall land
     return events;
   };

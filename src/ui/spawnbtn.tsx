@@ -38,9 +38,6 @@ export const SpawnBtn = () => {
             }
         }
         store.setState({playersAddress:playersAddress})
-        // while(realAddress?.size!=playersAddress.size){
-        //     console.log(realAddress?.size,playersAddress.size);
-        // }
         for (let index = 0; index < edges.length; index++) {
             const element = edges[index];
             if (element) {
@@ -112,6 +109,13 @@ export const SpawnBtn = () => {
         console.log("click spwan account:"+account.address);
         
         await spawn(account)
+        // store.setState({playersAddress:playersAddress})
+        var playersAddress = store.getState().playersAddress
+        console.log("spwan after playersAddress size:"+playersAddress?.size);
+        
+        const entity = parseInt(account.address) as EntityIndex;
+        playersAddress?.set(entity,account.address)
+        store.setState({playersAddress:playersAddress})
     }
 
     return (

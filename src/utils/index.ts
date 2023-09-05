@@ -1,6 +1,8 @@
 import { Coord } from "@latticexyz/utils";
 import { Direction } from "../dojo/createSystemCalls";
 import { MAP_WIDTH } from "../phaser/constants";
+import { Tileset } from "../artTypes/world";
+import { BANK_ID, HOTEL_ID, STARKBUCKS_ID } from "../config";
 
 export function isValidArray(input: any): input is any[] {
     return Array.isArray(input) && input != null;
@@ -63,7 +65,7 @@ export function positionToCoorp(position: number): Coord {
     return { x: x, y: y };
 }
 
-export function positionToBuildingCoorp(position:number):Coord{
+export function positionToBuildingCoorp(position: number): Coord {
     const size = MAP_WIDTH
     position = position - 1
     const ycount = Math.floor(position / size)
@@ -76,10 +78,30 @@ export function positionToBuildingCoorp(position:number):Coord{
     }
     const y = ycount * 2
 
-    return {x:x,y:y}
+    return { x: x, y: y }
 }
+
+export function mapIdToBuildingId(mapid: number): number {
+    var buildingId = 1
+    switch (mapid) {
+        case Tileset.Bank: buildingId = BANK_ID; break;
+        case Tileset.Hotel: buildingId = HOTEL_ID; break;
+        case Tileset.Starkbucks: buildingId = STARKBUCKS_ID; break;
+    }
+    return buildingId;
+}
+
+export function buildingIdToMapid(buildingId: number): number {
+    var mapid = 0
+    switch (buildingId) {
+        case BANK_ID: mapid = Tileset.Bank; break;
+        case HOTEL_ID: mapid = Tileset.Hotel; break;
+        case STARKBUCKS_ID: mapid = Tileset.Starkbucks; break;
+    }
+    return mapid
+}
+
 
 export function truncateString(str: string, frontLen: number, endLen: number) {
     return str.slice(0, frontLen) + '..' + str.slice(-endLen);
-  }
-  
+}
