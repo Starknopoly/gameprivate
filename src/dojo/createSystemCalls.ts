@@ -62,6 +62,25 @@ export function createSystemCalls(
     signer: Account,
     buidingId: number
   ) => {
+    const tx = await execute(signer, "build", [buidingId]);
+
+    // TODO: override gold
+
+    console.log(tx);
+    const receipt = await signer.waitForTransaction(tx.transaction_hash, {
+      retryInterval: 100,
+    });
+
+    console.log(receipt);
+
+    const events = parseEvent(receipt);
+    console.log(events);
+    // return player,land
+    return events;
+  };
+
+  //TODO : buy back on chain
+  const buyBack = async (signer: Account, buidingId: number) => {
     const tx = await execute(signer, "buy", [buidingId]);
 
     // TODO: override gold
@@ -76,11 +95,8 @@ export function createSystemCalls(
     const events = parseEvent(receipt);
     console.log(events);
     // return player1 player2 townhall land
-    return { ...events };
+    return events;
   };
-
-  //TODO : buy back on chain
-  const buyBack = async (signer: Account) => {};
 
   const spawn = async (signer: Account) => {
     console.log("spawn signer:" + signer.address);
