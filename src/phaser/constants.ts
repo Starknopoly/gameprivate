@@ -16,7 +16,7 @@ export enum Sprites {
 
 export enum Assets {
     MainAtlas = "MainAtlas",
-    Tileset = "Tileset",
+    Tileset = "Tileset"
 }
 
 export enum Direction {

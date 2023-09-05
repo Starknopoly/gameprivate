@@ -22,6 +22,7 @@ const mainMap = defineMapConfig({
         layers: {
             Background: { tilesets: ["Default"] },
             Foreground: { tilesets: ["Default"] },
+            Top: { tilesets: ["Default"] },
         },
         defaultLayer: "Background",
     },
@@ -82,7 +83,7 @@ export const phaserConfig = {
                     assetKey: Assets.Tileset,
                     tileWidth: TILE_WIDTH,
                     tileHeight: TILE_HEIGHT,
-                },
+                }
             },
         }),
     },

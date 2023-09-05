@@ -2,6 +2,7 @@ import { EntityIndex, setComponent } from "@latticexyz/recs";
 import { useDojo } from "../hooks/useDojo";
 import { ClickWrapper } from "./clickWrapper";
 import { store } from "../store/store";
+import { useEffect } from "react";
 
 export const SpawnBtn = () => {
     const {account,player} = store();
@@ -20,7 +21,10 @@ export const SpawnBtn = () => {
         },
     } = useDojo();
 
-    const showAllPlayers =async (edges:any) => {
+    const showAllPlayers = (edges:any) => {
+        if(!edges){
+            return
+        }
         const playersAddress = new Map<EntityIndex,string>()
 
         for (let index = 0; index < edges.length; index++) {
@@ -62,25 +66,20 @@ export const SpawnBtn = () => {
         }
     }
 
-    const startGame = async () => {
+    const fetchAllPlayers =async () => {
         if(!account){
-            alert("Create burner wallet first.")
-            return
+            return false
         }
-        // await spawn(account)
-        console.log("startGame");
-        
         const allPlayers = await graphSdk.getAllPlayers()
         console.log("startGame allPlayers:");
         console.log(allPlayers);
         const edges = allPlayers.data.entities?.edges
-
+        showAllPlayers(edges)
         const entityId = parseInt(account.address) as EntityIndex;
         console.log("startGame account.address:" + account.address + ",entityId:" + entityId);
 
         if (edges) {
             console.log("start game total players:"+edges.length);
-            showAllPlayers(edges)
             for (let index = 0; index < edges.length; index++) {
                 const element = edges[index];
                 if (element) {
@@ -99,13 +98,29 @@ export const SpawnBtn = () => {
                                     last_point: player.last_point,
                                     last_time: player.last_time
                                 })
-                                return
+                                return true
                             }
                         }
                     }
                 }
             }
         }
+        return false
+    }
+
+    const startGame = async () => {
+        if(!account){
+            alert("Create burner wallet first.")
+            return
+        }
+        // await spawn(account)
+        console.log("startGame");
+        
+        const has = await fetchAllPlayers()
+        if(has){
+            return
+        }
+
         console.log("click spwan account:"+account.address);
         
         await spawn(account)

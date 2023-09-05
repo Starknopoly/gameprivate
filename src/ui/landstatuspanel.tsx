@@ -1,27 +1,35 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDojo } from "../hooks/useDojo";
 import { store } from "../store/store";
 import { Building } from "../types";
 import { buildingIdToMapid, positionToBuildingCoorp } from "../utils";
+import { Tileset } from "../artTypes/world";
+import { EntityIndex, setComponent } from "@latticexyz/recs";
 
 export default function LandStatusPanel() {
     const { account, buildings } = store();
 
+    const accountRef = useRef<string>()
     // subscribe building change
     const {
         phaserLayer,
         networkLayer: {
-            components:{
-                Player,
-                Building : BuildingComponent,
+            components: {
+                Player: PlayerComponent,
+                Building: BuildingComponent,
                 Land: LandComponent,
             },
-            network: { graphSdk ,wsClient},
+            network: { graphSdk, wsClient },
             systemCalls: { spawn },
         },
     } = useDojo();
 
-    useEffect(()=>{
+    useEffect(() => {
+        console.log("account change ", account?.address);
+        accountRef.current = account?.address
+    }, [account])
+
+    useEffect(() => {
         const query = `subscription {
             entityUpdated{
               id
@@ -30,26 +38,68 @@ export default function LandStatusPanel() {
               updatedAt
             }
           }`;
-          const subscription = wsClient
-          .request({ query })
-          // so lets actually do something with the response
-          .subscribe({
-            next({ data }) {
-              if (data) {
-                let entityUpdated = data.entityUpdated;
-                if(entityUpdated.componentNames == LandComponent.metadata.name) {
+        const subscription = wsClient
+            .request({ query })
+            // so lets actually do something with the response
+            .subscribe({
+                next({ data }) {
+                    if (data) {
+                        let entityUpdated = data.entityUpdated;
+                        if (entityUpdated.componentNames == LandComponent.metadata.name) {
+                            fetchAllBuildings()
+                        } else if (entityUpdated.componentNames == BuildingComponent.metadata.name) {
 
-                } else if(entityUpdated.componentNames == BuildingComponent.metadata.name){
+                        } else if (entityUpdated.componentNames == PlayerComponent.metadata.name) {
+                            console.log("We got something player my account:" + accountRef.current + ",change account:" + entityUpdated.keys[0]);
 
-                }
-                console.log("We got something!", data);
-              }
-            },
-          });
-          return ()=>{
+                            if (entityUpdated.keys[0] != accountRef.current) {
+                                fetchAllPlayers()
+                            }
+                        }
+                        console.log("We got something!", data);
+                    }
+                },
+            });
+        return () => {
             subscription.unsubscribe()
-          }
+        }
     }, [])
+
+
+    const fetchAllPlayers = async () => {
+        console.log("fetchAllPlayers");
+        const allPlayers = await graphSdk.getAllPlayers()
+        console.log("fetchAllPlayers allPlayers:");
+        console.log(allPlayers);
+        const edges = allPlayers.data.entities?.edges
+
+        if (edges) {
+            // console.log("fetchAllPlayers game total players:" + edges.length);
+            for (let index = 0; index < edges.length; index++) {
+                console.log("fetchAllPlayers length", edges.length);
+                const element = edges[index];
+                const players = element?.node?.components
+                console.log(element?.node?.keys![0], element?.node?.components![0]?.__typename);
+                if (players && players[0] && players[0].__typename == "Player") {
+                    console.log(players[0]);
+                    const player = players[0] as any
+                    console.log("fetchAllPlayers setComponent ", element.node?.keys![0]);
+                    const entityId = parseInt(element.node?.keys![0]!) as EntityIndex
+                    if(element.node?.keys![0]!=accountRef.current){
+                        setComponent(PlayerComponent, entityId, {
+                            position: player.position,
+                            joined_time: player.joined_time,
+                            direction: player.direction,
+                            gold: player.gold,
+                            steps: player.steps,
+                            last_point: player.last_point,
+                            last_time: player.last_time
+                        })
+                    }
+                }
+            }
+        }
+    }
 
     const {
         scenes: {
@@ -61,18 +111,6 @@ export default function LandStatusPanel() {
         }
     } = phaserLayer;
 
-    // building_type
-    // : 
-    // 1
-    // owner
-    // : 
-    // "0x2e718687c96c1912743a9564acac04d04e8e886c548d88169661ff450758ec6"
-    // price
-    // : 
-    // 100
-    // __typename
-    // : 
-    // "Land"
     const fetchAllBuildings = async () => {
         console.log("fetchAllBuildings");
         const allBuildings = await graphSdk.getAllBuildings()
@@ -94,7 +132,10 @@ export default function LandStatusPanel() {
                             const owner = building.owner
                             const price = building.price
                             const build = new Building(type, price, owner, position)
-                            console.log(build);
+                            if (owner == account?.address) {
+                                build.isMine = true;
+                            }
+                            // console.log(build);
                             bs.set(position, build)
                         }
                     }
@@ -110,6 +151,10 @@ export default function LandStatusPanel() {
             const coord = positionToBuildingCoorp(position)
             const mapid = buildingIdToMapid(build.type)
             putTileAt({ x: coord.x, y: coord.y }, mapid, "Foreground");
+            if (build.isMine) {
+                console.log("buildings put is mine");
+                putTileAt({ x: coord.x, y: coord.y }, Tileset.Heart, "Top");
+            }
         })
     }, [buildings.keys()])
 
