@@ -25,6 +25,7 @@ export type Scalars = {
 
 export type Building = {
   __typename?: 'Building';
+  building_type?: Maybe<Scalars['u64']['output']>;
   entity?: Maybe<Entity>;
   price?: Maybe<Scalars['u64']['output']>;
 };
@@ -47,16 +48,44 @@ export type BuildingOrder = {
 };
 
 export enum BuildingOrderOrderField {
+  BuildingType = 'BUILDING_TYPE',
   Price = 'PRICE'
 }
 
 export type BuildingWhereInput = {
+  building_type?: InputMaybe<Scalars['Int']['input']>;
+  building_typeGT?: InputMaybe<Scalars['Int']['input']>;
+  building_typeGTE?: InputMaybe<Scalars['Int']['input']>;
+  building_typeLT?: InputMaybe<Scalars['Int']['input']>;
+  building_typeLTE?: InputMaybe<Scalars['Int']['input']>;
+  building_typeNEQ?: InputMaybe<Scalars['Int']['input']>;
   price?: InputMaybe<Scalars['Int']['input']>;
   priceGT?: InputMaybe<Scalars['Int']['input']>;
   priceGTE?: InputMaybe<Scalars['Int']['input']>;
   priceLT?: InputMaybe<Scalars['Int']['input']>;
   priceLTE?: InputMaybe<Scalars['Int']['input']>;
   priceNEQ?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type Component = {
+  __typename?: 'Component';
+  classHash?: Maybe<Scalars['felt252']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  transactionHash?: Maybe<Scalars['felt252']['output']>;
+};
+
+export type ComponentConnection = {
+  __typename?: 'ComponentConnection';
+  edges?: Maybe<Array<Maybe<ComponentEdge>>>;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type ComponentEdge = {
+  __typename?: 'ComponentEdge';
+  cursor: Scalars['Cursor']['output'];
+  node?: Maybe<Component>;
 };
 
 export type ComponentUnion = Building | Land | Player | Townhall;
@@ -115,6 +144,7 @@ export type Land = {
   building_type?: Maybe<Scalars['u64']['output']>;
   entity?: Maybe<Entity>;
   owner?: Maybe<Scalars['ContractAddress']['output']>;
+  position?: Maybe<Scalars['u64']['output']>;
   price?: Maybe<Scalars['u64']['output']>;
 };
 
@@ -138,6 +168,7 @@ export type LandOrder = {
 export enum LandOrderOrderField {
   BuildingType = 'BUILDING_TYPE',
   Owner = 'OWNER',
+  Position = 'POSITION',
   Price = 'PRICE'
 }
 
@@ -154,6 +185,12 @@ export type LandWhereInput = {
   ownerLT?: InputMaybe<Scalars['String']['input']>;
   ownerLTE?: InputMaybe<Scalars['String']['input']>;
   ownerNEQ?: InputMaybe<Scalars['String']['input']>;
+  position?: InputMaybe<Scalars['Int']['input']>;
+  positionGT?: InputMaybe<Scalars['Int']['input']>;
+  positionGTE?: InputMaybe<Scalars['Int']['input']>;
+  positionLT?: InputMaybe<Scalars['Int']['input']>;
+  positionLTE?: InputMaybe<Scalars['Int']['input']>;
+  positionNEQ?: InputMaybe<Scalars['Int']['input']>;
   price?: InputMaybe<Scalars['Int']['input']>;
   priceGT?: InputMaybe<Scalars['Int']['input']>;
   priceGTE?: InputMaybe<Scalars['Int']['input']>;
@@ -167,6 +204,7 @@ export type Player = {
   direction?: Maybe<Scalars['u64']['output']>;
   entity?: Maybe<Entity>;
   gold?: Maybe<Scalars['u64']['output']>;
+  id?: Maybe<Scalars['ContractAddress']['output']>;
   joined_time?: Maybe<Scalars['u64']['output']>;
   last_point?: Maybe<Scalars['u64']['output']>;
   last_time?: Maybe<Scalars['u64']['output']>;
@@ -194,6 +232,7 @@ export type PlayerOrder = {
 export enum PlayerOrderOrderField {
   Direction = 'DIRECTION',
   Gold = 'GOLD',
+  Id = 'ID',
   JoinedTime = 'JOINED_TIME',
   LastPoint = 'LAST_POINT',
   LastTime = 'LAST_TIME',
@@ -214,6 +253,12 @@ export type PlayerWhereInput = {
   goldLT?: InputMaybe<Scalars['Int']['input']>;
   goldLTE?: InputMaybe<Scalars['Int']['input']>;
   goldNEQ?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  idGT?: InputMaybe<Scalars['String']['input']>;
+  idGTE?: InputMaybe<Scalars['String']['input']>;
+  idLT?: InputMaybe<Scalars['String']['input']>;
+  idLTE?: InputMaybe<Scalars['String']['input']>;
+  idNEQ?: InputMaybe<Scalars['String']['input']>;
   joined_time?: InputMaybe<Scalars['Int']['input']>;
   joined_timeGT?: InputMaybe<Scalars['Int']['input']>;
   joined_timeGTE?: InputMaybe<Scalars['Int']['input']>;
@@ -249,6 +294,8 @@ export type PlayerWhereInput = {
 export type Query = {
   __typename?: 'Query';
   buildingComponents?: Maybe<BuildingConnection>;
+  component: Component;
+  components?: Maybe<ComponentConnection>;
   entities?: Maybe<EntityConnection>;
   entity: Entity;
   event: Event;
@@ -270,6 +317,11 @@ export type QueryBuildingComponentsArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
   order?: InputMaybe<BuildingOrder>;
   where?: InputMaybe<BuildingWhereInput>;
+};
+
+
+export type QueryComponentArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -331,6 +383,12 @@ export type QueryTownhallComponentsArgs = {
   where?: InputMaybe<TownhallWhereInput>;
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  componentRegistered: Component;
+  entityUpdated: Entity;
+};
+
 export type System = {
   __typename?: 'System';
   classHash?: Maybe<Scalars['felt252']['output']>;
@@ -379,6 +437,7 @@ export type Townhall = {
   __typename?: 'Townhall';
   entity?: Maybe<Entity>;
   gold?: Maybe<Scalars['u64']['output']>;
+  id?: Maybe<Scalars['u64']['output']>;
 };
 
 export type TownhallConnection = {
@@ -399,7 +458,8 @@ export type TownhallOrder = {
 };
 
 export enum TownhallOrderOrderField {
-  Gold = 'GOLD'
+  Gold = 'GOLD',
+  Id = 'ID'
 }
 
 export type TownhallWhereInput = {
@@ -409,22 +469,29 @@ export type TownhallWhereInput = {
   goldLT?: InputMaybe<Scalars['Int']['input']>;
   goldLTE?: InputMaybe<Scalars['Int']['input']>;
   goldNEQ?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  idGT?: InputMaybe<Scalars['Int']['input']>;
+  idGTE?: InputMaybe<Scalars['Int']['input']>;
+  idLT?: InputMaybe<Scalars['Int']['input']>;
+  idLTE?: InputMaybe<Scalars['Int']['input']>;
+  idNEQ?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type GetAllPlayersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllPlayersQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, components?: Array<{ __typename: 'Building' } | { __typename: 'Land' } | { __typename: 'Player', joined_time?: any | null, direction?: any | null, gold?: any | null, position?: any | null, steps?: any | null, last_point?: any | null, last_time?: any | null } | { __typename: 'Townhall' } | null> | null } | null } | null> | null } | null };
+export type GetAllPlayersQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', totalCount: number, edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, components?: Array<{ __typename: 'Building' } | { __typename: 'Land' } | { __typename: 'Player', joined_time?: any | null, direction?: any | null, gold?: any | null, position?: any | null, steps?: any | null, last_point?: any | null, last_time?: any | null } | { __typename: 'Townhall' } | null> | null } | null } | null> | null } | null };
 
 export type GetAllBuildingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllBuildingsQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, components?: Array<{ __typename: 'Building' } | { __typename: 'Land', building_type?: any | null, price?: any | null, owner?: any | null } | { __typename: 'Player' } | { __typename: 'Townhall' } | null> | null } | null } | null> | null } | null };
+export type GetAllBuildingsQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', totalCount: number, edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, components?: Array<{ __typename: 'Building' } | { __typename: 'Land', building_type?: any | null, price?: any | null, owner?: any | null } | { __typename: 'Player' } | { __typename: 'Townhall' } | null> | null } | null } | null> | null } | null };
 
 
 export const GetAllPlayersDocument = gql`
     query getAllPlayers {
-  entities(keys: ["%"]) {
+  entities(first: 1000, keys: ["%"]) {
+    totalCount
     edges {
       node {
         keys
@@ -447,7 +514,8 @@ export const GetAllPlayersDocument = gql`
     `;
 export const GetAllBuildingsDocument = gql`
     query getAllBuildings {
-  entities(keys: ["%"]) {
+  entities(first: 1000, keys: ["%"]) {
+    totalCount
     edges {
       node {
         keys

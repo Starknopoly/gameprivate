@@ -1,5 +1,6 @@
 query getAllPlayers {
-  entities(keys: ["%"]) {
+  entities(first:1000, keys: ["%"]) {
+    totalCount
     edges {
       node {
         keys
@@ -21,7 +22,8 @@ query getAllPlayers {
 }
 
 query getAllBuildings {
-  entities(keys: ["%"]) {
+  entities(first:1000, keys: ["%"]) {
+    totalCount
     edges {
       node {
         keys
