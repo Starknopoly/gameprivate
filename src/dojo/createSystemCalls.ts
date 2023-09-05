@@ -124,12 +124,12 @@ export function createSystemCalls(
     return events;
   };
 
-  const spawn = async (signer: Account) => {
+  const spawn = async (signer: Account, nick_name: number) => {
     console.log("spawn signer:" + signer.address);
 
     // const entityId = parseInt(signer.address) as EntityIndex;
     try {
-      const tx = await execute(signer, "spawn", []);
+      const tx = await execute(signer, "spawn", [nick_name]);
 
       console.log(tx);
       const receipt = await signer.waitForTransaction(tx.transaction_hash, {
