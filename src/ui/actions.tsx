@@ -7,7 +7,7 @@ import { store } from "../store/store";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { MAP_WIDTH, TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
 import { positionToBuildingCoorp, positionToCoorp } from "../utils";
-import { BANK_ID, HOTEL_ID, STARKBUCKS_ID } from "../config";
+import { BANK_ID, BUILDING_PRICES, HOTEL_ID, STARKBUCKS_ID } from "../config";
 
 export default function ActionsUI() {
     const { account, player } = store();
@@ -62,12 +62,12 @@ export default function ActionsUI() {
         putTileAt({ x: coord.x, y: coord.y }, Tileset.Bomb, "Foreground");
     }
 
-    const parseBuildingId = (id: number): number=>{
+    const parseBuildingId = (id: number): number => {
         var buildingId = 1
         switch (id) {
-            case Tileset.Bank: buildingId = BANK_ID;break;
-            case Tileset.Hotel: buildingId = HOTEL_ID;break;
-            case Tileset.Starkbucks: buildingId = STARKBUCKS_ID;break;
+            case Tileset.Bank: buildingId = BANK_ID; break;
+            case Tileset.Hotel: buildingId = HOTEL_ID; break;
+            case Tileset.Starkbucks: buildingId = STARKBUCKS_ID; break;
         }
 
         return buildingId;
@@ -83,20 +83,28 @@ export default function ActionsUI() {
             return
         }
 
+
+
         const coord = positionToBuildingCoorp(player.position)
         //TODO : check there is building
 
-        var buildingId = Tileset.Bank
+        var id = Tileset.Bank
+        var price = 0
         switch (selectBuild) {
-            case "Bank": buildingId = Tileset.Bank; break;
-            case "Hotel": buildingId = Tileset.Hotel; break;
-            case "Starkbucks": buildingId = Tileset.Starkbucks; break;
+            case "Bank": id = Tileset.Bank; price = BUILDING_PRICES['Bank']; break;
+            case "Hotel": id = Tileset.Hotel; price = BUILDING_PRICES['Hotel']; break;
+            case "Starkbucks": id = Tileset.Starkbucks; price = BUILDING_PRICES['Starkbucks']; break;
         }
-        console.log("buildClick");
+        console.log("buildClick gold:"+player.gold+",price:"+price);
         console.log(coord);
-        putTileAt({ x: coord.x, y: coord.y }, buildingId, "Foreground");
+        var buildingId = parseBuildingId(id)
+        if (player.gold < price) {
+            alert("Gold is not enough")
+            return
+        }
+        putTileAt({ x: coord.x, y: coord.y }, id, "Foreground");
 
-        buyBuilding(account, parseBuildingId(buildingId))
+        buyBuilding(account, buildingId)
     }
 
     const buyBackClick = () => {
@@ -108,6 +116,7 @@ export default function ActionsUI() {
             alert("Start game first.")
             return
         }
+
         // const coord = positionToCoorp(player.position)
         //TODO : check there is building
 
