@@ -109,6 +109,13 @@ export const SpawnBtn = () => {
         console.log("click spwan account:"+account.address);
         
         await spawn(account)
+        // store.setState({playersAddress:playersAddress})
+        var playersAddress = store.getState().playersAddress
+        console.log("spwan after playersAddress size:"+playersAddress?.size);
+        
+        const entity = parseInt(account.address) as EntityIndex;
+        playersAddress?.set(entity,account.address)
+        store.setState({playersAddress:playersAddress})
     }
 
     return (
