@@ -13,7 +13,7 @@ export default function LandStatusPanel() {
         phaserLayer,
         networkLayer: {
             components:{
-                Player,
+                Player:PlayerComponent,
                 Building : BuildingComponent,
                 Land: LandComponent,
             },
@@ -39,9 +39,11 @@ export default function LandStatusPanel() {
               if (data) {
                 let entityUpdated = data.entityUpdated;
                 if(entityUpdated.componentNames == LandComponent.metadata.name) {
-
+                    fetchAllBuildings()
                 } else if(entityUpdated.componentNames == BuildingComponent.metadata.name){
 
+                }else if(entityUpdated.componentNames == PlayerComponent.metadata.name){
+                    
                 }
                 console.log("We got something!", data);
               }
