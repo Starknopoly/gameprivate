@@ -3,8 +3,9 @@ import { useDojo } from "../hooks/useDojo";
 import { useEffect, useState } from "react";
 import { Player } from "../generated/graphql";
 import { store } from "../store/store";
-import { MAP_WIDTH } from "../phaser/constants";
+import { Animations, MAP_WIDTH, TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
 import { positionToCoorp } from "../utils";
+import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 
 export default function PlayerPanel() {
     const { account, player: storePlayer } = store();
@@ -12,7 +13,7 @@ export default function PlayerPanel() {
     const {
         world,
         scenes: {
-            Main: { },
+            Main: { objectPool, camera },
         },
         networkLayer: {
             components: { Player }
@@ -26,36 +27,59 @@ export default function PlayerPanel() {
         if (!layer || !account) {
             return
         }
+        console.log("defineSystem");
 
         defineSystem(world, [Has(Player)], ({ entity }) => {
             const player_ = getComponentValueStrict(Player, entity);
+            const myEntityId = parseInt(account.address) as EntityIndex;
 
-            if (account) {
-                const entityId = parseInt(account.address) as EntityIndex;
-                if (entity == entityId) {
-                    store.setState({ player: player_ })
-                } else {
-                    return
-                }
-            }
-            console.log("defineSystem account:" + account);
-            if (player_) {
+            if (entity == myEntityId) {
+                store.setState({ player: player_ })
                 setPlayer(player_)
+                console.log("defineSystem player change is myself");
+            }else{
+                console.log("defineSystem player change not myself");
             }
+
+            console.log("defineSystem account:" + account.address);
+
             const position = player_.position - 1
             const { x, y } = positionToCoorp(position)
-            // const ycount = Math.floor(position / size)
 
-            // var x = position % size
-            // if (ycount % 2 == 0) {
-            //     x = position % size
-            // }
-            // if (ycount % 2 == 1) {
-            //     x = size - position % size
-            // }
-            // const y = ycount * 2 + 1
-            // defineSystem position:5580,x=-31,y=61
             console.log("defineSystem position:" + player_.position + ",x=" + x + ",y=" + y);
+            const playerObj = objectPool.get(entity, "Sprite")
+
+            const size = MAP_WIDTH
+
+            const ycount = Math.floor(position / size)
+
+            if (ycount % 2 == 0) {
+                playerObj.setComponent({
+                    id: 'animation',
+                    once: (sprite) => {
+                        sprite.play(Animations.SwordsmanIdle);
+                    }
+                });
+            }
+            if (ycount % 2 == 1) {
+                playerObj.setComponent({
+                    id: 'animation',
+                    once: (sprite) => {
+                        sprite.play(Animations.SwordsmanIdleReverse);
+                    }
+                });
+            }
+            const pixelPosition = tileCoordToPixelCoord({ x, y }, TILE_WIDTH, TILE_HEIGHT);
+            playerObj.setComponent({
+                id: 'position',
+                once: (sprite) => {
+                    sprite.setPosition(pixelPosition?.x, pixelPosition?.y);
+                    // console.log("entity "+entity+",id:"+id);
+                    if (entity == myEntityId) {
+                        camera.centerOn(pixelPosition?.x!, pixelPosition?.y!);
+                    }
+                }
+            })
 
             setPosition({ x: x, y: y })
         });
