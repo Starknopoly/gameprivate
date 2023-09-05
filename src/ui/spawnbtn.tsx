@@ -38,9 +38,6 @@ export const SpawnBtn = () => {
             }
         }
         store.setState({playersAddress:playersAddress})
-        // while(realAddress?.size!=playersAddress.size){
-        //     console.log(realAddress?.size,playersAddress.size);
-        // }
         for (let index = 0; index < edges.length; index++) {
             const element = edges[index];
             if (element) {

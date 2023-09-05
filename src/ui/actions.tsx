@@ -4,10 +4,10 @@ import { ClickWrapper } from "./clickWrapper";
 import { useDojo } from "../hooks/useDojo";
 import { Tileset } from "../artTypes/world";
 import { store } from "../store/store";
-import { Player } from "../generated/graphql";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { MAP_WIDTH, TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
 import { positionToBuildingCoorp, positionToCoorp } from "../utils";
+import { BANK_ID, HOTEL_ID, STARKBUCKS_ID } from "../config";
 
 export default function ActionsUI() {
     const { account, player } = store();
@@ -47,7 +47,7 @@ export default function ActionsUI() {
     };
 
 
-    const placeBomb = ()=>{
+    const placeBomb = () => {
         if (!account) {
             alert("Create burner wallet first.")
             return
@@ -60,6 +60,17 @@ export default function ActionsUI() {
         const coord = positionToBuildingCoorp(player.position)
         //TODO : check there is building
         putTileAt({ x: coord.x, y: coord.y }, Tileset.Bomb, "Foreground");
+    }
+
+    const parseBuildingId = (id: number): number=>{
+        var buildingId = 1
+        switch (id) {
+            case Tileset.Bank: buildingId = BANK_ID;break;
+            case Tileset.Hotel: buildingId = HOTEL_ID;break;
+            case Tileset.Starkbucks: buildingId = STARKBUCKS_ID;break;
+        }
+
+        return buildingId;
     }
 
     const buildClick = () => {
@@ -85,7 +96,7 @@ export default function ActionsUI() {
         console.log(coord);
         putTileAt({ x: coord.x, y: coord.y }, buildingId, "Foreground");
 
-        buyBuilding(account, buildingId)
+        buyBuilding(account, parseBuildingId(buildingId))
     }
 
     const buyBackClick = () => {

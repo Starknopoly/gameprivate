@@ -5,11 +5,8 @@ import {
   num,
   shortString,
 } from "starknet";
-import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs";
+import { EntityIndex, setComponent } from "@latticexyz/recs";
 import { ClientComponents } from "./createClientComponents";
-import { WorldCoord } from "@latticexyz/phaserx/dist/types";
-import { MAP_WIDTH } from "../phaser/constants";
-import { groupCollapsed } from "console";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
@@ -80,8 +77,8 @@ export function createSystemCalls(
   };
 
   //TODO : buy back on chain
-  const buyBack = async (signer: Account, buidingId: number) => {
-    const tx = await execute(signer, "buy", [buidingId]);
+  const buyBack = async (signer: Account) => {
+    const tx = await execute(signer, "buy", [1]);
 
     // TODO: override gold
 
