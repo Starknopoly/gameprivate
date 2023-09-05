@@ -9,6 +9,7 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
+          nick_name: RecsType.Number,
           joined_time: RecsType.Number,
           direction: RecsType.Number,
           gold: RecsType.Number,
@@ -31,20 +32,6 @@ export function defineContractComponents(world: World) {
         {
           owner: RecsType.Number,
           building_type: RecsType.Number,
-          price: RecsType.Number,
-        },
-        {
-          metadata: {
-            name: name,
-          },
-        }
-      );
-    })(),
-    Building: (() => {
-      const name = "Building";
-      return defineComponent(
-        world,
-        {
           price: RecsType.Number,
         },
         {
