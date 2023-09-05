@@ -47,6 +47,21 @@ export default function ActionsUI() {
     };
 
 
+    const placeBomb = ()=>{
+        if (!account) {
+            alert("Create burner wallet first.")
+            return
+        }
+        if (!player) {
+            alert("Start game first.")
+            return
+        }
+
+        const coord = positionToBuildingCoorp(player.position)
+        //TODO : check there is building
+        putTileAt({ x: coord.x, y: coord.y }, Tileset.Bomb, "Foreground");
+    }
+
     const buildClick = () => {
         if (!account) {
             alert("Create burner wallet first.")
@@ -92,7 +107,7 @@ export default function ActionsUI() {
 
         <BuildingList options={options} onChange={handleSelectionChange} defaultValue="Hotel" />
         <button onClick={() => buildClick()}>Build {selectBuild}</button>
-
+        <button onClick={() => placeBomb()} style={{ marginTop: 15 }}>Place Bomb</button>
         <button onClick={() => buyBackClick()} style={{ marginTop: 15 }}>Buy Back</button>
     </ClickWrapper>)
 }

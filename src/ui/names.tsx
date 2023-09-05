@@ -62,41 +62,11 @@ export default function NamesUI() {
                 id: 'position',
                 once: (text) => {
                     text.setPosition(pixelPosition?.x, pixelPosition?.y - 14);
-                    // text.setBackgroundColor("rgba(0,0,0,0.6)")
-                    // text.setFontSize(12)
-                    // const entity = parseInt(account?.address!) as EntityIndex
-                    // if (entity == entity) {
-                    //     text.setText("Me")
-                    // } else {
-                    //     text.setText(truncateString(value, 4, 3))
-                    // }
                 }
             })
-            // console.log("defineSystem position:" + player_.position + ",x=" + x + ",y=" + y);
         });
     }, [layer, account])
 
-    // const showNames = useMemo(() => {
-    //     var result = <></>
-    //     nameLablesMap.forEach((value, key) => {
-    //         console.log(key, value);
-    //         const address = playersAddress?.get(key)
-    //         console.log(key, address);
 
-    //     });
-    //     return (<div>
-
-    //     </div>)
-    // }, [nameLablesMap])
-
-    return (<div>
-        {/* {Array.from(nameLablesMap.entries()).map(([key, value]) => (
-            <p key={key} style={{backgroundColor:"rgba(0,0,0,0.5)",borderRadius:20,color:"white",width:"100px",paddingLeft:"15px"}}>
-                {
-                    truncateString(playersAddress?.get(key)!,4,4)
-                }
-            </p>
-        ))} */}
-
-    </div>)
+    return (<></>)
 }

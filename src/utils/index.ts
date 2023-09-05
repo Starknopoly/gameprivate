@@ -80,6 +80,6 @@ export function positionToBuildingCoorp(position:number):Coord{
 }
 
 export function truncateString(str: string, frontLen: number, endLen: number) {
-    return str.slice(0, frontLen) + '...' + str.slice(-endLen);
+    return str.slice(0, frontLen) + '..' + str.slice(-endLen);
   }
   
