@@ -40,7 +40,7 @@ export default function NamesUI() {
                     const entity = parseInt(account?.address!) as EntityIndex
                     // console.log("entity:"+entity+",key:"+key);
                     if (entity == key) {
-                        // console.log("set name me");
+                        text.setBackgroundColor("rgba(255,0,0,0.6)")
                         text.setText("Me")
                     } else {
                         text.setText(truncateString(value, 4, 3))
@@ -68,7 +68,6 @@ export default function NamesUI() {
                     text.setPosition(pixelPosition?.x, pixelPosition?.y - 14);
                     const key = parseInt(account?.address!) as EntityIndex
                     if (entity == key) {
-                        // console.log("set name me");
                         text.setText("Me")
                     }
                 }
