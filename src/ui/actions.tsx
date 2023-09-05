@@ -85,7 +85,7 @@ export default function ActionsUI() {
         console.log(coord);
         putTileAt({ x: coord.x, y: coord.y }, buildingId, "Foreground");
 
-        buyBuilding(account, player.position, buildingId)
+        buyBuilding(account, buildingId)
     }
 
     const buyBackClick = () => {
@@ -100,7 +100,7 @@ export default function ActionsUI() {
         // const coord = positionToCoorp(player.position)
         //TODO : check there is building
 
-        buyBack(account, player.position)
+        buyBack(account)
     }
 
     return (<ClickWrapper style={{ display: "flex", flexDirection: "column" }}>
