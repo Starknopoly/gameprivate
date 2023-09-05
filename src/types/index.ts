@@ -4,6 +4,8 @@ export class Building{
     public price:number=0
     public owner:string=""
 
+    public isMine = false
+
     constructor(type:number,price:number,owner:string,position:number){
         this.type = type
         this.price = price

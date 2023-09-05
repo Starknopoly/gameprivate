@@ -28,17 +28,17 @@ export function mapSystem(layer: PhaserLayer) {
                 } else if (seed < -0.3) {
                     putTileAt(coord, Tileset.Forest, "Foreground");
                 }
-                const id = Math.ceil(seed * 100) % 12
+                // const id = Math.ceil(seed * 100) % 12
 
-                if (id == 0) {
-                    putTileAt(coord, Tileset.Bank, "Foreground");
-                } else if (id == 1) {
-                    putTileAt(coord, Tileset.Starkbucks, "Foreground");
-                } else if (id == 2) {
-                    putTileAt(coord, Tileset.Hotel, "Foreground");
-                }else if(id==3){
-                    putTileAt(coord, Tileset.Bomb, "Foreground");
-                }
+                // if (id == 0) {
+                //     putTileAt(coord, Tileset.Bank, "Foreground");
+                // } else if (id == 1) {
+                //     putTileAt(coord, Tileset.Starkbucks, "Foreground");
+                // } else if (id == 2) {
+                //     putTileAt(coord, Tileset.Hotel, "Foreground");
+                // }else if(id==3){
+                //     putTileAt(coord, Tileset.Bomb, "Foreground");
+                // }
             } else {
                 const coord = { x, y };
                 putTileAt(coord, Tileset.Road, "Foreground");

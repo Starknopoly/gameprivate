@@ -72,8 +72,6 @@ export default function ActionsUI() {
             return
         }
 
-
-
         const coord = positionToBuildingCoorp(player.position)
         //TODO : check there is building
 
@@ -92,7 +90,7 @@ export default function ActionsUI() {
             return
         }
         putTileAt({ x: coord.x, y: coord.y }, id, "Foreground");
-
+        putTileAt({ x: coord.x, y: coord.y }, Tileset.Heart, "Top");
         buyBuilding(account, buildingId)
     }
 

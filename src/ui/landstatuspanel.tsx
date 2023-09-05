@@ -3,6 +3,7 @@ import { useDojo } from "../hooks/useDojo";
 import { store } from "../store/store";
 import { Building } from "../types";
 import { buildingIdToMapid, positionToBuildingCoorp } from "../utils";
+import { Tileset } from "../artTypes/world";
 
 export default function LandStatusPanel() {
     const { account, buildings } = store();
@@ -26,18 +27,6 @@ export default function LandStatusPanel() {
         }
     } = phaserLayer;
 
-    // building_type
-    // : 
-    // 1
-    // owner
-    // : 
-    // "0x2e718687c96c1912743a9564acac04d04e8e886c548d88169661ff450758ec6"
-    // price
-    // : 
-    // 100
-    // __typename
-    // : 
-    // "Land"
     const fetchAllBuildings = async () => {
         console.log("fetchAllBuildings");
         const allBuildings = await graphSdk.getAllBuildings()
@@ -59,7 +48,10 @@ export default function LandStatusPanel() {
                             const owner = building.owner
                             const price = building.price
                             const build = new Building(type, price, owner, position)
-                            console.log(build);
+                            if(owner==account?.address){
+                                build.isMine = true;   
+                            }
+                            // console.log(build);
                             bs.set(position, build)
                         }
                     }
@@ -75,6 +67,10 @@ export default function LandStatusPanel() {
             const coord = positionToBuildingCoorp(position)
             const mapid = buildingIdToMapid(build.type)
             putTileAt({ x: coord.x, y: coord.y }, mapid, "Foreground");
+            if(build.isMine){
+                console.log("buildings put is mine");
+                putTileAt({ x: coord.x, y: coord.y }, Tileset.Heart, "Top");
+            }
         })
     }, [buildings.keys()])
 
