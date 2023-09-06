@@ -91,9 +91,9 @@ export default function PlayerPanel() {
         <div>
             <div style={{ width: 200, height: 230, lineHeight: 1, backgroundColor: "rgba(0, 0, 0, 0.5)", padding: 10, borderRadius: 15 }}>
                 <p style={{ color: "white" }}>Player Status</p>
-                <p>Money : ${player?.gold}</p>
+                <p>Gold : ${player?.gold}</p>
                 <p>Energy : {player?.steps}</p>
-                <p>Postion : {position.x},{position.y}</p>
+                <p>Postion : {player?.position}</p>
                 <p>Bank : 0</p>
                 <p>Hotel : 0</p>
                 <p>Starkbucks : 0</p>
