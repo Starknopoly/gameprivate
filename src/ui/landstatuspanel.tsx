@@ -45,6 +45,7 @@ export default function LandStatusPanel() {
                 next({ data }) {
                     if (data) {
                         let entityUpdated = data.entityUpdated;
+                        console.log("We got something:"+entityUpdated.componentNames);
                         if (entityUpdated.componentNames == LandComponent.metadata.name) {
                             fetchAllBuildings()
                         } else if (entityUpdated.componentNames == BuildingComponent.metadata.name) {
@@ -76,14 +77,14 @@ export default function LandStatusPanel() {
         if (edges) {
             // console.log("fetchAllPlayers game total players:" + edges.length);
             for (let index = 0; index < edges.length; index++) {
-                console.log("fetchAllPlayers length", edges.length);
+                // console.log("fetchAllPlayers length", edges.length);
                 const element = edges[index];
                 const players = element?.node?.components
-                console.log(element?.node?.keys![0], element?.node?.components![0]?.__typename);
+                // console.log(element?.node?.keys![0], element?.node?.components![0]?.__typename);
                 if (players && players[0] && players[0].__typename == "Player") {
                     console.log(players[0]);
                     const player = players[0] as any
-                    console.log("fetchAllPlayers setComponent ", element.node?.keys![0]);
+                    // console.log("fetchAllPlayers setComponent ", element.node?.keys![0]);
                     const entityId = parseInt(element.node?.keys![0]!) as EntityIndex
                     if(element.node?.keys![0]!=accountRef.current){
                         setComponent(PlayerComponent, entityId, {

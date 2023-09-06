@@ -60,7 +60,8 @@ export function createSystemCalls(
     buidingId: number
   ) => {
     const tx = await execute(signer, "build", [buidingId]);
-
+    console.log("buyBuilding signer:"+signer.address+",buidingId:"+buidingId);
+    
     // TODO: override gold
 
     console.log(tx);

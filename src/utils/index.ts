@@ -61,7 +61,7 @@ export function positionToCoorp(position: number): Coord {
     if (ycount % 2 == 1) {
         x = size - position % size - 1
     }
-    const y = ycount * 2 + 1
+    const y = ycount * 3 + 1
     return { x: x, y: y };
 }
 
@@ -76,7 +76,7 @@ export function positionToBuildingCoorp(position: number): Coord {
     if (ycount % 2 == 1) {
         x = size - position % size - 1
     }
-    const y = ycount * 2
+    const y = ycount * 3
 
     return { x: x, y: y }
 }

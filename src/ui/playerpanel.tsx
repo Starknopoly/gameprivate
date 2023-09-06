@@ -52,7 +52,7 @@ export default function PlayerPanel() {
             const size = MAP_WIDTH
 
             const ycount = Math.floor(position / size)
-
+            //1,4,7
             if (ycount % 2 == 0) {
                 playerObj.setComponent({
                     id: 'animation',
@@ -69,6 +69,7 @@ export default function PlayerPanel() {
                     }
                 });
             }
+
             const pixelPosition = tileCoordToPixelCoord({ x, y }, TILE_WIDTH, TILE_HEIGHT);
             playerObj.setComponent({
                 id: 'position',

@@ -3,6 +3,7 @@ import { useDojo } from "../hooks/useDojo";
 import { ClickWrapper } from "./clickWrapper";
 import { store } from "../store/store";
 import { useEffect } from "react";
+import { truncateString } from "../utils";
 
 export const SpawnBtn = () => {
     const {account,player} = store();
@@ -143,7 +144,7 @@ export const SpawnBtn = () => {
                 Account : {" "}
                 <select onChange={e => select(e.target.value)}>
                     {list().map((account, index) => {
-                        return <option value={account.address} key={index}>{account.address}</option>
+                        return <option value={account.address} key={index}>{truncateString(account.address,10,10)}</option>
                     })}
                 </select>
             </div>

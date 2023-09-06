@@ -48,7 +48,7 @@ export const UI = () => {
 
 const HeaderContainer = styled.div`
     position: absolute;
-    top: 5%;
+    top: 3%;
     left: 50%;
     transform: translate(-50%, -50%);
     color: white;
