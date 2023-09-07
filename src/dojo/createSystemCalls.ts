@@ -77,6 +77,7 @@ export function createSystemCalls(
     const playerEvent = events[0] as Player;
     const entity = parseInt(events[0].entity.toString()) as EntityIndex;
     setComponent(contractComponents.Player, entity, {
+      nick_name: playerEvent.nick_name,
       position: playerEvent.position,
       joined_time: playerEvent.joined_time,
       direction: playerEvent.direction,
@@ -109,6 +110,7 @@ export function createSystemCalls(
     const playerEvent = events[0] as Player;
     const entity = parseInt(events[0].entity.toString()) as EntityIndex;
     setComponent(contractComponents.Player, entity, {
+      nick_name: playerEvent.nick_name,
       position: playerEvent.position,
       joined_time: playerEvent.joined_time,
       direction: playerEvent.direction,
@@ -140,6 +142,7 @@ export function createSystemCalls(
 
       const playerEvent = events[0] as Player;
       setComponent(contractComponents.Player, entity, {
+        nick_name: playerEvent.nick_name,
         position: playerEvent.position,
         joined_time: playerEvent.joined_time,
         direction: playerEvent.direction,
@@ -192,6 +195,7 @@ export interface BaseEvent {
 }
 
 export interface Player extends BaseEvent {
+  nick_name: number,
   position: number;
   joined_time: number;
   direction: number;
@@ -243,13 +247,14 @@ export const parseEvent = (
         const playerData: Player = {
           type: ComponentEvents.Player,
           entity: raw.data[2],
-          joined_time: Number(raw.data[5]),
-          direction: Number(raw.data[6]),
-          gold: Number(raw.data[7]),
-          position: Number(raw.data[8]),
-          steps: Number(raw.data[9]),
-          last_point: Number(raw.data[10]),
-          last_time: Number(raw.data[11]),
+          nick_name: Number(raw.data[5]),
+          joined_time: Number(raw.data[6]),
+          direction: Number(raw.data[7]),
+          gold: Number(raw.data[8]),
+          position: Number(raw.data[9]),
+          steps: Number(raw.data[10]),
+          last_point: Number(raw.data[11]),
+          last_time: Number(raw.data[12])，
         };
 
         events.push(playerData);
