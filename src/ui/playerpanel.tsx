@@ -1,4 +1,4 @@
-import { EntityIndex, Has, defineSystem, getComponentValueStrict } from "@latticexyz/recs";
+import { EntityIndex, Has, defineSystem, getComponentValue, getComponentValueStrict } from "@latticexyz/recs";
 import { useDojo } from "../hooks/useDojo";
 import { useEffect, useState } from "react";
 import { Player } from "../generated/graphql";
@@ -30,7 +30,10 @@ export default function PlayerPanel() {
         console.log("defineSystem");
 
         defineSystem(world, [Has(Player)], ({ entity }) => {
-            const player_ = getComponentValueStrict(Player, entity);
+            const player_ = getComponentValue(Player, entity);
+            if(!player_){
+                return;
+            }
             const myEntityId = parseInt(account.address) as EntityIndex;
 
             if (entity == myEntityId) {

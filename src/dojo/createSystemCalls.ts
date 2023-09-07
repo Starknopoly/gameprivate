@@ -93,7 +93,7 @@ export function createSystemCalls(
 
   //TODO : buy back on chain
   const buyBack = async (signer: Account) => {
-    const tx = await execute(signer, "buy", [1]);
+    const tx = await execute(signer, "buy", []);
 
     // TODO: override gold
 
@@ -254,7 +254,7 @@ export const parseEvent = (
           position: Number(raw.data[9]),
           steps: Number(raw.data[10]),
           last_point: Number(raw.data[11]),
-          last_time: Number(raw.data[12])，
+          last_time: Number(raw.data[12])
         };
 
         events.push(playerData);

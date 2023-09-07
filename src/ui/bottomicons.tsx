@@ -4,7 +4,7 @@ import { ClickWrapper } from "./clickWrapper";
 import { store } from "../store/store";
 import { TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
 import { positionToCoorp } from "../utils";
-import { EntityIndex, getComponentValueStrict } from "@latticexyz/recs";
+import { EntityIndex, getComponentValue, getComponentValueStrict } from "@latticexyz/recs";
 import twitter from "/twitterlogo.png"
 
 export default function BottomIcons() {
@@ -26,7 +26,10 @@ export default function BottomIcons() {
         }
 
         const entityId = parseInt(account.address) as EntityIndex;
-        const player_ = getComponentValueStrict(networkLayer.components.Player, entityId);
+        const player_ = getComponentValue(networkLayer.components.Player, entityId);
+        if(!player_){
+            return;
+        }
         const { x, y } = positionToCoorp(player_.position)
         const pixelPosition = tileCoordToPixelCoord({ x, y }, TILE_WIDTH, TILE_HEIGHT);
         camera.centerOn(pixelPosition?.x!, pixelPosition?.y!);

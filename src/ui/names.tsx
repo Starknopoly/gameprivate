@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { store } from "../store/store";
 import { useDojo } from "../hooks/useDojo";
-import { EntityIndex, Has, defineSystem, getComponentValueStrict } from "@latticexyz/recs";
+import { EntityIndex, Has, defineSystem, getComponentValue, getComponentValueStrict } from "@latticexyz/recs";
 import { positionToCoorp, truncateString } from "../utils";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
@@ -24,8 +24,11 @@ export default function NamesUI() {
         // console.log(playersAddress);
         playersAddress?.forEach((value, key) => {
             // console.log("name value:"+value);
-            
-            const player_ = getComponentValueStrict(Player, key);
+            console.log(key,value);
+            const player_ = getComponentValue(Player, key);
+            if(!player_){
+                return
+            }
             const nameObj = objectPool.get("text_" + key, "Text")
             const position = player_.position - 1
             const { x, y } = positionToCoorp(position)
@@ -56,7 +59,10 @@ export default function NamesUI() {
         }
 
         defineSystem(world, [Has(Player)], ({ entity }) => {
-            const player_ = getComponentValueStrict(Player, entity);
+            const player_ = getComponentValue(Player, entity);
+            if(!player_){
+                return;
+            }
             const nameObj = objectPool.get("text_" + entity, "Text")
             const position = player_.position - 1
             const { x, y } = positionToCoorp(position)

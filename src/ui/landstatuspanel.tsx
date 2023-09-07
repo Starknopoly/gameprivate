@@ -16,7 +16,6 @@ export default function LandStatusPanel() {
         networkLayer: {
             components: {
                 Player: PlayerComponent,
-                Building: BuildingComponent,
                 Land: LandComponent,
             },
             network: { graphSdk, wsClient },
@@ -48,9 +47,7 @@ export default function LandStatusPanel() {
                         console.log("We got something:"+entityUpdated.componentNames);
                         if (entityUpdated.componentNames == LandComponent.metadata.name) {
                             fetchAllBuildings()
-                        } else if (entityUpdated.componentNames == BuildingComponent.metadata.name) {
-
-                        } else if (entityUpdated.componentNames == PlayerComponent.metadata.name) {
+                        }else if (entityUpdated.componentNames == PlayerComponent.metadata.name) {
                             console.log("We got something player my account:" + accountRef.current + ",change account:" + entityUpdated.keys[0]);
 
                             if (entityUpdated.keys[0] != accountRef.current) {
@@ -91,6 +88,7 @@ export default function LandStatusPanel() {
                             position: player.position,
                             joined_time: player.joined_time,
                             direction: player.direction,
+                            nick_name:player.nick_name,
                             gold: player.gold,
                             steps: player.steps,
                             last_point: player.last_point,

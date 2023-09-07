@@ -2,11 +2,12 @@ import { EntityIndex, setComponent } from "@latticexyz/recs";
 import { useDojo } from "../hooks/useDojo";
 import { ClickWrapper } from "./clickWrapper";
 import { store } from "../store/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { truncateString } from "../utils";
 
 export const SpawnBtn = () => {
     const {account,player} = store();
+    const [nickName,setNickName] = useState(0)
 
     const {
         account: {
@@ -54,6 +55,7 @@ export const SpawnBtn = () => {
                             setComponent(components.Player, entityId, {
                                 position: player.position,
                                 joined_time: player.joined_time,
+                                nick_name:player.nick_name,
                                 direction: player.direction,
                                 gold: player.gold,
                                 steps: player.steps,
@@ -95,6 +97,7 @@ export const SpawnBtn = () => {
                                     joined_time: player.joined_time,
                                     direction: player.direction,
                                     gold: player.gold,
+                                    nick_name:player.nick_name,
                                     steps: player.steps,
                                     last_point: player.last_point,
                                     last_time: player.last_time
@@ -124,7 +127,7 @@ export const SpawnBtn = () => {
 
         console.log("click spwan account:"+account.address);
         
-        await spawn(account)
+        await spawn(account,nickName)
         // store.setState({playersAddress:playersAddress})
         var playersAddress = store.getState().playersAddress
         console.log("spwan after playersAddress size:"+playersAddress?.size);
