@@ -21,7 +21,6 @@ export default function PlayerPanel() {
     } = layer;
 
     const [player, setPlayer] = useState<Player>()
-    const [position, setPosition] = useState<any>({ x: 0, y: 0 })
 
     useEffect(() => {
         if (!layer || !account) {
@@ -85,7 +84,24 @@ export default function PlayerPanel() {
                 }
             })
 
-            setPosition({ x: x, y: y })
+            const nameObj = objectPool.get("text_" + entity, "Text")
+            nameObj.setComponent({
+                id: 'position',
+                once: (text) => {
+                    text.setPosition(pixelPosition?.x, pixelPosition?.y - 14);
+                    text.setBackgroundColor("rgba(0,0,0,0.6)")
+                    text.setFontSize(12)
+                    const entity = parseInt(account?.address!) as EntityIndex
+                    // console.log("entity:"+entity+",key:"+key);
+                    if (entity == entity) {
+                        text.setBackgroundColor("rgba(255,0,0,0.6)")
+                        text.setText("Me")
+                    } else {
+                        text.setText("0x"+player_.nick_name);
+                        // text.setText(truncateString(player_.nick_name, 4, 3))
+                    }
+                }
+            })
         });
     }, [layer, account])
 
@@ -94,6 +110,7 @@ export default function PlayerPanel() {
         <div>
             <div style={{ width: 200, height: 230, lineHeight: 1, backgroundColor: "rgba(0, 0, 0, 0.5)", padding: 10, borderRadius: 15 }}>
                 <p style={{ color: "white" }}>Player Status</p>
+                {/* <p>Name : {player.}</p> */}
                 <p>Gold : ${player?.gold}</p>
                 <p>Energy : {player?.steps}</p>
                 <p>Postion : {player?.position}</p>
