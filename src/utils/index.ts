@@ -112,7 +112,10 @@ export function stringToHex(str: string): string {
     }).join('');
 }
 
-export function hexToString(hex: string): string {
+export function hexToString(hex: string|undefined): string {
+    if(!hex){
+        return ''
+    }
     try {
         let str = '';
         for (let i = 0; i < hex.length; i += 2) {

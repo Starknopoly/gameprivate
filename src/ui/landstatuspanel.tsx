@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDojo } from "../hooks/useDojo";
 import { store } from "../store/store";
 import { Building } from "../types";
-import { buildingIdToMapid, positionToBuildingCoorp, truncateString } from "../utils";
+import { buildingIdToMapid, hexToString, positionToBuildingCoorp, truncateString } from "../utils";
 import { Tileset } from "../artTypes/world";
-import { EntityIndex, Has, defineSystem, getComponentValue, setComponent } from "@latticexyz/recs";
+import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs";
 
 export default function LandStatusPanel() {
     const { account, buildings, player } = store();
@@ -20,14 +20,9 @@ export default function LandStatusPanel() {
                 Player: PlayerComponent,
                 Land: LandComponent,
             },
-            network: { graphSdk, wsClient },
-            systemCalls: { spawn },
+            network: { graphSdk, wsClient }
         },
     } = useDojo();
-
-    const { world, networkLayer: {
-        components: { Player }
-    }, } = phaserLayer
 
     useEffect(() => {
         console.log("account change ", account?.address);
@@ -101,6 +96,7 @@ export default function LandStatusPanel() {
                             last_time: player.last_time
                         })
                     }
+                    // getComponentValue()
                 }
             }
         }
@@ -173,13 +169,24 @@ export default function LandStatusPanel() {
     useEffect(() => {
         const build = buildings.get(player?.position)
         setCurrentLand(build)
-    }, [player])
+    }, [player,buildings.keys()])
+
+
+
+    const getOwnerName = useMemo(() => {
+        if(!currenLand){
+            return <span>0x000</span>
+        }
+        const entity = parseInt(currenLand?.owner) as EntityIndex;
+        const player =  getComponentValue(PlayerComponent,entity)
+        return <span>{hexToString(player?.nick_name)}</span>
+    }, [currenLand])
 
     return (<div>
         <div style={{ width: 200, height: 140, lineHeight: 1, backgroundColor: "rgba(0, 0, 0, 0.5)", padding: 10, borderRadius: 15 }}>
             <p>Current Land</p>
             <p>Building : {currenLand ? <span>{currenLand.getName()}</span> : "None"}</p>
-            <p>Owner : {currenLand ? <span>{truncateString(currenLand.owner, 5, 5)}</span> : "0x000"}</p>
+            <p>Owner : {getOwnerName}</p>
             <p>Price : {currenLand ? <span>${currenLand.price}</span> : "$0"}</p>
         </div>
     </div>)
