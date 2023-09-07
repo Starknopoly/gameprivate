@@ -1,13 +1,15 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDojo } from "../hooks/useDojo";
 import { store } from "../store/store";
 import { Building } from "../types";
-import { buildingIdToMapid, positionToBuildingCoorp } from "../utils";
+import { buildingIdToMapid, positionToBuildingCoorp, truncateString } from "../utils";
 import { Tileset } from "../artTypes/world";
-import { EntityIndex, setComponent } from "@latticexyz/recs";
+import { EntityIndex, Has, defineSystem, getComponentValue, setComponent } from "@latticexyz/recs";
 
 export default function LandStatusPanel() {
-    const { account, buildings } = store();
+    const { account, buildings, player } = store();
+
+    const [currenLand, setCurrentLand] = useState<Building>()
 
     const accountRef = useRef<string>()
     // subscribe building change
@@ -22,6 +24,10 @@ export default function LandStatusPanel() {
             systemCalls: { spawn },
         },
     } = useDojo();
+
+    const { world, networkLayer: {
+        components: { Player }
+    }, } = phaserLayer
 
     useEffect(() => {
         console.log("account change ", account?.address);
@@ -44,10 +50,10 @@ export default function LandStatusPanel() {
                 next({ data }) {
                     if (data) {
                         let entityUpdated = data.entityUpdated;
-                        console.log("We got something:"+entityUpdated.componentNames);
+                        console.log("We got something:" + entityUpdated.componentNames);
                         if (entityUpdated.componentNames == LandComponent.metadata.name) {
                             fetchAllBuildings()
-                        }else if (entityUpdated.componentNames == PlayerComponent.metadata.name) {
+                        } else if (entityUpdated.componentNames == PlayerComponent.metadata.name) {
                             console.log("We got something player my account:" + accountRef.current + ",change account:" + entityUpdated.keys[0]);
 
                             if (entityUpdated.keys[0] != accountRef.current) {
@@ -83,12 +89,12 @@ export default function LandStatusPanel() {
                     const player = players[0] as any
                     // console.log("fetchAllPlayers setComponent ", element.node?.keys![0]);
                     const entityId = parseInt(element.node?.keys![0]!) as EntityIndex
-                    if(element.node?.keys![0]!=accountRef.current){
+                    if (element.node?.keys![0] != accountRef.current) {
                         setComponent(PlayerComponent, entityId, {
                             position: player.position,
                             joined_time: player.joined_time,
                             direction: player.direction,
-                            nick_name:player.nick_name,
+                            nick_name: player.nick_name,
                             gold: player.gold,
                             steps: player.steps,
                             last_point: player.last_point,
@@ -164,12 +170,17 @@ export default function LandStatusPanel() {
         fetchAllBuildings()
     }, [account])
 
+    useEffect(() => {
+        const build = buildings.get(player?.position)
+        setCurrentLand(build)
+    }, [player])
+
     return (<div>
         <div style={{ width: 200, height: 140, lineHeight: 1, backgroundColor: "rgba(0, 0, 0, 0.5)", padding: 10, borderRadius: 15 }}>
             <p>Current Land</p>
-            <p>Building : Bank</p>
-            <p>Owner : 0x000</p>
-            <p>Price : $100</p>
+            <p>Building : {currenLand ? <span>{currenLand.getName()}</span> : "None"}</p>
+            <p>Owner : {currenLand ? <span>{truncateString(currenLand.owner, 5, 5)}</span> : "0x000"}</p>
+            <p>Price : {currenLand ? <span>${currenLand.price}</span> : "$0"}</p>
         </div>
     </div>)
 }

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import { store } from "../store/store";
 import { Animations, MAP_WIDTH, TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
-import { hexNumberToString, hexToString, positionToCoorp } from "../utils";
+import { hexToString, positionToCoorp } from "../utils";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 
 export default function PlayerPanel() {
@@ -82,18 +82,6 @@ export default function PlayerPanel() {
             })
         });
     }, [layer, account])
-
-    // useEffect(()=>{
-    //     if(player?.nick_name){
-    //         console.log("nick name", (player?.nick_name).toString());
-    //         const num = BigInt(player?.nick_name);
-    //         console.log(num.toString());
-    //         // console.log("nick name", player?.nick_name);
-    //         const str = hexToString(num.toString())
-    //         console.log(str);
-            
-    //     }
-    // },[player])
 
     return (
         <div>

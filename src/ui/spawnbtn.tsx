@@ -137,8 +137,11 @@ export const SpawnBtn = () => {
             return
         }
         const hex = stringToHex(nickName)
-        console.log("startGame name hex", hex);
-
+        console.log("startGame name hex", hex,hex.length);
+        if (hex.length > 64) {
+            alert("Illegal name.")
+            return
+        }
         await spawn(account, BigInt('0x' + hex));
 
         var playersAddress = store.getState().playersAddress

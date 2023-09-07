@@ -10,7 +10,7 @@ import { mapIdToBuildingId, positionToBuildingCoorp, positionToCoorp } from "../
 import { BANK_ID, BUILDING_PRICES, HOTEL_ID, STARKBUCKS_ID } from "../config";
 
 export default function ActionsUI() {
-    const { account, player } = store();
+    const { account, player,buildings } = store();
     const { phaserLayer } = useDojo()
 
     const {
@@ -56,6 +56,11 @@ export default function ActionsUI() {
             alert("Start game first.")
             return
         }
+        const build = buildings.get(player.position)
+        if(build){
+            alert("There is a building.")
+            return
+        }
 
         const coord = positionToBuildingCoorp(player.position)
         //TODO : check there is building
@@ -71,7 +76,11 @@ export default function ActionsUI() {
             alert("Start game first.")
             return
         }
-
+        const build = buildings.get(player.position)
+        if(build){
+            alert("There is a building.")
+            return
+        }
         const coord = positionToBuildingCoorp(player.position)
         //TODO : check there is building
 

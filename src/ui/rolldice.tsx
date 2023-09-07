@@ -103,6 +103,7 @@ export default function RollDice() {
 
         setComponent(components.Player, entityId, {
             position: position,
+            nick_name:playerEvent.nick_name,
             joined_time: playerEvent.joined_time,
             direction: playerEvent.direction,
             gold: playerEvent.gold,
@@ -138,10 +139,8 @@ export default function RollDice() {
         const result = await roll(account)
         console.log("rolldice result:"+result);
         if(result){
-            // chainDiceRef.current = result.last_point
             playerEventRef.current = result
         }
-        // chainDiceRef.current = result
     }
 
     return (
