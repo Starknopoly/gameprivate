@@ -105,3 +105,23 @@ export function buildingIdToMapid(buildingId: number): number {
 export function truncateString(str: string, frontLen: number, endLen: number) {
     return str.slice(0, frontLen) + '..' + str.slice(-endLen);
 }
+
+export function stringToHex(str: string): string {
+    return Array.from(encodeURI(str)).map(char => {
+        return char.charCodeAt(0).toString(16);
+    }).join('');
+}
+
+export function hexToString(hex: string): string {
+    try {
+        let str = '';
+        for (let i = 0; i < hex.length; i += 2) {
+            str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+        }
+        const result =  decodeURI(str);
+        return result
+    } catch (error) {
+        console.error(error);
+    }
+    return ''
+}

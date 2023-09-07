@@ -124,12 +124,12 @@ export function createSystemCalls(
     return events;
   };
 
-  const spawn = async (signer: Account, nick_name: number) => {
-    console.log("spawn signer:" + signer.address);
+  const spawn = async (signer: Account, nick_name: BigInt) => {
+    console.log("spawn signer:" + signer.address+",nickname:"+nick_name);
 
     // const entityId = parseInt(signer.address) as EntityIndex;
     try {
-      const tx = await execute(signer, "spawn", [nick_name]);
+      const tx = await execute(signer, "spawn", [nick_name.toString()]);
 
       console.log(tx);
       const receipt = await signer.waitForTransaction(tx.transaction_hash, {
@@ -141,6 +141,9 @@ export function createSystemCalls(
       const entity = parseInt(events[0].entity.toString()) as EntityIndex;
 
       const playerEvent = events[0] as Player;
+
+      console.log("spawn event nick name",playerEvent.nick_name);
+      
       setComponent(contractComponents.Player, entity, {
         nick_name: playerEvent.nick_name,
         position: playerEvent.position,
@@ -195,7 +198,7 @@ export interface BaseEvent {
 }
 
 export interface Player extends BaseEvent {
-  nick_name: number,
+  nick_name: string,
   position: number;
   joined_time: number;
   direction: number;
@@ -243,11 +246,10 @@ export const parseEvent = (
         if (raw.data.length < 6) {
           throw new Error("Insufficient data for Moves event.");
         }
-
         const playerData: Player = {
           type: ComponentEvents.Player,
           entity: raw.data[2],
-          nick_name: Number(raw.data[5]),
+          nick_name: (raw.data[5]),
           joined_time: Number(raw.data[6]),
           direction: Number(raw.data[7]),
           gold: Number(raw.data[8]),
@@ -256,7 +258,7 @@ export const parseEvent = (
           last_point: Number(raw.data[11]),
           last_time: Number(raw.data[12])
         };
-
+        console.log("parseEvent player",raw.data[5],playerData.nick_name);
         events.push(playerData);
         break;
 

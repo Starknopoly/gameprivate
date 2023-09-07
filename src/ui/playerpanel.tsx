@@ -1,10 +1,10 @@
 import { EntityIndex, Has, defineSystem, getComponentValue, getComponentValueStrict } from "@latticexyz/recs";
 import { useDojo } from "../hooks/useDojo";
 import { useEffect, useState } from "react";
-import { Player } from "../generated/graphql";
+
 import { store } from "../store/store";
 import { Animations, MAP_WIDTH, TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
-import { positionToCoorp } from "../utils";
+import { hexNumberToString, hexToString, positionToCoorp } from "../utils";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 
 export default function PlayerPanel() {
@@ -20,7 +20,7 @@ export default function PlayerPanel() {
         },
     } = layer;
 
-    const [player, setPlayer] = useState<Player>()
+    // const [player, setPlayer] = useState<Player>()
 
     useEffect(() => {
         if (!layer || !account) {
@@ -36,11 +36,8 @@ export default function PlayerPanel() {
             const myEntityId = parseInt(account.address) as EntityIndex;
 
             if (entity == myEntityId) {
+                console.log("playerpanel is myself nick name",player_.nick_name);
                 store.setState({ player: player_ })
-                setPlayer(player_)
-                console.log("defineSystem player change is myself");
-            }else{
-                console.log("defineSystem player change not myself");
             }
 
             console.log("defineSystem account:" + account.address);
@@ -83,37 +80,29 @@ export default function PlayerPanel() {
                     }
                 }
             })
-
-            const nameObj = objectPool.get("text_" + entity, "Text")
-            nameObj.setComponent({
-                id: 'position',
-                once: (text) => {
-                    text.setPosition(pixelPosition?.x, pixelPosition?.y - 14);
-                    text.setBackgroundColor("rgba(0,0,0,0.6)")
-                    text.setFontSize(12)
-                    const entity = parseInt(account?.address!) as EntityIndex
-                    // console.log("entity:"+entity+",key:"+key);
-                    if (entity == entity) {
-                        text.setBackgroundColor("rgba(255,0,0,0.6)")
-                        text.setText("Me")
-                    } else {
-                        text.setText("0x"+player_.nick_name);
-                        // text.setText(truncateString(player_.nick_name, 4, 3))
-                    }
-                }
-            })
         });
     }, [layer, account])
 
+    // useEffect(()=>{
+    //     if(player?.nick_name){
+    //         console.log("nick name", (player?.nick_name).toString());
+    //         const num = BigInt(player?.nick_name);
+    //         console.log(num.toString());
+    //         // console.log("nick name", player?.nick_name);
+    //         const str = hexToString(num.toString())
+    //         console.log(str);
+            
+    //     }
+    // },[player])
 
     return (
         <div>
             <div style={{ width: 200, height: 230, lineHeight: 0.9, backgroundColor: "rgba(0, 0, 0, 0.5)", padding: 10, borderRadius: 15 }}>
                 {/* <p style={{ color: "white" }}>Player Status</p> */}
-                <p>Name : {player?.nick_name}</p>
-                <p>Gold : ${player?.gold}</p>
-                <p>Energy : {player?.steps}</p>
-                <p>Postion : {player?.position}</p>
+                <p>Name : {hexToString(storePlayer?.nick_name)}</p>
+                <p>Gold : ${storePlayer?.gold}</p>
+                <p>Energy : {storePlayer?.steps}</p>
+                <p>Postion : {storePlayer?.position}</p>
                 <p>Bank : 0</p>
                 <p>Hotel : 0</p>
                 <p>Starkbucks : 0</p>
