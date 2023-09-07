@@ -7,6 +7,7 @@ query getAllPlayers {
         components {
           __typename
           ... on Player {
+            nick_name
             joined_time
             direction
             gold
