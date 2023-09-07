@@ -167,6 +167,39 @@ export function createSystemCalls(
     return null;
   };
 
+  const explode = async (signer: Account) => {
+    console.log(`explode`)
+    // const entityId = parseInt(signer.address) as EntityIndex;
+    try {
+      const tx = await execute(signer, "spawn", []);
+
+      console.log(tx);
+      const receipt = await signer.waitForTransaction(tx.transaction_hash, {
+        retryInterval: 100,
+      });
+
+      const events = parseEvent(receipt);
+      console.log(events);
+      // Player Townhall land
+      return events;
+      // const entity = parseInt(events[0].entity.toString()) as EntityIndex;
+
+      // const playerEvent = events[0] as Player;
+
+      // console.log("spawn event nick name",playerEvent.nick_name);
+      // store.setState({player})
+    } catch (e) {
+      console.log(e);
+      return null
+      // Player.removeOverride(positionId);
+      // Moves.removeOverride(movesId);
+    } finally {
+      // Position.removeOverride(positionId);
+      // Moves.removeOverride(movesId);
+    }
+    return true;
+  };
+
   return {
     spawn,
     roll,
