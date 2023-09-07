@@ -157,7 +157,7 @@ export default function LandStatusPanel() {
                 putTileAt({ x: coord.x, y: coord.y }, Tileset.Heart, "Top");
             }
         })
-    }, [buildings.keys()])
+    }, [buildings.values()])
 
     useEffect(() => {
         if (!account) {
