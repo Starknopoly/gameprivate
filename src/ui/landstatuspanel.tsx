@@ -166,6 +166,8 @@ export default function LandStatusPanel() {
             if (build.isMine) {
                 // console.log("buildings put is mine");
                 putTileAt({ x: coord.x, y: coord.y }, Tileset.Heart, "Top");
+            }else{
+                putTileAt({ x: coord.x, y: coord.y }, Tileset.NoHeart, "Top");
             }
         })
     }, [buildings.values()])

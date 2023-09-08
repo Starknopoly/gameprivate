@@ -10,7 +10,7 @@ import { mapIdToBuildingId, positionToBuildingCoorp, positionToCoorp } from "../
 import { BANK_ID, BUILDING_PRICES, HOTEL_ID, STARKBUCKS_ID } from "../config";
 
 export default function ActionsUI() {
-    const { account, player,buildings } = store();
+    const { account, player, buildings } = store();
     const { phaserLayer } = useDojo()
 
     const {
@@ -23,7 +23,7 @@ export default function ActionsUI() {
             },
         },
         networkLayer: {
-            systemCalls: { buyBuilding, buyBack,explode },
+            systemCalls: { buyBuilding, buyBack, explode },
         },
     } = phaserLayer;
 
@@ -57,7 +57,7 @@ export default function ActionsUI() {
             return
         }
         const build = buildings.get(player.position)
-        if(build){
+        if (build) {
             alert("There is a building.")
             return
         }
@@ -80,7 +80,7 @@ export default function ActionsUI() {
             return
         }
         const build = buildings.get(player.position)
-        if(build){
+        if (build) {
             alert("There is a building.")
             return
         }
@@ -94,7 +94,7 @@ export default function ActionsUI() {
             case "Hotel": id = Tileset.Hotel; price = BUILDING_PRICES['Hotel']; break;
             case "Starkbucks": id = Tileset.Starkbucks; price = BUILDING_PRICES['Starkbucks']; break;
         }
-        console.log("buildClick gold:"+player.gold+",price:"+price);
+        console.log("buildClick gold:" + player.gold + ",price:" + price);
         console.log(coord);
         var buildingId = mapIdToBuildingId(id)
         if (player.gold < price) {
@@ -113,6 +113,22 @@ export default function ActionsUI() {
         }
         if (!player) {
             alert("Start game first.")
+            return
+        }
+
+        const postion = player.position
+        const building = buildings.get(postion)
+        if (building) {
+            if(building.owner==account.address){
+                alert("Can not buy your building")
+                return
+            }
+            if (player.gold < building.price * 1.3) {
+                alert("Gold is not enough. Need $" + (building.price * 1.3).toFixed(0))
+                return
+            }
+        } else {
+            alert("No building here")
             return
         }
 
