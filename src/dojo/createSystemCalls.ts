@@ -219,7 +219,7 @@ export function createSystemCalls(
       return null
     } finally {
     }
-    return true;
+
   };
 
   return {

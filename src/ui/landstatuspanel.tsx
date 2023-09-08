@@ -46,12 +46,14 @@ export default function LandStatusPanel() {
                     if (data) {
                         let entityUpdated = data.entityUpdated;
                         console.log("We got something:" + entityUpdated.componentNames);
+                        console.log(entityUpdated);
+
                         if (entityUpdated.componentNames == LandComponent.metadata.name) {
                             fetchAllBuildings()
                         } else if (entityUpdated.componentNames == PlayerComponent.metadata.name) {
                             console.log("We got something player my account:" + accountRef.current + ",change account:" + entityUpdated.keys[0]);
 
-                            if (entityUpdated.keys[0] != accountRef.current) {
+                            if (entityUpdated.keys[0] != "0x0" && entityUpdated.keys[0] != accountRef.current) {
                                 fetchAllPlayers()
                             }
                         }
@@ -86,31 +88,34 @@ export default function LandStatusPanel() {
                     const entityId = parseInt(element.node?.keys![0]!) as EntityIndex
 
                     //if is not myself
-                    if (element.node?.keys![0] != accountRef.current) {
-                        setComponent(PlayerComponent, entityId, {
-                            position: player.position,
-                            joined_time: player.joined_time,
-                            direction: player.direction,
-                            nick_name: player.nick_name,
-                            gold: player.gold,
-                            steps: player.steps,
-                            last_point: player.last_point,
-                            last_time: player.last_time
-                        })
-                    } else {
-                        if (player.last_point == 0) {
-                            setComponent(PlayerComponent, entityId, {
-                                position: player.position,
-                                joined_time: player.joined_time,
-                                direction: player.direction,
-                                nick_name: player.nick_name,
-                                gold: player.gold,
-                                steps: player.steps,
-                                last_point: player.last_point,
-                                last_time: player.last_time
-                            })
-                        }
-                    }
+                    // if (element.node?.keys![0] != accountRef.current) {
+                    setComponent(PlayerComponent, entityId, {
+                        position: player.position,
+                        joined_time: player.joined_time,
+                        direction: player.direction,
+                        nick_name: player.nick_name,
+                        gold: player.gold,
+                        steps: player.steps,
+                        last_point: player.last_point,
+                        last_time: player.last_time
+                    })
+                    // } else {
+                    //     console.log("Player:");
+                    //     console.log(player);
+                    //     //for admin roll
+                    //     // if (player.last_point == 0) {
+                    //         setComponent(PlayerComponent, entityId, {
+                    //             position: player.position,
+                    //             joined_time: player.joined_time,
+                    //             direction: player.direction,
+                    //             nick_name: player.nick_name,
+                    //             gold: player.gold,
+                    //             steps: player.steps,
+                    //             last_point: player.last_point,
+                    //             last_time: player.last_time
+                    //         })
+                    //     // }
+                    // }
                 }
             }
         }
@@ -142,16 +147,26 @@ export default function LandStatusPanel() {
             if (building && building.__typename == "Land") {
                 const position = parseInt(element?.node?.keys![0]!, 16);
                 const type = building.building_type
-                const owner = building.owner
+                var owner = building.owner
                 const price = building.price
+                const bomb = building.bomb
                 const build = new Building(type, price, owner, position)
-                // console.log("fetchAllBuildings postion ",position,owner,account?.address);
+                // console.log("fetchAllBuildings postion ", position, owner, type);
+                if (bomb) {
+                    owner = building.bomber
+                }
                 if (owner == accountRef.current) {
                     // console.log("is mine ", owner, position);
                     build.isMine = true;
                 }
                 // console.log(build);
-                bs.set(position, build)
+                if (type == 0) {
+                    if (bomb) {
+                        bs.set(position, build)
+                    }
+                } else {
+                    bs.set(position, build)
+                }
             }
         }
         store.setState({ buildings: bs })
@@ -166,7 +181,7 @@ export default function LandStatusPanel() {
             if (build.isMine) {
                 // console.log("buildings put is mine");
                 putTileAt({ x: coord.x, y: coord.y }, Tileset.Heart, "Top");
-            }else{
+            } else {
                 putTileAt({ x: coord.x, y: coord.y }, Tileset.NoHeart, "Top");
             }
         })

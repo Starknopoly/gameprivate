@@ -1,4 +1,4 @@
-import { BANK_ID, HOTEL_ID, STARKBUCKS_ID } from "../config"
+import { BANK_ID, BOMB_ID, HOTEL_ID, STARKBUCKS_ID } from "../config"
 
 export class Building {
     public position: number = 0
@@ -17,6 +17,7 @@ export class Building {
 
     public getName = () => {
         switch (this.type) {
+            case BOMB_ID:return "Bomb";
             case HOTEL_ID: return "Hotel";
             case BANK_ID: return "Bank";
             case STARKBUCKS_ID: return "Starkbucks";

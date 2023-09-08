@@ -8,10 +8,12 @@ import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { MAP_WIDTH, TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
 import { mapIdToBuildingId, positionToBuildingCoorp, positionToCoorp } from "../utils";
 import { BANK_ID, BUILDING_PRICES, HOTEL_ID, STARKBUCKS_ID } from "../config";
+import { Player } from "../dojo/createSystemCalls";
+import { EntityIndex, setComponent } from "@latticexyz/recs";
 
 export default function ActionsUI() {
     const { account, player, buildings } = store();
-    const { phaserLayer } = useDojo()
+    const { phaserLayer, networkLayer: { components } } = useDojo()
 
     const {
         scenes: {
@@ -47,7 +49,7 @@ export default function ActionsUI() {
     };
 
 
-    const placeBomb = () => {
+    const placeBomb = async () => {
         if (!account) {
             alert("Create burner wallet first.")
             return
@@ -64,10 +66,29 @@ export default function ActionsUI() {
 
         const coord = positionToBuildingCoorp(player.position)
 
-        explode(account)
-        //TODO : check there is building
-        putTileAt({ x: coord.x, y: coord.y }, Tileset.Bomb, "Foreground");
+        const events = await explode(account)
+        if (events) {
+            if (events.length != 0) {
+                //TODO : check there is building
+                const entityId = parseInt(account.address) as EntityIndex
+                const player = events[0] as Player
 
+                setComponent(components.Player, entityId, {
+                    position: player.position,
+                    joined_time: player.joined_time,
+                    direction: player.direction,
+                    nick_name: player.nick_name,
+                    gold: player.gold,
+                    steps: player.steps,
+                    last_point: player.last_point,
+                    last_time: player.last_time
+                })
+                putTileAt({ x: coord.x, y: coord.y }, Tileset.Bomb, "Foreground");
+                return
+            }
+        }
+
+        alert("Something wrong")
     }
 
     const buildClick = () => {
@@ -119,7 +140,7 @@ export default function ActionsUI() {
         const postion = player.position
         const building = buildings.get(postion)
         if (building) {
-            if(building.owner==account.address){
+            if (building.owner == account.address) {
                 alert("Can not buy your building")
                 return
             }

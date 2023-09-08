@@ -2,7 +2,7 @@ import { Coord } from "@latticexyz/utils";
 import { Direction } from "../dojo/createSystemCalls";
 import { MAP_WIDTH } from "../phaser/constants";
 import { Tileset } from "../artTypes/world";
-import { BANK_ID, HOTEL_ID, STARKBUCKS_ID } from "../config";
+import { BANK_ID, BOMB_ID, HOTEL_ID, STARKBUCKS_ID } from "../config";
 
 export function isValidArray(input: any): input is any[] {
     return Array.isArray(input) && input != null;
@@ -94,6 +94,7 @@ export function mapIdToBuildingId(mapid: number): number {
 export function buildingIdToMapid(buildingId: number): number {
     var mapid = 0
     switch (buildingId) {
+        case BOMB_ID:mapid = Tileset.Bomb;break;
         case BANK_ID: mapid = Tileset.Bank; break;
         case HOTEL_ID: mapid = Tileset.Hotel; break;
         case STARKBUCKS_ID: mapid = Tileset.Starkbucks; break;
