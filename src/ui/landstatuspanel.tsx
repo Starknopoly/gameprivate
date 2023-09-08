@@ -7,7 +7,7 @@ import { Tileset } from "../artTypes/world";
 import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs";
 
 export default function LandStatusPanel() {
-    const { account, buildings, player } = store();
+    const { account, buildings, player: storePlayer } = store();
 
     const [currenLand, setCurrentLand] = useState<Building>()
 
@@ -84,6 +84,8 @@ export default function LandStatusPanel() {
                     const player = players[0] as any
                     // console.log("fetchAllPlayers setComponent ", element.node?.keys![0]);
                     const entityId = parseInt(element.node?.keys![0]!) as EntityIndex
+
+                    //if is not myself
                     if (element.node?.keys![0] != accountRef.current) {
                         setComponent(PlayerComponent, entityId, {
                             position: player.position,
@@ -95,8 +97,20 @@ export default function LandStatusPanel() {
                             last_point: player.last_point,
                             last_time: player.last_time
                         })
+                    } else {
+                        if (player.last_point == 0 ) {
+                            setComponent(PlayerComponent, entityId, {
+                                position: player.position,
+                                joined_time: player.joined_time,
+                                direction: player.direction,
+                                nick_name: player.nick_name,
+                                gold: player.gold,
+                                steps: player.steps,
+                                last_point: player.last_point,
+                                last_time: player.last_time
+                            })
+                        }
                     }
-                    // getComponentValue()
                 }
             }
         }
@@ -167,18 +181,18 @@ export default function LandStatusPanel() {
     }, [account])
 
     useEffect(() => {
-        const build = buildings.get(player?.position)
+        const build = buildings.get(storePlayer?.position)
         setCurrentLand(build)
-    }, [player,buildings.keys()])
+    }, [storePlayer, buildings.keys()])
 
 
 
     const getOwnerName = useMemo(() => {
-        if(!currenLand){
+        if (!currenLand) {
             return <span>0x000</span>
         }
         const entity = parseInt(currenLand?.owner) as EntityIndex;
-        const player =  getComponentValue(PlayerComponent,entity)
+        const player = getComponentValue(PlayerComponent, entity)
         return <span>{hexToString(player?.nick_name)}</span>
     }, [currenLand])
 

@@ -14,6 +14,8 @@ export function createSystemCalls(
   { execute, contractComponents }: SetupNetworkResult,
   { Player }: ClientComponents
 ) {
+
+
   const roll = async (signer: Account) => {
     console.log("roll signer:" + signer.address);
     // const entityId = parseInt(signer.address) as EntityIndex;
@@ -171,7 +173,7 @@ export function createSystemCalls(
     console.log(`explode`)
     // const entityId = parseInt(signer.address) as EntityIndex;
     try {
-      const tx = await execute(signer, "spawn", []);
+      const tx = await execute(signer, "explode", []);
 
       console.log(tx);
       const receipt = await signer.waitForTransaction(tx.transaction_hash, {
@@ -197,6 +199,26 @@ export function createSystemCalls(
       // Position.removeOverride(positionId);
       // Moves.removeOverride(movesId);
     }
+  };
+
+  const adminRoll = async (signer: Account,position:number) => {
+    console.log(`adminRoll`)
+    try {
+      const tx = await execute(signer, "admin_roll", [position]);
+
+      console.log(tx);
+      const receipt = await signer.waitForTransaction(tx.transaction_hash, {
+        retryInterval: 100,
+      });
+
+      const events = parseEvent(receipt);
+      console.log(events);
+      return events;
+    } catch (e) {
+      console.log(e);
+      return null
+    } finally {
+    }
     return true;
   };
 
@@ -205,6 +227,8 @@ export function createSystemCalls(
     roll,
     buyBuilding,
     buyBack,
+    explode,
+    adminRoll
   };
 }
 

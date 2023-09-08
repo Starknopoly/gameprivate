@@ -23,7 +23,7 @@ export default function ActionsUI() {
             },
         },
         networkLayer: {
-            systemCalls: { buyBuilding, buyBack },
+            systemCalls: { buyBuilding, buyBack,explode },
         },
     } = phaserLayer;
 
@@ -63,8 +63,11 @@ export default function ActionsUI() {
         }
 
         const coord = positionToBuildingCoorp(player.position)
+
+        explode(account)
         //TODO : check there is building
         putTileAt({ x: coord.x, y: coord.y }, Tileset.Bomb, "Foreground");
+
     }
 
     const buildClick = () => {

@@ -8,6 +8,7 @@ import PlayerPanel from "./playerpanel";
 import LandStatusPanel from "./landstatuspanel";
 import BottomIcons from "./bottomicons";
 import NamesUI from "./names";
+import AdminUI from "./adminUI";
 
 export const UI = () => {
     const layers = store((state) => {
@@ -41,6 +42,10 @@ export const UI = () => {
             <BottomRightContainer>
                 <BottomIcons/>
             </BottomRightContainer>
+        <BottomLeftContainer>
+            <AdminUI/>
+        </BottomLeftContainer>
+
             <NamesUI/>
         </Wrapper>
     );
@@ -95,6 +100,17 @@ const BottomRightContainer = styled.div`
     position: absolute;
     bottom: 2%;
     right: 2%;
+    transform: translate(-50%, -50%);
+    color: white;
+    display: flex;
+    flex-direaction: row;
+    gap: 20px;
+`;
+
+const BottomLeftContainer = styled.div`
+    position: absolute;
+    bottom: 2%;
+    left: 10%;
     transform: translate(-50%, -50%);
     color: white;
     display: flex;
