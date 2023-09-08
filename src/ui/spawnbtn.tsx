@@ -41,7 +41,7 @@ export const SpawnBtn = () => {
                 if (element.node?.keys) {
                     if (element.node.keys[0]) {
                         const player = element.node.components[0]
-                        if (player && player.__typename == "Player") {
+                        if (player && player.__typename == "Player" && player.last_time!=0) {
                             const entityId = parseInt(element.node.keys[0]) as EntityIndex;
                             playersAddress.set(entityId, element.node.keys[0])
                         }
@@ -56,7 +56,7 @@ export const SpawnBtn = () => {
                 if (element.node?.keys) {
                     if (element.node.keys[0]) {
                         const player = element.node.components[0]
-                        if (player && player.__typename == "Player") {
+                        if (player && player.__typename == "Player"&& player.last_time!=0) {
                             const entityId = parseInt(element.node.keys[0]) as EntityIndex;
                             setComponent(components.Player, entityId, {
                                 position: player.position,
