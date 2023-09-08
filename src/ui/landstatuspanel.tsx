@@ -79,7 +79,7 @@ export default function LandStatusPanel() {
                 const element = edges[index];
                 const players = element?.node?.components
                 // console.log(element?.node?.keys![0], element?.node?.components![0]?.__typename);
-                if (players && players[0] && players[0].__typename == "Player") {
+                if (players && players[0] && players[0].__typename == "Player" && players[0].last_time != 0) {
                     console.log(players[0]);
                     const player = players[0] as any
                     // console.log("fetchAllPlayers setComponent ", element.node?.keys![0]);
@@ -98,7 +98,7 @@ export default function LandStatusPanel() {
                             last_time: player.last_time
                         })
                     } else {
-                        if (player.last_point == 0 ) {
+                        if (player.last_point == 0) {
                             setComponent(PlayerComponent, entityId, {
                                 position: player.position,
                                 joined_time: player.joined_time,
@@ -127,34 +127,31 @@ export default function LandStatusPanel() {
     } = phaserLayer;
 
     const fetchAllBuildings = async () => {
-        console.log("fetchAllBuildings");
         const allBuildings = await graphSdk.getAllBuildings()
+        console.log("fetchAllBuildings");
         console.log(allBuildings);
         const edges = allBuildings.data.entities?.edges
         if (!edges) {
             return
         }
+
         const bs = store.getState().buildings
         for (let index = 0; index < edges.length; index++) {
             const element = edges[index];
-            if (element) {
-                if (element.node?.components) {
-                    if (element.node.components[0]) {
-                        const building = element.node.components[0]
-                        if (building && building.__typename == "Land") {
-                            const position = parseInt(element.node.keys![0]!, 16);
-                            const type = building.building_type
-                            const owner = building.owner
-                            const price = building.price
-                            const build = new Building(type, price, owner, position)
-                            if (owner == account?.address) {
-                                build.isMine = true;
-                            }
-                            // console.log(build);
-                            bs.set(position, build)
-                        }
-                    }
+            const building = element?.node?.components![0];
+            if (building && building.__typename == "Land") {
+                const position = parseInt(element?.node?.keys![0]!, 16);
+                const type = building.building_type
+                const owner = building.owner
+                const price = building.price
+                const build = new Building(type, price, owner, position)
+                // console.log("fetchAllBuildings postion ",position,owner,account?.address);
+                if (owner == accountRef.current) {
+                    // console.log("is mine ", owner, position);
+                    build.isMine = true;
                 }
+                // console.log(build);
+                bs.set(position, build)
             }
         }
         store.setState({ buildings: bs })
@@ -167,7 +164,7 @@ export default function LandStatusPanel() {
             const mapid = buildingIdToMapid(build.type)
             putTileAt({ x: coord.x, y: coord.y }, mapid, "Foreground");
             if (build.isMine) {
-                console.log("buildings put is mine");
+                // console.log("buildings put is mine");
                 putTileAt({ x: coord.x, y: coord.y }, Tileset.Heart, "Top");
             }
         })
@@ -184,8 +181,6 @@ export default function LandStatusPanel() {
         const build = buildings.get(storePlayer?.position)
         setCurrentLand(build)
     }, [storePlayer, buildings.keys()])
-
-
 
     const getOwnerName = useMemo(() => {
         if (!currenLand) {
