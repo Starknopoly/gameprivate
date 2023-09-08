@@ -161,9 +161,8 @@ export default function LandStatusPanel() {
                 }
                 // console.log(build);
                 if (type == 0) {
-                    if (bomb) {
-                        bs.set(position, build)
-                    }
+                    build.enable = bomb
+                    bs.set(position, build)
                 } else {
                     bs.set(position, build)
                 }
@@ -177,7 +176,13 @@ export default function LandStatusPanel() {
         buildings.forEach((build, position) => {
             const coord = positionToBuildingCoorp(position)
             const mapid = buildingIdToMapid(build.type)
-            putTileAt({ x: coord.x, y: coord.y }, mapid, "Foreground");
+
+            if(build.enable){
+                putTileAt({ x: coord.x, y: coord.y }, mapid, "Foreground");
+            }else{
+                putTileAt({ x: coord.x, y: coord.y }, Tileset.NoHeart, "Foreground");
+            }
+
             if (build.isMine) {
                 // console.log("buildings put is mine");
                 putTileAt({ x: coord.x, y: coord.y }, Tileset.Heart, "Top");

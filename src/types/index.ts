@@ -5,7 +5,7 @@ export class Building {
     public type: number = 1
     public price: number = 0
     public owner: string = ""
-
+    public enable = true
     public isMine = false
 
     constructor(type: number, price: number, owner: string, position: number) {
