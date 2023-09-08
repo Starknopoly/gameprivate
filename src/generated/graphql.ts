@@ -19,6 +19,7 @@ export type Scalars = {
   ContractAddress: { input: any; output: any; }
   Cursor: { input: any; output: any; }
   DateTime: { input: any; output: any; }
+  bool: { input: any; output: any; }
   felt252: { input: any; output: any; }
   u64: { input: any; output: any; }
 };
@@ -97,6 +98,8 @@ export type EventEdge = {
 
 export type Land = {
   __typename?: 'Land';
+  bomb?: Maybe<Scalars['bool']['output']>;
+  bomber?: Maybe<Scalars['ContractAddress']['output']>;
   building_type?: Maybe<Scalars['u64']['output']>;
   entity?: Maybe<Entity>;
   owner?: Maybe<Scalars['ContractAddress']['output']>;
@@ -122,6 +125,8 @@ export type LandOrder = {
 };
 
 export enum LandOrderOrderField {
+  Bomb = 'BOMB',
+  Bomber = 'BOMBER',
   BuildingType = 'BUILDING_TYPE',
   Owner = 'OWNER',
   Position = 'POSITION',
@@ -129,6 +134,18 @@ export enum LandOrderOrderField {
 }
 
 export type LandWhereInput = {
+  bomb?: InputMaybe<Scalars['Int']['input']>;
+  bombGT?: InputMaybe<Scalars['Int']['input']>;
+  bombGTE?: InputMaybe<Scalars['Int']['input']>;
+  bombLT?: InputMaybe<Scalars['Int']['input']>;
+  bombLTE?: InputMaybe<Scalars['Int']['input']>;
+  bombNEQ?: InputMaybe<Scalars['Int']['input']>;
+  bomber?: InputMaybe<Scalars['String']['input']>;
+  bomberGT?: InputMaybe<Scalars['String']['input']>;
+  bomberGTE?: InputMaybe<Scalars['String']['input']>;
+  bomberLT?: InputMaybe<Scalars['String']['input']>;
+  bomberLTE?: InputMaybe<Scalars['String']['input']>;
+  bomberNEQ?: InputMaybe<Scalars['String']['input']>;
   building_type?: InputMaybe<Scalars['Int']['input']>;
   building_typeGT?: InputMaybe<Scalars['Int']['input']>;
   building_typeGTE?: InputMaybe<Scalars['Int']['input']>;
@@ -438,7 +455,12 @@ export type GetAllPlayersQuery = { __typename?: 'Query', entities?: { __typename
 export type GetAllBuildingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllBuildingsQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', totalCount: number, edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, components?: Array<{ __typename: 'Land', building_type?: any | null, price?: any | null, owner?: any | null } | { __typename: 'Player' } | { __typename: 'Townhall' } | null> | null } | null } | null> | null } | null };
+export type GetAllBuildingsQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', totalCount: number, edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, components?: Array<{ __typename: 'Land', position?: any | null, owner?: any | null, building_type?: any | null, price?: any | null, bomb?: any | null, bomber?: any | null } | { __typename: 'Player' } | { __typename: 'Townhall' } | null> | null } | null } | null> | null } | null };
+
+export type GetTownHallBalanceQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTownHallBalanceQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, components?: Array<{ __typename: 'Land' } | { __typename: 'Player' } | { __typename: 'Townhall', gold?: any | null } | null> | null } | null } | null> | null } | null };
 
 
 export const GetAllPlayersDocument = gql`
@@ -476,9 +498,29 @@ export const GetAllBuildingsDocument = gql`
         components {
           __typename
           ... on Land {
+            position
+            owner
             building_type
             price
-            owner
+            bomb
+            bomber
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+export const GetTownHallBalanceDocument = gql`
+    query getTownHallBalance {
+  entities(first: 1000, keys: ["0x1"]) {
+    edges {
+      node {
+        keys
+        components {
+          __typename
+          ... on Townhall {
+            gold
           }
         }
       }
@@ -493,6 +535,7 @@ export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, str
 const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action();
 const GetAllPlayersDocumentString = print(GetAllPlayersDocument);
 const GetAllBuildingsDocumentString = print(GetAllBuildingsDocument);
+const GetTownHallBalanceDocumentString = print(GetTownHallBalanceDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
     getAllPlayers(variables?: GetAllPlayersQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetAllPlayersQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
@@ -500,6 +543,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     getAllBuildings(variables?: GetAllBuildingsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetAllBuildingsQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetAllBuildingsQuery>(GetAllBuildingsDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getAllBuildings', 'query');
+    },
+    getTownHallBalance(variables?: GetTownHallBalanceQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetTownHallBalanceQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetTownHallBalanceQuery>(GetTownHallBalanceDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getTownHallBalance', 'query');
     }
   };
 }
