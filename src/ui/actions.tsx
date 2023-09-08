@@ -43,6 +43,17 @@ export default function ActionsUI() {
         { value: 'Starkbucks', label: 'Starkbucks($1000)' }
     ];
 
+    const [selectBomb, setSelectBomb] = useState("10")
+    const bomboptions: OptionType[] = [
+        { value: '10', label: 'Power : $10' },
+        { value: '20', label: 'Power : $20' },
+        { value: '50', label: 'Power : $50' },
+        { value: '100', label: 'Power : $100' },
+        { value: '200', label: 'Power : $200' },
+        { value: '300', label: 'Power : $300' },
+        { value: '500', label: 'Power : $500' },
+    ];
+
     const handleSelectionChange = (value: string) => {
         console.log('Selected:', value);
         setSelectBuild(value)
@@ -163,7 +174,11 @@ export default function ActionsUI() {
 
         <BuildingList options={options} onChange={handleSelectionChange} defaultValue="Hotel" />
         <button onClick={() => buildClick()}>Build {selectBuild}</button>
-        <button onClick={() => placeBomb()} style={{ marginTop: 15 }}>Place Bomb</button>
+
+        <div style={{ marginTop: 15 }}></div>
+        <BuildingList options={bomboptions} onChange={(value)=>setSelectBomb(value)} defaultValue="10" />
+        <button onClick={() => placeBomb()} >Place Bomb</button>
+        
         <button onClick={() => buyBackClick()} style={{ marginTop: 15 }}>Buy Back</button>
     </ClickWrapper>)
 }
