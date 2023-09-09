@@ -148,12 +148,13 @@ export default function LandStatusPanel() {
                 const position = parseInt(element?.node?.keys![0]!, 16);
                 const type = building.building_type
                 var owner = building.owner
-                const price = building.price
+                var price = building.price
                 const bomb = building.bomb
                 const build = new Building(type, price, owner, position)
                 // console.log("fetchAllBuildings postion ", position, owner, type);
                 if (bomb) {
                     owner = building.bomber
+                    price = building.price
                 }
                 if (owner == accountRef.current) {
                     // console.log("is mine ", owner, position);

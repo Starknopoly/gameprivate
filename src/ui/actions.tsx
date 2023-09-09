@@ -12,7 +12,7 @@ import { Player } from "../dojo/createSystemCalls";
 import { EntityIndex, setComponent } from "@latticexyz/recs";
 
 export default function ActionsUI() {
-    const { account, player, buildings } = store();
+    const { account, player, buildings,actions } = store();
     const { phaserLayer, networkLayer: { components } } = useDojo()
 
     const {
@@ -59,6 +59,19 @@ export default function ActionsUI() {
         setSelectBuild(value)
     };
 
+    const hasBuilding = (position:number)=>{
+        const build = buildings.get(position)
+        if (build) {
+            if(build.type==0){
+                if(build.enable){
+                    return true
+                }
+            }else{
+                return true
+            }
+        }
+        return false
+    }
 
     const placeBomb = async () => {
         if (!account) {
@@ -69,9 +82,9 @@ export default function ActionsUI() {
             alert("Start game first.")
             return
         }
-        const build = buildings.get(player.position)
-        if (build) {
-            alert("There is a building.")
+        const has = hasBuilding(player.position)
+        if(has){
+            alert("There is a building")
             return
         }
 
@@ -95,6 +108,7 @@ export default function ActionsUI() {
                     last_time: player.last_time
                 })
                 putTileAt({ x: coord.x, y: coord.y }, Tileset.Bomb, "Foreground");
+                actions.push("Place $"+selectBomb+" bomb at : "+player.position)
                 return
             }
         }
@@ -111,11 +125,17 @@ export default function ActionsUI() {
             alert("Start game first.")
             return
         }
-        const build = buildings.get(player.position)
-        if (build) {
-            alert("There is a building.")
+        const has = hasBuilding(player.position)
+        if(has){
+            alert("There is a building")
             return
         }
+        // const build = buildings.get(player.position)
+        // console.log(build);
+        // if (build) {
+        //     alert("There is a building.")
+        //     return
+        // }
         const coord = positionToBuildingCoorp(player.position)
         //TODO : check there is building
 
@@ -136,6 +156,7 @@ export default function ActionsUI() {
         putTileAt({ x: coord.x, y: coord.y }, id, "Foreground");
         putTileAt({ x: coord.x, y: coord.y }, Tileset.Heart, "Top");
         buyBuilding(account, buildingId)
+        actions.push("Build "+selectBuild+" at : "+player.position)
     }
 
     const buyBackClick = () => {
@@ -168,6 +189,8 @@ export default function ActionsUI() {
         //TODO : check there is building
 
         buyBack(account)
+
+        actions.push("Buy back "+(building.getName())+" at : "+player.position)
     }
 
     return (<ClickWrapper style={{ display: "flex", flexDirection: "column" }}>

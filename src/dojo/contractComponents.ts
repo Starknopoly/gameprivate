@@ -9,7 +9,7 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
-          nick_name: RecsType.Number,
+          nick_name: RecsType.String,
           joined_time: RecsType.Number,
           direction: RecsType.Number,
           gold: RecsType.Number,

@@ -9,6 +9,7 @@ import LandStatusPanel from "./landstatuspanel";
 import BottomIcons from "./bottomicons";
 import NamesUI from "./names";
 import AdminUI from "./adminUI";
+import ActionList from "./actionlist";
 
 export const UI = () => {
     const layers = store((state) => {
@@ -23,30 +24,32 @@ export const UI = () => {
     return (
         <Wrapper>
             <TopLeftContainer>
-                <PlayerPanel/>
+                <PlayerPanel />
             </TopLeftContainer>
             <HeaderContainer>
                 <SpawnBtn />
             </HeaderContainer>
 
             <BottomContainer>
-                <RollDice/>
+                <RollDice />
             </BottomContainer>
             <RightContainer>
-                <ActionsUI/>
+                <ActionsUI />
             </RightContainer>
             <TopRightContainer>
-                <LandStatusPanel/>
+                <LandStatusPanel />
             </TopRightContainer>
 
             <BottomRightContainer>
-                <BottomIcons/>
+                <BottomIcons />
             </BottomRightContainer>
-        <BottomLeftContainer>
-            <AdminUI/>
-        </BottomLeftContainer>
-
-            <NamesUI/>
+            <BottomLeftContainer>
+                <AdminUI />
+            </BottomLeftContainer>
+            <LeftCenterContainer>
+                <ActionList />
+            </LeftCenterContainer>
+            <NamesUI />
         </Wrapper>
     );
 };
@@ -65,6 +68,17 @@ const HeaderContainer = styled.div`
 const TopLeftContainer = styled.div`
     position: absolute;
     top: 130px;
+    left: 130px;
+    transform: translate(-50%, -50%);
+    color: white;
+    display: flex;
+    flex-direaction: row;
+    gap: 10px;
+`;
+
+const LeftCenterContainer = styled.div`
+    position: absolute;
+    top: 430px;
     left: 130px;
     transform: translate(-50%, -50%);
     color: white;
@@ -109,7 +123,7 @@ const BottomRightContainer = styled.div`
 
 const BottomLeftContainer = styled.div`
     position: absolute;
-    bottom: 2%;
+    bottom: 0%;
     left: 10%;
     transform: translate(-50%, -50%);
     color: white;

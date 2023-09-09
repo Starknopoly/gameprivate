@@ -12,6 +12,7 @@ export type Store = {
     phaserLayer: PhaserLayer | null;
     account:Account| null;
     player:Player|null;
+    actions:Array<string>;
     //entity => address
     playersAddress:Map<EntityIndex,string>;
     //position=>buidings
@@ -23,6 +24,7 @@ export const store = create<Store>(() => ({
     phaserLayer: null,
     account:null,
     player:null,
+    actions:new Array(),
     playersAddress:new Map(),
     buildings:new Map()
 }));
