@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ClickWrapper } from "./clickWrapper";
 import { store } from "../store/store";
 import { useDojo } from "../hooks/useDojo";
@@ -10,9 +10,12 @@ export default function AdminUI() {
     const { account } = store();
     const { phaserLayer,networkLayer:{components} } = useDojo()
 
+    const [testMode,setTestmode] = useState(false)
+
     const {
         scenes: {
             Main: {
+                input,
                 camera,
                 maps: {
                     Main: { putTileAt },
@@ -24,6 +27,14 @@ export default function AdminUI() {
         },
     } = phaserLayer;
 
+    useEffect(()=>{
+
+        input.onKeyPress(
+            keys => keys.has("M"),
+            () => {
+                setTestmode(pre=>!pre)
+            });
+    },[])
 
     const clickMove =async () => {
         if (moveTo <= 0) {
@@ -59,11 +70,16 @@ export default function AdminUI() {
     }
 
     return (<ClickWrapper>
-        <div style={{ width: 150, height: 140, lineHeight: 1, backgroundColor: "rgba(0, 0, 0, 0.5)", padding: 10, borderRadius: 15 }}>
+        {
+            testMode?
+            <div style={{ width: 150, height: 140, lineHeight: 1, backgroundColor: "rgba(0, 0, 0, 0.5)", padding: 10, borderRadius: 15 }}>
             <p>Admin Test</p>
 
             <button onClick={() => clickMove()}>Move To</button>
             <input value={moveTo} onChange={inputChange} type="number" />
         </div>
+        :<></>
+        }
+       
     </ClickWrapper>);
 }
