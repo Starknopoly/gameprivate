@@ -208,6 +208,9 @@ export default function LandStatusPanel() {
         if (!currenLand) {
             return <span>0x000</span>
         }
+        if(currenLand.type==0){
+            return <span>You</span>
+        }
         const entity = parseInt(currenLand?.owner) as EntityIndex;
         const player = getComponentValue(PlayerComponent, entity)
         return <span>{hexToString(player?.nick_name)}</span>

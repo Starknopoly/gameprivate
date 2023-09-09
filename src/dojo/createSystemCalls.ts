@@ -169,11 +169,11 @@ export function createSystemCalls(
     return null;
   };
 
-  const explode = async (signer: Account) => {
+  const explode = async (signer: Account,price:number) => {
     console.log(`explode`)
     // const entityId = parseInt(signer.address) as EntityIndex;
     try {
-      const tx = await execute(signer, "explode", []);
+      const tx = await execute(signer, "explode", [price]);
 
       console.log(tx);
       const receipt = await signer.waitForTransaction(tx.transaction_hash, {

@@ -76,8 +76,8 @@ export default function ActionsUI() {
         }
 
         const coord = positionToBuildingCoorp(player.position)
-
-        const events = await explode(account)
+        
+        const events = await explode(account,parseInt(selectBomb))
         if (events) {
             if (events.length != 0) {
                 //TODO : check there is building
