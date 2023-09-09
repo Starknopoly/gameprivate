@@ -150,11 +150,14 @@ export default function LandStatusPanel() {
                 var owner = building.owner
                 var price = building.price
                 const bomb = building.bomb
+                if(bomb){
+                    price = building.bomb_price
+                }
                 const build = new Building(type, price, owner, position)
                 // console.log("fetchAllBuildings postion ", position, owner, type);
                 if (bomb) {
+                    console.log("is bomb price:"+building.bomb_price);
                     owner = building.bomber
-                    price = building.price
                 }
                 if (owner == accountRef.current) {
                     // console.log("is mine ", owner, position);
@@ -201,9 +204,10 @@ export default function LandStatusPanel() {
     }, [account])
 
     useEffect(() => {
+        console.log("current land change");
         const build = buildings.get(storePlayer?.position)
         setCurrentLand(build)
-    }, [storePlayer, buildings.keys()])
+    }, [storePlayer, buildings.values()])
 
     const getOwnerName = useMemo(() => {
         if (!currenLand) {
