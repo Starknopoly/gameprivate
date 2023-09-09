@@ -2,11 +2,13 @@ import { useState } from "react";
 import { ClickWrapper } from "./clickWrapper";
 import { store } from "../store/store";
 import { useDojo } from "../hooks/useDojo";
+import { EntityIndex, setComponent } from "@latticexyz/recs";
+import { Player } from "../dojo/createSystemCalls";
 
 export default function AdminUI() {
     const [moveTo, setMoveTo] = useState(0)
     const { account } = store();
-    const { phaserLayer } = useDojo()
+    const { phaserLayer,networkLayer:{components} } = useDojo()
 
     const {
         scenes: {
@@ -23,7 +25,7 @@ export default function AdminUI() {
     } = phaserLayer;
 
 
-    const clickMove = () => {
+    const clickMove =async () => {
         if (moveTo <= 0) {
             alert("wrong position")
             return
@@ -32,7 +34,23 @@ export default function AdminUI() {
             alert("no account")
             return
         }
-        adminRoll(account, moveTo)
+        const events = await adminRoll(account, moveTo)
+        if(!events){
+            return
+        }
+        const entityId = parseInt(account.address) as EntityIndex
+        const player = events[0] as Player
+
+        setComponent(components.Player, entityId, {
+            position: player.position,
+            joined_time: player.joined_time,
+            direction: player.direction,
+            nick_name: player.nick_name,
+            gold: player.gold,
+            steps: player.steps,
+            last_point: player.last_point,
+            last_time: player.last_time
+        })
     }
 
     const inputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
