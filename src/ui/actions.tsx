@@ -190,7 +190,7 @@ export default function ActionsUI() {
 
         buyBack(account)
 
-        actions.push("Buy back "+(building.getName())+" at : "+player.position)
+        actions.push("Buy back "+(building.getName())+" at : "+player.position+", spend $"+(building.price*1.3).toFixed(2))
     }
 
     return (<ClickWrapper style={{ display: "flex", flexDirection: "column" }}>

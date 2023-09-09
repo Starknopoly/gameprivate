@@ -44,7 +44,7 @@ export const UI = () => {
                 <BottomIcons />
             </BottomRightContainer>
             <BottomLeftContainer>
-                <AdminUI />
+                {/* <AdminUI /> */}
             </BottomLeftContainer>
             <LeftCenterContainer>
                 <ActionList />
