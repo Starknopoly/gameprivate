@@ -9,7 +9,7 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
-          nick_name: RecsType.String,
+          nick_name: RecsType.Number,
           joined_time: RecsType.Number,
           direction: RecsType.Number,
           gold: RecsType.Number,
@@ -33,6 +33,9 @@ export function defineContractComponents(world: World) {
           owner: RecsType.Number,
           building_type: RecsType.Number,
           price: RecsType.Number,
+          bomb: RecsType.Boolean,
+          bomber: RecsType.Number,
+          bomb_price: RecsType.Number,
         },
         {
           metadata: {

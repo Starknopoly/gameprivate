@@ -99,6 +99,7 @@ export type EventEdge = {
 export type Land = {
   __typename?: 'Land';
   bomb?: Maybe<Scalars['bool']['output']>;
+  bomb_price?: Maybe<Scalars['u64']['output']>;
   bomber?: Maybe<Scalars['ContractAddress']['output']>;
   building_type?: Maybe<Scalars['u64']['output']>;
   entity?: Maybe<Entity>;
@@ -127,6 +128,7 @@ export type LandOrder = {
 export enum LandOrderOrderField {
   Bomb = 'BOMB',
   Bomber = 'BOMBER',
+  BombPrice = 'BOMB_PRICE',
   BuildingType = 'BUILDING_TYPE',
   Owner = 'OWNER',
   Position = 'POSITION',
@@ -140,6 +142,12 @@ export type LandWhereInput = {
   bombLT?: InputMaybe<Scalars['Int']['input']>;
   bombLTE?: InputMaybe<Scalars['Int']['input']>;
   bombNEQ?: InputMaybe<Scalars['Int']['input']>;
+  bomb_price?: InputMaybe<Scalars['Int']['input']>;
+  bomb_priceGT?: InputMaybe<Scalars['Int']['input']>;
+  bomb_priceGTE?: InputMaybe<Scalars['Int']['input']>;
+  bomb_priceLT?: InputMaybe<Scalars['Int']['input']>;
+  bomb_priceLTE?: InputMaybe<Scalars['Int']['input']>;
+  bomb_priceNEQ?: InputMaybe<Scalars['Int']['input']>;
   bomber?: InputMaybe<Scalars['String']['input']>;
   bomberGT?: InputMaybe<Scalars['String']['input']>;
   bomberGTE?: InputMaybe<Scalars['String']['input']>;
