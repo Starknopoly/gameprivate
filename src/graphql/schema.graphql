@@ -38,6 +38,7 @@ query getAllBuildings {
             price
             bomb
             bomber
+            bomb_price
           }
         }
       }

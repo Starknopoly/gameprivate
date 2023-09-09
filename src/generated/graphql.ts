@@ -463,7 +463,7 @@ export type GetAllPlayersQuery = { __typename?: 'Query', entities?: { __typename
 export type GetAllBuildingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllBuildingsQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', totalCount: number, edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, components?: Array<{ __typename: 'Land', position?: any | null, owner?: any | null, building_type?: any | null, price?: any | null, bomb?: any | null, bomber?: any | null } | { __typename: 'Player' } | { __typename: 'Townhall' } | null> | null } | null } | null> | null } | null };
+export type GetAllBuildingsQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', totalCount: number, edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, components?: Array<{ __typename: 'Land', position?: any | null, owner?: any | null, building_type?: any | null, price?: any | null, bomb?: any | null, bomber?: any | null, bomb_price?: any | null } | { __typename: 'Player' } | { __typename: 'Townhall' } | null> | null } | null } | null> | null } | null };
 
 export type GetTownHallBalanceQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -512,6 +512,7 @@ export const GetAllBuildingsDocument = gql`
             price
             bomb
             bomber
+            bomb_price
           }
         }
       }
