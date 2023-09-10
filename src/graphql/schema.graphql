@@ -30,10 +30,32 @@ query getAllBuildings {
         keys
         components {
           __typename
-          ... on Land {
+          ... on
+           Land {
+            position
+            owner
             building_type
             price
-            owner
+            bomb
+            bomber
+            bomb_price
+          }
+        }
+      }
+    }
+  }
+}
+
+query getTownHallBalance{
+  entities(first:1000, keys: ["0x1"]) {
+    edges {
+      node {
+        keys
+        components {
+          __typename
+          ... on
+           Townhall {
+						gold
           }
         }
       }

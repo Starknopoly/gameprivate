@@ -40,7 +40,7 @@ export default function NamesUI() {
                 once: (text) => {
                     text.setPosition(pixelPosition?.x, pixelPosition?.y - 14);
                     text.setBackgroundColor("rgba(0,0,0,0.6)")
-                    text.setFontSize(12)
+                    text.setFontSize(11)
                     const myId = parseInt(account?.address!) as EntityIndex
                     if (myId == entity) {
                         text.setBackgroundColor("rgba(255,0,0,0.6)")

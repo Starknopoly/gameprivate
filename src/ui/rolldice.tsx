@@ -14,6 +14,7 @@ import { store } from "../store/store";
 import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs"
 import { MAP_WIDTH } from "../phaser/constants"
 import { Account } from "starknet"
+import { HOTEL_ID } from "../config"
 
 export default function RollDice() {
     const MaxRollTimes = 12
@@ -28,7 +29,7 @@ export default function RollDice() {
     const walkInternalIdRef = useRef<NodeJS.Timer>()
     const walkCountRef = useRef(0)
 
-    const {account,player} = store();
+    const { account, player, actions, buildings: storeBuildings } = store();
     const dices = [dice1, dice2, dice3, dice4, dice5, dice6]
     const {
         networkLayer: {
@@ -48,20 +49,27 @@ export default function RollDice() {
         } else {
             clearInterval(rollInternalIdRef.current)
             rollCountRef.current = 0;
-            if(playerEventRef.current){
-                setDice1(dices[playerEventRef.current.last_point-1])
+            if (playerEventRef.current) {
+                setDice1(dices[playerEventRef.current.last_point - 1])
             }
             const intervalId = setInterval(walk, 600);
             walkInternalIdRef.current = intervalId
+
+            actions.push("Roll " + playerEventRef.current.last_point + " , walk to : " + playerEventRef.current.position)
+            // if(playerEventRef.current.type)
+            const b = storeBuildings.get(playerEventRef.current.position)
+            if (b?.type == HOTEL_ID) {
+                actions.push("There is a bank, you pay $"+(b.price*0.1).toFixed(2))
+            }
         }
     }
 
     const walk = async () => {
-        if(!account){
+        if (!account) {
             alert("Create burner wallet first.")
             return
         }
-        if(!player){
+        if (!player) {
             alert("Start game first.")
             return
         }
@@ -73,8 +81,8 @@ export default function RollDice() {
         }
 
         walkCountRef.current = walkCountRef.current + 1
-        if(playerEventRef.current)
-        move(account, Direction.Right,playerEventRef.current)
+        if (playerEventRef.current)
+            move(account, Direction.Right, playerEventRef.current)
     }
 
     const move = (signer: Account, direction: Direction, playerEvent: Player) => {
@@ -96,14 +104,14 @@ export default function RollDice() {
         }
         if (direction == Direction.Right) {
             position += 1
-            if (position == size * size+1) {
+            if (position == size * size + 1) {
                 position = 1
             }
         }
 
         setComponent(components.Player, entityId, {
             position: position,
-            nick_name:playerEvent.nick_name,
+            nick_name: playerEvent.nick_name,
             joined_time: playerEvent.joined_time,
             direction: playerEvent.direction,
             gold: playerEvent.gold,
@@ -115,11 +123,11 @@ export default function RollDice() {
 
 
     const rollDice = async () => {
-        if(!account){
+        if (!account) {
             alert("Create burner wallet first.")
             return
         }
-        if(!player){
+        if (!player) {
             alert("Start game first.")
             return
         }
@@ -135,10 +143,10 @@ export default function RollDice() {
         const intervalId = setInterval(waitForChainResult, 200);
         rollInternalIdRef.current = intervalId
 
-        console.log("click roll account:"+account.address);
+        console.log("click roll account:" + account.address);
         const result = await roll(account)
-        console.log("rolldice result:"+result);
-        if(result){
+        console.log("rolldice result:" + result);
+        if (result) {
             playerEventRef.current = result
         }
     }

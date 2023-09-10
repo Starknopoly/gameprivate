@@ -40,12 +40,12 @@ export default function PlayerPanel() {
                 store.setState({ player: player_ })
             }
 
-            console.log("defineSystem account:" + account.address);
+            // console.log("defineSystem account:" + account.address);
 
             const position = player_.position - 1
             const { x, y } = positionToCoorp(position)
 
-            console.log("defineSystem position:" + player_.position + ",x=" + x + ",y=" + y);
+            // console.log("defineSystem position:" + player_.position + ",x=" + x + ",y=" + y);
             const playerObj = objectPool.get(entity, "Sprite")
 
             const size = MAP_WIDTH

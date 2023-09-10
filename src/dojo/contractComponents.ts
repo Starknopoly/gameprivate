@@ -33,6 +33,9 @@ export function defineContractComponents(world: World) {
           owner: RecsType.Number,
           building_type: RecsType.Number,
           price: RecsType.Number,
+          bomb: RecsType.Boolean,
+          bomber: RecsType.Number,
+          bomb_price: RecsType.Number,
         },
         {
           metadata: {

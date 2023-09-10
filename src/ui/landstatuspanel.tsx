@@ -7,7 +7,7 @@ import { Tileset } from "../artTypes/world";
 import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs";
 
 export default function LandStatusPanel() {
-    const { account, buildings, player } = store();
+    const { account, buildings, player: storePlayer } = store();
 
     const [currenLand, setCurrentLand] = useState<Building>()
 
@@ -46,12 +46,14 @@ export default function LandStatusPanel() {
                     if (data) {
                         let entityUpdated = data.entityUpdated;
                         console.log("We got something:" + entityUpdated.componentNames);
+                        console.log(entityUpdated);
+
                         if (entityUpdated.componentNames == LandComponent.metadata.name) {
                             fetchAllBuildings()
                         } else if (entityUpdated.componentNames == PlayerComponent.metadata.name) {
                             console.log("We got something player my account:" + accountRef.current + ",change account:" + entityUpdated.keys[0]);
 
-                            if (entityUpdated.keys[0] != accountRef.current) {
+                            if (entityUpdated.keys[0] != "0x0" && entityUpdated.keys[0] != accountRef.current) {
                                 fetchAllPlayers()
                             }
                         }
@@ -79,24 +81,41 @@ export default function LandStatusPanel() {
                 const element = edges[index];
                 const players = element?.node?.components
                 // console.log(element?.node?.keys![0], element?.node?.components![0]?.__typename);
-                if (players && players[0] && players[0].__typename == "Player") {
+                if (players && players[0] && players[0].__typename == "Player" && players[0].last_time != 0) {
                     console.log(players[0]);
                     const player = players[0] as any
                     // console.log("fetchAllPlayers setComponent ", element.node?.keys![0]);
                     const entityId = parseInt(element.node?.keys![0]!) as EntityIndex
-                    if (element.node?.keys![0] != accountRef.current) {
-                        setComponent(PlayerComponent, entityId, {
-                            position: player.position,
-                            joined_time: player.joined_time,
-                            direction: player.direction,
-                            nick_name: player.nick_name,
-                            gold: player.gold,
-                            steps: player.steps,
-                            last_point: player.last_point,
-                            last_time: player.last_time
-                        })
-                    }
-                    // getComponentValue()
+
+                    //if is not myself
+                    // if (element.node?.keys![0] != accountRef.current) {
+                    setComponent(PlayerComponent, entityId, {
+                        position: player.position,
+                        joined_time: player.joined_time,
+                        direction: player.direction,
+                        nick_name: player.nick_name,
+                        gold: player.gold,
+                        steps: player.steps,
+                        last_point: player.last_point,
+                        last_time: player.last_time
+                    })
+                    // } else {
+                    //     console.log("Player:");
+                    //     console.log(player);
+                    //     //for admin roll
+                    //     // if (player.last_point == 0) {
+                    //         setComponent(PlayerComponent, entityId, {
+                    //             position: player.position,
+                    //             joined_time: player.joined_time,
+                    //             direction: player.direction,
+                    //             nick_name: player.nick_name,
+                    //             gold: player.gold,
+                    //             steps: player.steps,
+                    //             last_point: player.last_point,
+                    //             last_time: player.last_time
+                    //         })
+                    //     // }
+                    // }
                 }
             }
         }
@@ -113,33 +132,43 @@ export default function LandStatusPanel() {
     } = phaserLayer;
 
     const fetchAllBuildings = async () => {
-        console.log("fetchAllBuildings");
         const allBuildings = await graphSdk.getAllBuildings()
+        console.log("fetchAllBuildings");
         console.log(allBuildings);
         const edges = allBuildings.data.entities?.edges
         if (!edges) {
             return
         }
+
         const bs = store.getState().buildings
         for (let index = 0; index < edges.length; index++) {
             const element = edges[index];
-            if (element) {
-                if (element.node?.components) {
-                    if (element.node.components[0]) {
-                        const building = element.node.components[0]
-                        if (building && building.__typename == "Land") {
-                            const position = parseInt(element.node.keys![0]!, 16);
-                            const type = building.building_type
-                            const owner = building.owner
-                            const price = building.price
-                            const build = new Building(type, price, owner, position)
-                            if (owner == account?.address) {
-                                build.isMine = true;
-                            }
-                            // console.log(build);
-                            bs.set(position, build)
-                        }
-                    }
+            const building = element?.node?.components![0];
+            if (building && building.__typename == "Land") {
+                const position = parseInt(element?.node?.keys![0]!, 16);
+                const type = building.building_type
+                var owner = building.owner
+                var price = building.price
+                const bomb = building.bomb
+                if(bomb){
+                    price = building.bomb_price
+                }
+                const build = new Building(type, price, owner, position)
+                // console.log("fetchAllBuildings postion ", position, owner, type);
+                if (bomb) {
+                    console.log("is bomb price:"+building.bomb_price);
+                    owner = building.bomber
+                }
+                if (owner == accountRef.current) {
+                    // console.log("is mine ", owner, position);
+                    build.isMine = true;
+                }
+                // console.log(build);
+                if (type == 0) {
+                    build.enable = bomb
+                    bs.set(position, build)
+                } else {
+                    bs.set(position, build)
                 }
             }
         }
@@ -151,10 +180,18 @@ export default function LandStatusPanel() {
         buildings.forEach((build, position) => {
             const coord = positionToBuildingCoorp(position)
             const mapid = buildingIdToMapid(build.type)
-            putTileAt({ x: coord.x, y: coord.y }, mapid, "Foreground");
+
+            if(build.enable){
+                putTileAt({ x: coord.x, y: coord.y }, mapid, "Foreground");
+            }else{
+                putTileAt({ x: coord.x, y: coord.y }, Tileset.NoHeart, "Foreground");
+            }
+
             if (build.isMine) {
-                console.log("buildings put is mine");
+                // console.log("buildings put is mine");
                 putTileAt({ x: coord.x, y: coord.y }, Tileset.Heart, "Top");
+            } else {
+                putTileAt({ x: coord.x, y: coord.y }, Tileset.NoHeart, "Top");
             }
         })
     }, [buildings.values()])
@@ -167,18 +204,20 @@ export default function LandStatusPanel() {
     }, [account])
 
     useEffect(() => {
-        const build = buildings.get(player?.position)
+        console.log("current land change");
+        const build = buildings.get(storePlayer?.position)
         setCurrentLand(build)
-    }, [player,buildings.keys()])
-
-
+    }, [storePlayer, buildings.values()])
 
     const getOwnerName = useMemo(() => {
-        if(!currenLand){
+        if (!currenLand) {
             return <span>0x000</span>
         }
+        if(currenLand.type==0){
+            return <span>You</span>
+        }
         const entity = parseInt(currenLand?.owner) as EntityIndex;
-        const player =  getComponentValue(PlayerComponent,entity)
+        const player = getComponentValue(PlayerComponent, entity)
         return <span>{hexToString(player?.nick_name)}</span>
     }, [currenLand])
 

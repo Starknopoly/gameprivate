@@ -14,6 +14,8 @@ export function createSystemCalls(
   { execute, contractComponents }: SetupNetworkResult,
   { Player }: ClientComponents
 ) {
+
+
   const roll = async (signer: Account) => {
     console.log("roll signer:" + signer.address);
     // const entityId = parseInt(signer.address) as EntityIndex;
@@ -167,11 +169,66 @@ export function createSystemCalls(
     return null;
   };
 
+  const explode = async (signer: Account,price:number) => {
+    console.log(`explode`)
+    // const entityId = parseInt(signer.address) as EntityIndex;
+    try {
+      const tx = await execute(signer, "explode", [price]);
+
+      console.log(tx);
+      const receipt = await signer.waitForTransaction(tx.transaction_hash, {
+        retryInterval: 100,
+      });
+
+      const events = parseEvent(receipt);
+      console.log(events);
+      // Player Townhall land
+      return events;
+      // const entity = parseInt(events[0].entity.toString()) as EntityIndex;
+
+      // const playerEvent = events[0] as Player;
+
+      // console.log("spawn event nick name",playerEvent.nick_name);
+      // store.setState({player})
+    } catch (e) {
+      console.log(e);
+      return null
+      // Player.removeOverride(positionId);
+      // Moves.removeOverride(movesId);
+    } finally {
+      // Position.removeOverride(positionId);
+      // Moves.removeOverride(movesId);
+    }
+  };
+
+  const adminRoll = async (signer: Account,position:number) => {
+    console.log(`adminRoll`)
+    try {
+      const tx = await execute(signer, "admin_roll", [position]);
+
+      console.log(tx);
+      const receipt = await signer.waitForTransaction(tx.transaction_hash, {
+        retryInterval: 100,
+      });
+
+      const events = parseEvent(receipt);
+      console.log(events);
+      return events;
+    } catch (e) {
+      console.log(e);
+      return null
+    } finally {
+    }
+
+  };
+
   return {
     spawn,
     roll,
     buyBuilding,
     buyBack,
+    explode,
+    adminRoll
   };
 }
 
