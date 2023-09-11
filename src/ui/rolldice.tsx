@@ -44,7 +44,9 @@ export default function RollDice() {
         console.log("playerState change "+playerState);
         
         switch (playerState) {
-            case PlayerState.IDLE: break;
+            case PlayerState.IDLE: 
+                idle();
+            break;
             case PlayerState.ROLLING:
                 playRollingAnimation();
                 break;
@@ -59,6 +61,13 @@ export default function RollDice() {
                 break;
         }
     }, [playerState])
+
+    const idle = ()=>{
+        if(rollInternalIdRef.current){
+            clearInterval(rollInternalIdRef.current)
+            rollInternalIdRef.current = undefined
+        }
+    }
 
     const changeState = (state: PlayerState) => {
         console.log("changeState " + state);

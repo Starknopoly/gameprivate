@@ -200,7 +200,30 @@ export default function ActionsUI() {
     }
 
     const buyEnergy = async ()=>{
+        if (!account) {
+            toastError("Create burner wallet first.")
+            return
+        }
+        if (!player) {
+            toastError("Start game first.")
+            return
+        }
+        if (playerState != PlayerState.IDLE && playerState != PlayerState.WALK_END) {
+            return
+        }
+        const postion = player.position
+        const building = buildings.get(postion)
+        if (building) {
+            if(building.type == STARKBUCKS_ID){
 
+            }else{
+                toastWarning("Not Starkbucks")
+                return
+            }
+        } else {
+            toastWarning("No Starkbucks here")
+            return
+        }
     }
 
     return (<ClickWrapper style={{ display: "flex", flexDirection: "column" }}>

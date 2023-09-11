@@ -174,6 +174,7 @@ export default function LandStatusPanel() {
             const mapid = buildingIdToMapid(build.type)
 
             if (build.enable) {
+                putTileAt({ x: coord.x, y: coord.y }, Tileset.Num0 + build.getLevel(), "Level");
                 putTileAt({ x: coord.x, y: coord.y }, mapid, "Foreground");
             } else {
                 putTileAt({ x: coord.x, y: coord.y }, Tileset.NoHeart, "Foreground");
@@ -184,8 +185,6 @@ export default function LandStatusPanel() {
             } else {
                 putTileAt({ x: coord.x, y: coord.y }, Tileset.NoHeart, "Top");
             }
-
-            putTileAt({ x: coord.x, y: coord.y }, Tileset.Num0 + build.getLevel(), "Level");
         })
     }, [buildings.values()])
 
