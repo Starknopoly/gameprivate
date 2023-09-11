@@ -6,6 +6,8 @@ import { PhaserLayer } from './phaser/phaserLayer';
 import { store } from "./store/store";
 import { UI } from './ui';
 import NamesUI from './ui/names';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const networkLayer = useNetworkLayer();
@@ -24,6 +26,7 @@ function App() {
     <div>
       <PhaserLayer networkLayer={networkLayer} />
       <UI />
+      <ToastContainer />
     </div>
   );
 }

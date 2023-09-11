@@ -3,6 +3,7 @@ import { Direction } from "../dojo/createSystemCalls";
 import { MAP_WIDTH } from "../phaser/constants";
 import { Tileset } from "../artTypes/world";
 import { BANK_ID, BOMB_ID, HOTEL_ID, STARKBUCKS_ID } from "../config";
+import { ToastContainer, toast } from 'react-toastify';
 
 export function isValidArray(input: any): input is any[] {
     return Array.isArray(input) && input != null;
@@ -128,4 +129,56 @@ export function hexToString(hex: string|undefined): string {
         console.error(error);
     }
     return ''
+}
+
+export function toastError(msg:string){
+    toast.error(msg, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: "light",
+        });
+}
+
+export function toastWarning(msg:string){
+    toast.warning(msg, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: "light",
+        });
+}
+
+export function toastInfo(msg:string){
+    toast.info(msg, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: "light",
+        });
+}
+
+export function toastSuccess(msg:string){
+    toast.success(msg, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: "light",
+        });
 }

@@ -6,13 +6,14 @@ import { Tileset } from "../artTypes/world";
 import { store } from "../store/store";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { MAP_WIDTH, TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
-import { mapIdToBuildingId, positionToBuildingCoorp, positionToCoorp } from "../utils";
+import { mapIdToBuildingId, positionToBuildingCoorp, positionToCoorp, toastError, toastWarning } from "../utils";
 import { BANK_ID, BUILDING_PRICES, HOTEL_ID, STARKBUCKS_ID } from "../config";
 import { Player } from "../dojo/createSystemCalls";
 import { EntityIndex, setComponent } from "@latticexyz/recs";
+import { PlayerState } from "../types/playerState";
 
 export default function ActionsUI() {
-    const { account, player, buildings,actions } = store();
+    const { account, player, buildings, actions, playerState } = store();
     const { phaserLayer, networkLayer: { components } } = useDojo()
 
     const {
@@ -59,14 +60,14 @@ export default function ActionsUI() {
         setSelectBuild(value)
     };
 
-    const hasBuilding = (position:number)=>{
+    const hasBuilding = (position: number) => {
         const build = buildings.get(position)
         if (build) {
-            if(build.type==0){
-                if(build.enable){
+            if (build.type == 0) {
+                if (build.enable) {
                     return true
                 }
-            }else{
+            } else {
                 return true
             }
         }
@@ -75,22 +76,25 @@ export default function ActionsUI() {
 
     const placeBomb = async () => {
         if (!account) {
-            alert("Create burner wallet first.")
+            toastError("Create burner wallet first.")
             return
         }
         if (!player) {
-            alert("Start game first.")
+            toastError("Start game first.")
+            return
+        }
+        if (playerState != PlayerState.IDLE && playerState != PlayerState.WALK_END) {
             return
         }
         const has = hasBuilding(player.position)
-        if(has){
-            alert("There is a building")
+        if (has) {
+            toastWarning("There is a building")
             return
         }
 
         const coord = positionToBuildingCoorp(player.position)
-        
-        const events = await explode(account,parseInt(selectBomb))
+
+        const events = await explode(account, parseInt(selectBomb))
         if (events) {
             if (events.length != 0) {
                 //TODO : check there is building
@@ -108,7 +112,7 @@ export default function ActionsUI() {
                     last_time: player.last_time
                 })
                 putTileAt({ x: coord.x, y: coord.y }, Tileset.Bomb, "Foreground");
-                actions.push("Place $"+selectBomb+" bomb at : "+player.position)
+                actions.push("Place $" + selectBomb + " bomb at : " + player.position)
                 return
             }
         }
@@ -118,16 +122,19 @@ export default function ActionsUI() {
 
     const buildClick = () => {
         if (!account) {
-            alert("Create burner wallet first.")
+            toastError("Create burner wallet first.")
             return
         }
         if (!player) {
-            alert("Start game first.")
+            toastError("Start game first.")
+            return
+        }
+        if (playerState != PlayerState.IDLE && playerState != PlayerState.WALK_END) {
             return
         }
         const has = hasBuilding(player.position)
-        if(has){
-            alert("There is a building")
+        if (has) {
+            toastWarning("There is a building")
             return
         }
         // const build = buildings.get(player.position)
@@ -150,38 +157,40 @@ export default function ActionsUI() {
         console.log(coord);
         var buildingId = mapIdToBuildingId(id)
         if (player.gold < price) {
-            alert("Gold is not enough")
+            toastWarning("Gold is not enough")
             return
         }
         putTileAt({ x: coord.x, y: coord.y }, id, "Foreground");
         putTileAt({ x: coord.x, y: coord.y }, Tileset.Heart, "Top");
         buyBuilding(account, buildingId)
-        actions.push("Build "+selectBuild+" at : "+player.position)
+        actions.push("Build " + selectBuild + " at : " + player.position)
     }
 
     const buyBackClick = () => {
         if (!account) {
-            alert("Create burner wallet first.")
+            toastError("Create burner wallet first.")
             return
         }
         if (!player) {
-            alert("Start game first.")
+            toastError("Start game first.")
             return
         }
-
+        if (playerState != PlayerState.IDLE && playerState != PlayerState.WALK_END) {
+            return
+        }
         const postion = player.position
         const building = buildings.get(postion)
         if (building) {
             if (building.owner == account.address) {
-                alert("Can not buy your building")
+                toastWarning("Can not buy your building")
                 return
             }
             if (player.gold < building.price * 1.3) {
-                alert("Gold is not enough. Need $" + (building.price * 1.3).toFixed(0))
+                toastWarning("Gold is not enough. Need $" + (building.price * 1.3).toFixed(0))
                 return
             }
         } else {
-            alert("No building here")
+            toastWarning("No building here")
             return
         }
 
@@ -190,7 +199,7 @@ export default function ActionsUI() {
 
         buyBack(account)
 
-        actions.push("Buy back "+(building.getName())+" at : "+player.position+", spend $"+(building.price*1.3).toFixed(2))
+        actions.push("Buy back " + (building.getName()) + " at : " + player.position + ", spend $" + (building.price * 1.3).toFixed(2))
     }
 
     return (<ClickWrapper style={{ display: "flex", flexDirection: "column" }}>
@@ -199,9 +208,9 @@ export default function ActionsUI() {
         <button onClick={() => buildClick()}>Build {selectBuild}</button>
 
         <div style={{ marginTop: 15 }}></div>
-        <BuildingList options={bomboptions} onChange={(value)=>setSelectBomb(value)} defaultValue="10" />
+        <BuildingList options={bomboptions} onChange={(value) => setSelectBomb(value)} defaultValue="10" />
         <button onClick={() => placeBomb()} >Place Bomb</button>
-        
+
         <button onClick={() => buyBackClick()} style={{ marginTop: 15 }}>Buy Back</button>
     </ClickWrapper>)
 }

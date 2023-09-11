@@ -3,7 +3,7 @@ import { useDojo } from "../hooks/useDojo";
 import { ClickWrapper } from "./clickWrapper";
 import { store } from "../store/store";
 import { TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
-import { positionToCoorp } from "../utils";
+import { positionToCoorp, toastError } from "../utils";
 import { EntityIndex, getComponentValue, getComponentValueStrict } from "@latticexyz/recs";
 import twitter from "/twitterlogo.png"
 
@@ -22,12 +22,14 @@ export default function BottomIcons() {
 
     const center = () => {
         if (!account) {
+            toastError("Create burner wallet first.")
             return
         }
 
         const entityId = parseInt(account.address) as EntityIndex;
         const player_ = getComponentValue(networkLayer.components.Player, entityId);
         if(!player_){
+            toastError("Start game first.")
             return;
         }
         const { x, y } = positionToCoorp(player_.position)

@@ -3,7 +3,7 @@ import { useDojo } from "../hooks/useDojo";
 import { ClickWrapper } from "./clickWrapper";
 import { store } from "../store/store";
 import { useEffect, useState } from "react";
-import { hexToString, stringToHex, truncateString } from "../utils";
+import { hexToString, stringToHex, toastError, toastInfo, toastSuccess, toastWarning, truncateString } from "../utils";
 
 export const SpawnBtn = () => {
     const { account, player } = store();
@@ -122,24 +122,24 @@ export const SpawnBtn = () => {
 
     const startGame = async () => {
         if (!account) {
-            alert("Create burner wallet first.")
+            toastError("Create burner wallet first.")
             return
         }
         // await spawn(account)
         console.log("startGame name:" + nickName + ",length:" + nickName.length);
 
         if (nickName.length < 2) {
-            alert("Name is too short.")
+            toastWarning("Name is too short.")
             return
         }
         if (nickName.length > 30) {
-            alert("Name is too long.")
+            toastWarning("Name is too long.")
             return
         }
         const hex = stringToHex(nickName)
         console.log("startGame name hex", hex,hex.length);
         if (hex.length > 64) {
-            alert("Illegal name.")
+            toastWarning("Illegal name.")
             return
         }
         await spawn(account, BigInt('0x' + hex));
@@ -148,6 +148,7 @@ export const SpawnBtn = () => {
         const entity = parseInt(account.address) as EntityIndex;
         playersAddress?.set(entity, account.address)
         store.setState({ playersAddress: playersAddress })
+        toastSuccess("Mint player success.")
     }
 
     const inputChange = (event: React.ChangeEvent<HTMLInputElement>) => {

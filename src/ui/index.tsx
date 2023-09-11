@@ -10,6 +10,7 @@ import BottomIcons from "./bottomicons";
 import NamesUI from "./names";
 import AdminUI from "./adminUI";
 import ActionList from "./actionlist";
+import { ToastContainer } from "react-toastify";
 
 export const UI = () => {
     const layers = store((state) => {
@@ -50,6 +51,7 @@ export const UI = () => {
                 <ActionList />
             </LeftCenterContainer>
             <NamesUI />
+
         </Wrapper>
     );
 };
