@@ -7,9 +7,7 @@ export default function TreasuryUI() {
     const { account,treasury } = store();
     const {
         networkLayer: {
-            components,
-            network: { graphSdk },
-            systemCalls: { spawn },
+            network: { graphSdk }
         },
     } = useDojo();
 
@@ -28,13 +26,17 @@ export default function TreasuryUI() {
         store.setState({treasury:gold.gold})
     }
 
+    const buyGold = async ()=>{
+        
+    }
+
     return (
         <ClickWrapper style={{ display: "flex", flexDirection: "column" }}>
             <div style={{ width: 200, height: 130, lineHeight: 0.9, backgroundColor: "rgba(0, 0, 0, 0.5)", padding: 10, borderRadius: 15 }}>
                 <p>Treasury</p>
                 <p>Balance : {treasury} Gold</p>
                 <p>Price : 0.00001 ETH</p>
-                <button>Buy Gold</button>
+                <button onClick={()=>buyGold()}>Buy Gold</button>
             </div>
         </ClickWrapper>
     )

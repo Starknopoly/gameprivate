@@ -2,12 +2,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useDojo } from "../hooks/useDojo";
 import { store } from "../store/store";
 import { Building } from "../types";
-import { buildingIdToMapid, hexToString, positionToBuildingCoorp, truncateString } from "../utils";
+import { buildingIdToMapid, hexToString, positionToBuildingCoorp } from "../utils";
 import { Tileset } from "../artTypes/world";
 import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs";
 
 export default function LandStatusPanel() {
-    const { account, buildings, player: storePlayer, treasury } = store();
+    const { account, buildings, player: storePlayer } = store();
 
     const [currenLand, setCurrentLand] = useState<Building>()
 
@@ -19,21 +19,10 @@ export default function LandStatusPanel() {
             components: {
                 Player: PlayerComponent,
                 Land: LandComponent,
-                Townhall
             },
             network: { graphSdk, wsClient }
         },
     } = useDojo();
-
-    const {
-        world,
-        scenes: {
-            Main: { objectPool },
-        },
-        networkLayer: {
-            components: { Player }
-        },
-    } = phaserLayer;
 
     useEffect(() => {
         console.log("account change ", account?.address);
@@ -191,29 +180,12 @@ export default function LandStatusPanel() {
             }
 
             if (build.isMine) {
-                // console.log("buildings put is mine");
                 putTileAt({ x: coord.x, y: coord.y }, Tileset.Heart, "Top");
             } else {
                 putTileAt({ x: coord.x, y: coord.y }, Tileset.NoHeart, "Top");
             }
 
             putTileAt({ x: coord.x, y: coord.y }, Tileset.Num0 + build.getLevel(), "Level");
-            // const nameObj = objectPool.get("text_" + entity, "Text")
-            // nameObj.setComponent({
-            //     id: 'position',
-            //     once: (text) => {
-            //         text.setPosition(pixelPosition?.x, pixelPosition?.y - 14);
-            //         text.setBackgroundColor("rgba(0,0,0,0.6)")
-            //         text.setFontSize(11)
-            //         const myId = parseInt(account?.address!) as EntityIndex
-            //         if (myId == entity) {
-            //             text.setBackgroundColor("rgba(255,0,0,0.6)")
-            //             text.setText("Me")
-            //         } else {
-            //             text.setText(hexToString(player_.nick_name));
-            //         }
-            //     }
-            // })
         })
     }, [buildings.values()])
 
