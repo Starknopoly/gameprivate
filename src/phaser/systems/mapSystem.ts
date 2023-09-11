@@ -49,7 +49,7 @@ export function mapSystem(layer: PhaserLayer) {
                         var yy = y * 3 + index + 1
                         var xx = x -1
                         const coord = { x:xx, y: yy };
-                        putTileAt(coord, Tileset.Road, "Foreground");
+                        putTileAt(coord, Tileset.Stair, "Foreground");
                     }
                 }
             } else {
@@ -58,7 +58,7 @@ export function mapSystem(layer: PhaserLayer) {
                         var yy = y * 3 + index + 1
                         var xx = size
                         const coord = { x:xx, y: yy };
-                        putTileAt(coord, Tileset.Road, "Foreground");
+                        putTileAt(coord, Tileset.Stair, "Foreground");
                     }
                 }
             }
