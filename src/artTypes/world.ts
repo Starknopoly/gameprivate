@@ -10,7 +10,7 @@ export enum Tileset {
     Bomb = 7,
     Heart = 8,
     Stair = 9,
-    NoHeart = 20,
+    NoHeart = 19,
 }
 export enum TileAnimationKey { }
 export const TileAnimations: { [key in TileAnimationKey]: number[] } = {};
