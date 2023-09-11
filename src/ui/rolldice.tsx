@@ -98,7 +98,9 @@ export default function RollDice() {
         actions.push("Roll " + playerEventRef.current.last_point + " , walk to : " + playerEventRef.current.position)
         const b = storeBuildings.get(playerEventRef.current.position)
         if (b?.type == HOTEL_ID) {
-            actions.push("There is a hotel, you pay $" + (b.price * 0.1).toFixed(2))
+            const price = (b.price * 0.1).toFixed(2)
+            actions.push("There is a hotel, you paid $" + price)
+            toastInfo("You paid $"+price+" for hotel.")
         }
         // if (b?.type == BOMB_ID) {
 
@@ -108,7 +110,6 @@ export default function RollDice() {
 
     const rollDice = async () => {
         if (!account) {
-            // alert("Create burner wallet first.")
             toastError("Create burner wallet first.")
             return
         }
@@ -126,12 +127,6 @@ export default function RollDice() {
             return
         }
 
-        // if (rollCountRef.current != 0) {
-        //     return
-        // }
-        // if (walkCountRef.current != 0) {
-        //     return
-        // }
         console.log("rollDice");
         toastInfo("Rolling...")
         changeState(PlayerState.ROLLING)
@@ -147,32 +142,6 @@ export default function RollDice() {
             changeState(PlayerState.IDLE)
         }
     }
-
-    // const waitForChainResult = async () => {
-    //     rollCountRef.current = rollCountRef.current + 1;
-    //     if (rollCountRef.current <= MaxRollTimes || !playerEventRef.current) {
-    //         var random1 = getRandomIntBetween(0, 5);
-    //         if (dices[random1] == diceImg1) {
-    //             random1 = getRandomIntBetween(0, 5);
-    //         }
-    //         setDice1(dices[random1])
-    //     } else {
-    //         clearInterval(rollInternalIdRef.current)
-    //         rollCountRef.current = 0;
-    //         if (playerEventRef.current) {
-    //             setDice1(dices[playerEventRef.current.last_point - 1])
-    //         }
-    //         const intervalId = setInterval(walk, 600);
-    //         walkInternalIdRef.current = intervalId
-
-    //         actions.push("Roll " + playerEventRef.current.last_point + " , walk to : " + playerEventRef.current.position)
-    //         // if(playerEventRef.current.type)
-    //         const b = storeBuildings.get(playerEventRef.current.position)
-    //         if (b?.type == HOTEL_ID) {
-    //             actions.push("There is a bank, you pay $" + (b.price * 0.1).toFixed(2))
-    //         }
-    //     }
-    // }
 
     const startWalking = () => {
         const intervalId = setInterval(walk, 600);
