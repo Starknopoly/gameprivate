@@ -42,6 +42,9 @@ export const SpawnBtn = () => {
                     if (element.node.keys[0]) {
                         const player = element.node.components[0]
                         if (player && player.__typename == "Player") {
+                            if(element.node.keys[0]=="0x0"){
+                                continue
+                            }
                             const entityId = parseInt(element.node.keys[0]) as EntityIndex;
                             playersAddress.set(entityId, element.node.keys[0])
                         }
@@ -57,6 +60,9 @@ export const SpawnBtn = () => {
                     if (element.node.keys[0]) {
                         const player = element.node.components[0]
                         if (player && player.__typename == "Player") {
+                            if(element.node.keys[0]=="0x0"){
+                                continue
+                            }
                             const entityId = parseInt(element.node.keys[0]) as EntityIndex;
                             console.log("showAllPlayers ");
                             

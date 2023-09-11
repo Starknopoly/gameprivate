@@ -83,8 +83,10 @@ export default function LandStatusPanel() {
                 // console.log(element?.node?.keys![0], element?.node?.components![0]?.__typename);
                 if (players && players[0] && players[0].__typename == "Player" && players[0].last_time != 0) {
                     console.log(players[0]);
+                    if(element.node?.keys![0]=="0x0"){
+                        continue
+                    }
                     const player = players[0] as any
-                    // console.log("fetchAllPlayers setComponent ", element.node?.keys![0]);
                     const entityId = parseInt(element.node?.keys![0]!) as EntityIndex
 
                     setComponent(PlayerComponent, entityId, {
