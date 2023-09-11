@@ -47,25 +47,7 @@ export const SpawnBtn = () => {
                             }
                             const entityId = parseInt(element.node.keys[0]) as EntityIndex;
                             playersAddress.set(entityId, element.node.keys[0])
-                        }
-                    }
-                }
-            }
-        }
-        store.setState({ playersAddress: playersAddress })
-        for (let index = 0; index < edges.length; index++) {
-            const element = edges[index];
-            if (element) {
-                if (element.node?.keys) {
-                    if (element.node.keys[0]) {
-                        const player = element.node.components[0]
-                        if (player && player.__typename == "Player") {
-                            if(element.node.keys[0]=="0x0"){
-                                continue
-                            }
-                            const entityId = parseInt(element.node.keys[0]) as EntityIndex;
-                            console.log("showAllPlayers ");
-                            
+
                             setComponent(components.Player, entityId, {
                                 position: player.position,
                                 joined_time: player.joined_time,
@@ -81,6 +63,7 @@ export const SpawnBtn = () => {
                 }
             }
         }
+        store.setState({ playersAddress: playersAddress })
     }
 
     const fetchAllPlayers = async () => {

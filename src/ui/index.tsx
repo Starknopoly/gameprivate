@@ -11,8 +11,9 @@ import NamesUI from "./names";
 import AdminUI from "./adminUI";
 import ActionList from "./actionlist";
 import TreasuryUI from "./treasuryUI";
+import { useState } from "react";
 
-export const UI = () => {
+export default function UI(){
     const layers = store((state) => {
         return {
             networkLayer: state.networkLayer,
@@ -21,6 +22,7 @@ export const UI = () => {
     });
 
     if (!layers.networkLayer || !layers.phaserLayer) return <></>;
+
 
     return (
         <Wrapper>

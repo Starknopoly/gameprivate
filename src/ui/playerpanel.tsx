@@ -1,6 +1,6 @@
 import { EntityIndex, Has, defineSystem, getComponentValue, getComponentValueStrict } from "@latticexyz/recs";
 import { useDojo } from "../hooks/useDojo";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { store } from "../store/store";
 import { Animations, MAP_WIDTH, TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
@@ -10,6 +10,21 @@ import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 export default function PlayerPanel() {
     const { account, player: storePlayer } = store();
     const { phaserLayer: layer } = useDojo()
+
+    const spriteListen = useRef<Map<EntityIndex, boolean>>(new Map())
+
+    // const [spriteListen, setSpriteListen] = useState<Map<EntityIndex, boolean>>(new Map())
+
+    // 添加一个键值对到Map中
+    // const addToMap = (key: EntityIndex, value: boolean) => {
+    //     setSpriteListen(prevMap => {
+    //         const newMap = new Map(prevMap);
+    //         newMap.set(key, value);
+    //         return newMap;
+    //     });
+    // };
+
+
     const {
         world,
         scenes: {
@@ -30,13 +45,13 @@ export default function PlayerPanel() {
 
         defineSystem(world, [Has(Player)], ({ entity }) => {
             const player_ = getComponentValue(Player, entity);
-            if(!player_){
+            if (!player_) {
                 return;
             }
             const myEntityId = parseInt(account.address) as EntityIndex;
 
             if (entity == myEntityId) {
-                console.log("playerpanel is myself nick name",player_.nick_name);
+                console.log("playerpanel is myself nick name", player_.nick_name);
                 store.setState({ player: player_ })
             }
 
@@ -73,15 +88,55 @@ export default function PlayerPanel() {
             playerObj.setComponent({
                 id: 'position',
                 once: (sprite) => {
+                    // console.log("player obj:",entity, sprite,sprite.width);
                     sprite.setPosition(pixelPosition?.x, pixelPosition?.y);
                     // console.log("entity "+entity+",id:"+id);
                     if (entity == myEntityId) {
                         camera.centerOn(pixelPosition?.x!, pixelPosition?.y!);
                     }
+                    if (sprite.width > 1) {
+                        setHoverListener(entity, sprite)
+                    }
                 }
             })
         });
     }, [layer, account])
+
+    const setHoverListener = (entity: EntityIndex, sprite: Phaser.GameObjects.Sprite) => {
+        if (spriteListen.current.get(entity)) {
+            return
+        }
+        spriteListen.current.set(entity, true)
+        // console.log("setHoverListener ",sprite);
+
+        sprite.setInteractive()
+        sprite.on('pointerover', function (pointer: any) {
+            console.log('Mouse is over the sprite!' + entity);
+            // store.setState({ tooltip: { show: true, x: e.clientX + 10, y: e.clientY + 10 } })
+            const player_ = getComponentValue(Player, entity);
+            if (player_) {
+                const position = player_.position - 1
+                const { x, y } = positionToCoorp(position)
+                const pixelPosition = tileCoordToPixelCoord({ x, y }, TILE_WIDTH, TILE_HEIGHT);
+                console.log("pointerover", position, x, y, pixelPosition);
+                console.log("camera", camera.phaserCamera.worldView);
+                console.log("camera zoom", camera.phaserCamera.zoom);
+
+                const px = 2 * (pixelPosition.x - camera.phaserCamera.worldView.x)
+                const py = 2 * (pixelPosition.y - camera.phaserCamera.worldView.y)
+                console.log("px,py", px, py);
+
+                store.setState({ tooltip: { show: true, x: px + 40, y: py-60 ,content:<><p>{hexToString(player_.nick_name)}</p>
+                <p>Gold : ${player_.gold}</p></>} })
+            }
+        });
+        sprite.on('pointerout', function (pointer: any) {
+            console.log('Mouse left the sprite!' + entity);
+            store.setState({ tooltip: { show: false, x: 0, y: 0,content:null } })
+        });
+    }
+
+
 
     return (
         <div>

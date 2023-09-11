@@ -210,7 +210,8 @@ export function createSystemCalls(
       const receipt = await signer.waitForTransaction(tx.transaction_hash, {
         retryInterval: 100,
       });
-
+      console.log(receipt);
+      
       const events = parseEvent(receipt);
       console.log(events);
       return events;
