@@ -35,7 +35,7 @@ export function createSystemCalls(
       const events = parseEvent(receipt);
       // const entity = parseInt(events[0].entity.toString()) as EntityIndex
 
-      const playerEvent = events[0] as Player;
+      // const playerEvent = events[0] as Player;
       // setComponent(contractComponents.Player, entity, {
       //     position: playerEvent.position,
       //     joined_time: playerEvent.joined_time,
@@ -45,7 +45,7 @@ export function createSystemCalls(
       //     last_point: playerEvent.last_point,
       //     last_time: playerEvent.last_time
       // })
-      return playerEvent;
+      return events;
     } catch (e) {
       console.log(e);
       // Position.removeOverride(positionId);

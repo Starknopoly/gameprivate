@@ -15,9 +15,14 @@ import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs"
 import { MAP_WIDTH } from "../phaser/constants"
 import { Account } from "starknet"
 import { HOTEL_ID } from "../config"
+import { PlayerState } from "../types/playerState"
+
+const MaxRollTimes = 12
+const dices = [dice1, dice2, dice3, dice4, dice5, dice6]
 
 export default function RollDice() {
-    const MaxRollTimes = 12
+    const { account, player, actions, buildings: storeBuildings, playerState } = store();
+
     const [diceImg1, setDice1] = useState(dice1)
 
     const rollInternalIdRef = useRef<NodeJS.Timer>()
@@ -29,14 +34,21 @@ export default function RollDice() {
     const walkInternalIdRef = useRef<NodeJS.Timer>()
     const walkCountRef = useRef(0)
 
-    const { account, player, actions, buildings: storeBuildings } = store();
-    const dices = [dice1, dice2, dice3, dice4, dice5, dice6]
     const {
         networkLayer: {
             components,
             systemCalls: { roll },
         },
     } = useDojo();
+
+    useEffect(() => {
+        switch (playerState) {
+            case PlayerState.IDLE: break;
+            case PlayerState.ROLLING: break;
+            case PlayerState.ROLL_END: break;
+            case PlayerState.WALK_END: break;
+        }
+    }, [playerState])
 
     const waitForChainResult = async () => {
         rollCountRef.current = rollCountRef.current + 1;
@@ -59,7 +71,7 @@ export default function RollDice() {
             // if(playerEventRef.current.type)
             const b = storeBuildings.get(playerEventRef.current.position)
             if (b?.type == HOTEL_ID) {
-                actions.push("There is a bank, you pay $"+(b.price*0.1).toFixed(2))
+                actions.push("There is a bank, you pay $" + (b.price * 0.1).toFixed(2))
             }
         }
     }
@@ -132,13 +144,21 @@ export default function RollDice() {
             return
         }
         console.log("rolldice " + rollCountRef.current);
+        if (playerState != PlayerState.IDLE) {
+            return
+        }
 
-        if (rollCountRef.current != 0) {
+        if(player.gold==0){
+            
             return
         }
-        if (walkCountRef.current != 0) {
-            return
-        }
+
+        // if (rollCountRef.current != 0) {
+        //     return
+        // }
+        // if (walkCountRef.current != 0) {
+        //     return
+        // }
         console.log("rollDice");
         const intervalId = setInterval(waitForChainResult, 200);
         rollInternalIdRef.current = intervalId
@@ -146,8 +166,11 @@ export default function RollDice() {
         console.log("click roll account:" + account.address);
         const result = await roll(account)
         console.log("rolldice result:" + result);
-        if (result) {
-            playerEventRef.current = result
+
+        if (result && result.length > 0) {
+            playerEventRef.current = result[0] as Player
+        } else {
+
         }
     }
 
