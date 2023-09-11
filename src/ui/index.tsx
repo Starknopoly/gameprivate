@@ -13,7 +13,7 @@ import ActionList from "./actionlist";
 import TreasuryUI from "./treasuryUI";
 import BuildingTip from "./buildingtip";
 
-export default function UI(){
+export default function UI() {
     const layers = store((state) => {
         return {
             networkLayer: state.networkLayer,
@@ -55,7 +55,7 @@ export default function UI(){
                 <TreasuryUI />
             </TreasuryContainer>
             <NamesUI />
-            <BuildingTip/>
+            <BuildingTip />
         </Wrapper>
     );
 };
@@ -73,7 +73,7 @@ const HeaderContainer = styled.div`
 
 const TopLeftContainer = styled.div`
     position: absolute;
-    top: 130px;
+    top: 140px;
     left: 130px;
     transform: translate(-50%, -50%);
     color: white;
@@ -84,8 +84,8 @@ const TopLeftContainer = styled.div`
 
 const TreasuryContainer = styled.div`
 position: absolute;
-top: 80px;
-left: 380px;
+top: 260px;
+right: -80px;
 transform: translate(-50%, -50%);
 color: white;
 display: flex;
@@ -152,8 +152,8 @@ const BottomLeftContainer = styled.div`
 
 const RightContainer = styled.div`
     position: absolute;
-    top: 50%;
-    right: 2%;
+    top: 58%;
+    right: 0%;
     transform: translate(-50%, -50%);
     color: white;
 `;

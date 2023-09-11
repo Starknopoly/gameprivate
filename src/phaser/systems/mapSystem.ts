@@ -65,7 +65,6 @@ export function mapSystem(layer: PhaserLayer) {
                 }
             }
         }
-
     }
-    putTileAt({x:0,y:0}, Tileset.Stair, "Background");
+    // putTileAt({x:0,y:0}, Tileset.Stair, "Background");
 }
