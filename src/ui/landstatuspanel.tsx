@@ -87,8 +87,6 @@ export default function LandStatusPanel() {
                     // console.log("fetchAllPlayers setComponent ", element.node?.keys![0]);
                     const entityId = parseInt(element.node?.keys![0]!) as EntityIndex
 
-                    //if is not myself
-                    // if (element.node?.keys![0] != accountRef.current) {
                     setComponent(PlayerComponent, entityId, {
                         position: player.position,
                         joined_time: player.joined_time,
@@ -99,23 +97,6 @@ export default function LandStatusPanel() {
                         last_point: player.last_point,
                         last_time: player.last_time
                     })
-                    // } else {
-                    //     console.log("Player:");
-                    //     console.log(player);
-                    //     //for admin roll
-                    //     // if (player.last_point == 0) {
-                    //         setComponent(PlayerComponent, entityId, {
-                    //             position: player.position,
-                    //             joined_time: player.joined_time,
-                    //             direction: player.direction,
-                    //             nick_name: player.nick_name,
-                    //             gold: player.gold,
-                    //             steps: player.steps,
-                    //             last_point: player.last_point,
-                    //             last_time: player.last_time
-                    //         })
-                    //     // }
-                    // }
                 }
             }
         }

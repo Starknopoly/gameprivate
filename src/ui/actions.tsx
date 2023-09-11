@@ -91,7 +91,10 @@ export default function ActionsUI() {
             toastWarning("There is a building")
             return
         }
-
+        if(player.gold<selectBomb){
+            toastWarning("Gold is not enough")
+            return
+        }
         const coord = positionToBuildingCoorp(player.position)
 
         const events = await explode(account, parseInt(selectBomb))
