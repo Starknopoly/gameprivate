@@ -183,14 +183,6 @@ export default function LandStatusPanel() {
             } else {
                 putTileAt({ x: coord.x, y: coord.y }, Tileset.NoHeart, "Top");
             }
-            // const num = tiles[mapid].get(coord)
-            // if(num){
-            //     const map = tiles[mapid].map.get(num)
-            //     if(map){
-
-            //     }
-            // }
-
         })
     }, [buildings.values()])
 

@@ -82,6 +82,26 @@ export function positionToBuildingCoorp(position: number): Coord {
     return { x: x, y: y }
 }
 
+export function buildingCoorpToPosition(coord: Coord): number {
+    var position = -1
+    const size = MAP_WIDTH
+    const x = coord.x
+    const y = coord.y
+    if (y % 3 != 0) {
+        return position
+    }
+
+    const ycount = Math.floor(y / 3)
+    if (ycount % 2 == 0) {
+        position = ycount * size + x
+    }
+    if (ycount % 2 == 1) {
+        position = ycount * size - x - 1 + size
+    }
+    position = position + 1;
+    return position
+}
+
 export function mapIdToBuildingId(mapid: number): number {
     var buildingId = 1
     switch (mapid) {
@@ -95,7 +115,7 @@ export function mapIdToBuildingId(mapid: number): number {
 export function buildingIdToMapid(buildingId: number): number {
     var mapid = 0
     switch (buildingId) {
-        case BOMB_ID:mapid = Tileset.Bomb;break;
+        case BOMB_ID: mapid = Tileset.Bomb; break;
         case BANK_ID: mapid = Tileset.Bank; break;
         case HOTEL_ID: mapid = Tileset.Hotel; break;
         case STARKBUCKS_ID: mapid = Tileset.Starkbucks; break;
@@ -114,8 +134,8 @@ export function stringToHex(str: string): string {
     }).join('');
 }
 
-export function hexToString(hex: string|undefined): string {
-    if(!hex){
+export function hexToString(hex: string | undefined): string {
+    if (!hex) {
         return ''
     }
     try {
@@ -123,7 +143,7 @@ export function hexToString(hex: string|undefined): string {
         for (let i = 0; i < hex.length; i += 2) {
             str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
         }
-        const result =  decodeURI(str);
+        const result = decodeURI(str);
         return result
     } catch (error) {
         console.error(error);
@@ -131,7 +151,7 @@ export function hexToString(hex: string|undefined): string {
     return ''
 }
 
-export function toastError(msg:string){
+export function toastError(msg: string) {
     toast.error(msg, {
         position: "top-right",
         autoClose: 3000,
@@ -141,10 +161,10 @@ export function toastError(msg:string){
         draggable: false,
         progress: undefined,
         theme: "light",
-        });
+    });
 }
 
-export function toastWarning(msg:string){
+export function toastWarning(msg: string) {
     toast.warning(msg, {
         position: "top-right",
         autoClose: 3000,
@@ -154,10 +174,10 @@ export function toastWarning(msg:string){
         draggable: false,
         progress: undefined,
         theme: "light",
-        });
+    });
 }
 
-export function toastInfo(msg:string){
+export function toastInfo(msg: string) {
     toast.info(msg, {
         position: "top-right",
         autoClose: 3000,
@@ -167,10 +187,10 @@ export function toastInfo(msg:string){
         draggable: false,
         progress: undefined,
         theme: "light",
-        });
+    });
 }
 
-export function toastSuccess(msg:string){
+export function toastSuccess(msg: string) {
     toast.success(msg, {
         position: "top-right",
         autoClose: 3000,
@@ -180,5 +200,5 @@ export function toastSuccess(msg:string){
         draggable: false,
         progress: undefined,
         theme: "light",
-        });
+    });
 }

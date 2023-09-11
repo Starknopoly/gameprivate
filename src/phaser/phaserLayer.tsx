@@ -32,12 +32,13 @@ export const PhaserLayer = ({ networkLayer }: Props) => {
         // const pixelPosition = tileCoordToPixelCoord({ x: 1, y: 1 }, TILE_WIDTH, TILE_HEIGHT);
         // console.log("handleMouseMove", x, y);
         // console.log("handleMouseMove pixelPosition", pixelPosition);
-        console.log("handleMouseMove ", e.clientX, e.clientY);
-        mouseStore.setState({x: e.clientX,y: e.clientY})
+        // console.log("handleMouseMove ", e.clientX, e.clientY);
+        mouseStore.setState({x: e.clientX,y: e.clientY,hover:true})
     };
 
     const handleMouseLeave = () => {
         console.log("handleMouseLeave");
+        mouseStore.setState({x:0,y:0,hover:false})
         // setTooltip({ show: false, x: 0, y: 0 });
     };
 
