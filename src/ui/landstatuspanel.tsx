@@ -7,7 +7,7 @@ import { Tileset } from "../artTypes/world";
 import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs";
 
 export default function LandStatusPanel() {
-    const { account, buildings, player: storePlayer } = store();
+    const { account, buildings, player: storePlayer, treasury } = store();
 
     const [currenLand, setCurrentLand] = useState<Building>()
 
@@ -19,6 +19,7 @@ export default function LandStatusPanel() {
             components: {
                 Player: PlayerComponent,
                 Land: LandComponent,
+                Townhall
             },
             network: { graphSdk, wsClient }
         },
@@ -66,6 +67,8 @@ export default function LandStatusPanel() {
                             if (entityUpdated.keys[0] != "0x0" && entityUpdated.keys[0] != accountRef.current) {
                                 fetchAllPlayers()
                             }
+                        } else if (entityUpdated.componentNames == "Townhall,Land") {
+                            fetchTreasury()
                         }
                         console.log("We got something!", data);
                     }
@@ -76,6 +79,13 @@ export default function LandStatusPanel() {
         }
     }, [])
 
+    const fetchTreasury = async () => {
+        const result = await graphSdk.getTownHallBalance()
+        console.log("fetchTreasury : ", result);
+        const gold = result.data.entities?.edges![0]?.node?.components![0] as any
+        console.log(gold);
+        store.setState({ treasury: gold.gold })
+    }
 
     const fetchAllPlayers = async () => {
         console.log("fetchAllPlayers");

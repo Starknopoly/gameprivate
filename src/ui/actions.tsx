@@ -199,6 +199,10 @@ export default function ActionsUI() {
         actions.push("Buy back " + (building.getName()) + " at : " + player.position + ", spend $" + (building.price * 1.3).toFixed(2))
     }
 
+    const buyEnergy = async ()=>{
+
+    }
+
     return (<ClickWrapper style={{ display: "flex", flexDirection: "column" }}>
 
         <BuildingList options={options} onChange={handleSelectionChange} defaultValue="Hotel" />
@@ -208,6 +212,9 @@ export default function ActionsUI() {
         <BuildingList options={bomboptions} onChange={(value) => setSelectBomb(value)} defaultValue="10" />
         <button onClick={() => placeBomb()} >Place Bomb</button>
 
-        <button onClick={() => buyBackClick()} style={{ marginTop: 15 }}>Buy Back</button>
+        <button onClick={() => buyBackClick()} style={{ marginTop: 15 }}>Buy Building Back</button>
+
+        <button onClick={() => buyEnergy()} style={{ marginTop: 15 }}>Buy Energy</button>
+        
     </ClickWrapper>)
 }

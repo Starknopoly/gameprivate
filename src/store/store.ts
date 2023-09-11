@@ -18,7 +18,8 @@ export type Store = {
     playersAddress:Map<EntityIndex,string>;
     //position=>buidings
     buildings:Map<number,Building>,
-    playerState : PlayerState
+    playerState : PlayerState,
+    treasury:0,
 };
 
 export const store = create<Store>(() => ({
@@ -29,6 +30,7 @@ export const store = create<Store>(() => ({
     actions:new Array(),
     playersAddress:new Map(),
     buildings:new Map(),
-    playerState:PlayerState.IDLE
+    playerState:PlayerState.IDLE,
+    treasury:0
 }));
 

@@ -10,7 +10,7 @@ import BottomIcons from "./bottomicons";
 import NamesUI from "./names";
 import AdminUI from "./adminUI";
 import ActionList from "./actionlist";
-import { ToastContainer } from "react-toastify";
+import TreasuryUI from "./treasuryUI";
 
 export const UI = () => {
     const layers = store((state) => {
@@ -50,8 +50,10 @@ export const UI = () => {
             <LeftCenterContainer>
                 <ActionList />
             </LeftCenterContainer>
+            <TreasuryContainer>
+                <TreasuryUI />
+            </TreasuryContainer>
             <NamesUI />
-
         </Wrapper>
     );
 };
@@ -76,6 +78,17 @@ const TopLeftContainer = styled.div`
     display: flex;
     flex-direaction: row;
     gap: 10px;
+`;
+
+const TreasuryContainer = styled.div`
+position: absolute;
+top: 80px;
+left: 380px;
+transform: translate(-50%, -50%);
+color: white;
+display: flex;
+flex-direaction: row;
+gap: 10px;
 `;
 
 const LeftCenterContainer = styled.div`
@@ -137,7 +150,7 @@ const BottomLeftContainer = styled.div`
 
 const RightContainer = styled.div`
     position: absolute;
-    bottom: 50%;
+    top: 50%;
     right: 2%;
     transform: translate(-50%, -50%);
     color: white;
