@@ -17,6 +17,8 @@ export function mapSystem(layer: PhaserLayer) {
     const noise = createNoise2D();
     const size = MAP_WIDTH
 
+
+
     for (let x = 0; x < size; x++) {
         for (let y = 0; y < size; y++) {
             for (let index = 0; index < 2; index++) {
@@ -65,4 +67,5 @@ export function mapSystem(layer: PhaserLayer) {
         }
 
     }
+    putTileAt({x:0,y:0}, Tileset.Stair, "Background");
 }

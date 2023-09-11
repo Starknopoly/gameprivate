@@ -11,7 +11,7 @@ import NamesUI from "./names";
 import AdminUI from "./adminUI";
 import ActionList from "./actionlist";
 import TreasuryUI from "./treasuryUI";
-import { useState } from "react";
+import BuildingTip from "./buildingtip";
 
 export default function UI(){
     const layers = store((state) => {
@@ -22,7 +22,6 @@ export default function UI(){
     });
 
     if (!layers.networkLayer || !layers.phaserLayer) return <></>;
-
 
     return (
         <Wrapper>
@@ -56,6 +55,7 @@ export default function UI(){
                 <TreasuryUI />
             </TreasuryContainer>
             <NamesUI />
+            <BuildingTip/>
         </Wrapper>
     );
 };

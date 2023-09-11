@@ -14,7 +14,15 @@ export default function LandStatusPanel() {
     const accountRef = useRef<string>()
     // subscribe building change
     const {
-        phaserLayer,
+        phaserLayer: {
+            world,
+            game,
+            scenes: {
+                Main: { objectPool, maps: {
+                    Main: { putTileAt,tiles },
+                } },
+            },
+        },
         networkLayer: {
             components: {
                 Player: PlayerComponent,
@@ -42,7 +50,7 @@ export default function LandStatusPanel() {
             .request({ query })
             // so lets actually do something with the response
             .subscribe({
-                next({ data }) {
+                next({ data }: any) {
                     if (data) {
                         let entityUpdated = data.entityUpdated;
                         console.log("We got something:" + entityUpdated.componentNames);
@@ -113,16 +121,6 @@ export default function LandStatusPanel() {
         }
     }
 
-    const {
-        scenes: {
-            Main: {
-                maps: {
-                    Main: { putTileAt },
-                },
-            },
-        }
-    } = phaserLayer;
-
     const fetchAllBuildings = async () => {
         const allBuildings = await graphSdk.getAllBuildings()
         console.log("fetchAllBuildings");
@@ -185,6 +183,14 @@ export default function LandStatusPanel() {
             } else {
                 putTileAt({ x: coord.x, y: coord.y }, Tileset.NoHeart, "Top");
             }
+            // const num = tiles[mapid].get(coord)
+            // if(num){
+            //     const map = tiles[mapid].map.get(num)
+            //     if(map){
+
+            //     }
+            // }
+
         })
     }, [buildings.values()])
 

@@ -27,8 +27,9 @@ export default function PlayerPanel() {
 
     const {
         world,
+        game,
         scenes: {
-            Main: { objectPool, camera },
+            Main: { objectPool, camera,maps },
         },
         networkLayer: {
             components: { Player }
@@ -120,8 +121,8 @@ export default function PlayerPanel() {
                 const pixelPosition = tileCoordToPixelCoord({ x, y }, TILE_WIDTH, TILE_HEIGHT);
                 console.log("pointerover", position, x, y, pixelPosition);
                 console.log("camera", camera.phaserCamera.worldView);
-                console.log("camera zoom", camera.phaserCamera.zoom);
-
+                console.log("camera zoom", camera.phaserCamera.zoom,game.scale);
+                
                 const px = 2 * (pixelPosition.x - camera.phaserCamera.worldView.x)
                 const py = 2 * (pixelPosition.y - camera.phaserCamera.worldView.y)
                 console.log("px,py", px, py);
@@ -135,8 +136,6 @@ export default function PlayerPanel() {
             store.setState({ tooltip: { show: false, x: 0, y: 0,content:null } })
         });
     }
-
-
 
     return (
         <div>

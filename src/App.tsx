@@ -8,6 +8,7 @@ import NamesUI from './ui/names';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import UI from './ui';
+import BuildingTip from './ui/buildingtip';
 
 function App() {
   const networkLayer = useNetworkLayer();

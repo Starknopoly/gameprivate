@@ -27,7 +27,6 @@
     "proxy-deep": "^3.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-tooltip": "^5.21.3",
     "rxjs": "^7.8.1",
     "simplex-noise": "^4.0.1",
     "starknet": "^5.14.1",
