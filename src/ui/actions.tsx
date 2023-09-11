@@ -123,7 +123,7 @@ export default function ActionsUI() {
         alert("Something wrong")
     }
 
-    const buildClick = () => {
+    const buildClick =async () => {
         if (!account) {
             toastError("Create burner wallet first.")
             return
@@ -140,14 +140,7 @@ export default function ActionsUI() {
             toastWarning("There is a building")
             return
         }
-        // const build = buildings.get(player.position)
-        // console.log(build);
-        // if (build) {
-        //     alert("There is a building.")
-        //     return
-        // }
         const coord = positionToBuildingCoorp(player.position)
-        //TODO : check there is building
 
         var id = Tileset.Bank
         var price = 0
@@ -163,9 +156,10 @@ export default function ActionsUI() {
             toastWarning("Gold is not enough")
             return
         }
+
+        await buyBuilding(account, buildingId)
         putTileAt({ x: coord.x, y: coord.y }, id, "Foreground");
         putTileAt({ x: coord.x, y: coord.y }, Tileset.Heart, "Top");
-        buyBuilding(account, buildingId)
         actions.push("Build " + selectBuild + " at : " + player.position)
     }
 
@@ -185,7 +179,7 @@ export default function ActionsUI() {
         const building = buildings.get(postion)
         if (building) {
             if (building.owner == account.address) {
-                toastWarning("Can not buy your building")
+                toastWarning("Can't buy your building")
                 return
             }
             if (player.gold < building.price * 1.3) {

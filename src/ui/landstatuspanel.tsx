@@ -24,6 +24,16 @@ export default function LandStatusPanel() {
         },
     } = useDojo();
 
+    const {
+        world,
+        scenes: {
+            Main: { objectPool },
+        },
+        networkLayer: {
+            components: { Player }
+        },
+    } = phaserLayer;
+
     useEffect(() => {
         console.log("account change ", account?.address);
         accountRef.current = account?.address
@@ -83,7 +93,7 @@ export default function LandStatusPanel() {
                 // console.log(element?.node?.keys![0], element?.node?.components![0]?.__typename);
                 if (players && players[0] && players[0].__typename == "Player" && players[0].last_time != 0) {
                     console.log(players[0]);
-                    if(element.node?.keys![0]=="0x0"){
+                    if (element.node?.keys![0] == "0x0") {
                         continue
                     }
                     const player = players[0] as any
@@ -133,13 +143,13 @@ export default function LandStatusPanel() {
                 var owner = building.owner
                 var price = building.price
                 const bomb = building.bomb
-                if(bomb){
+                if (bomb) {
                     price = building.bomb_price
                 }
                 const build = new Building(type, price, owner, position)
                 // console.log("fetchAllBuildings postion ", position, owner, type);
                 if (bomb) {
-                    console.log("is bomb price:"+building.bomb_price);
+                    console.log("is bomb price:" + building.bomb_price);
                     owner = building.bomber
                 }
                 if (owner == accountRef.current) {
@@ -164,9 +174,9 @@ export default function LandStatusPanel() {
             const coord = positionToBuildingCoorp(position)
             const mapid = buildingIdToMapid(build.type)
 
-            if(build.enable){
+            if (build.enable) {
                 putTileAt({ x: coord.x, y: coord.y }, mapid, "Foreground");
-            }else{
+            } else {
                 putTileAt({ x: coord.x, y: coord.y }, Tileset.NoHeart, "Foreground");
             }
 
@@ -176,6 +186,24 @@ export default function LandStatusPanel() {
             } else {
                 putTileAt({ x: coord.x, y: coord.y }, Tileset.NoHeart, "Top");
             }
+
+            putTileAt({ x: coord.x, y: coord.y }, Tileset.Num0 + build.getLevel(), "Level");
+            // const nameObj = objectPool.get("text_" + entity, "Text")
+            // nameObj.setComponent({
+            //     id: 'position',
+            //     once: (text) => {
+            //         text.setPosition(pixelPosition?.x, pixelPosition?.y - 14);
+            //         text.setBackgroundColor("rgba(0,0,0,0.6)")
+            //         text.setFontSize(11)
+            //         const myId = parseInt(account?.address!) as EntityIndex
+            //         if (myId == entity) {
+            //             text.setBackgroundColor("rgba(255,0,0,0.6)")
+            //             text.setText("Me")
+            //         } else {
+            //             text.setText(hexToString(player_.nick_name));
+            //         }
+            //     }
+            // })
         })
     }, [buildings.values()])
 
@@ -196,7 +224,7 @@ export default function LandStatusPanel() {
         if (!currenLand) {
             return <span>0x000</span>
         }
-        if(currenLand.type==0){
+        if (currenLand.type == 0) {
             return <span>You</span>
         }
         const entity = parseInt(currenLand?.owner) as EntityIndex;

@@ -23,6 +23,7 @@ const mainMap = defineMapConfig({
             Background: { tilesets: ["Default"] },
             Foreground: { tilesets: ["Default"] },
             Top: { tilesets: ["Default"] },
+            Level: { tilesets: ["Default"] }
         },
         defaultLayer: "Background",
     },
