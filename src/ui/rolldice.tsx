@@ -19,7 +19,7 @@ import { BOMB_ID, HOTEL_ID } from "../config"
 import { PlayerState } from "../types/playerState"
 
 
-const MaxRollTimes = 12
+const MaxRollTimes = 16
 const dices = [dice1, dice2, dice3, dice4, dice5, dice6]
 
 export default function RollDice() {
@@ -147,7 +147,7 @@ export default function RollDice() {
         if (result && result.length > 0) {
             playerEventRef.current = result[0] as Player
         } else {
-            toastError("Server error. Please refresh page and try again.")
+            toastError("Rolling too quick!")
             changeState(PlayerState.IDLE)
         }
     }

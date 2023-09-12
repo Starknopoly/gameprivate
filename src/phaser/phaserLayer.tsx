@@ -14,32 +14,15 @@ type Props = {
 // TODO: this is where we need to set the burner account from local storage.
 
 export const PhaserLayer = ({ networkLayer }: Props) => {
-
     const { phaserLayer, ref } = usePhaserLayer({ networkLayer });
 
     const handleMouseMove = (e: any) => {
-        // setTooltip({ show: true, x: e.clientX + 10, y: e.clientY + 10 });
-        // const ex = e.clientX
-        // const ey = e.clientY
-
-        // const x = (ex + camera.phaserCamera.worldView.x) / 2;
-        // const y = (ey + camera.phaserCamera.worldView.y) / 2
-        // console.log("handleMouseMove camera", camera.phaserCamera.worldView);
-        // console.log("handleMouseMove x=", ex, camera.phaserCamera.worldView.x);
-
-
-        // const coord = pixelCoordToTileCoord({ x, y }, TILE_WIDTH, TILE_HEIGHT)
-        // const pixelPosition = tileCoordToPixelCoord({ x: 1, y: 1 }, TILE_WIDTH, TILE_HEIGHT);
-        // console.log("handleMouseMove", x, y);
-        // console.log("handleMouseMove pixelPosition", pixelPosition);
-        // console.log("handleMouseMove ", e.clientX, e.clientY);
-        mouseStore.setState({x: e.clientX,y: e.clientY,hover:true})
+        mouseStore.setState({x: e.clientX,y: e.clientY})
     };
 
     const handleMouseLeave = () => {
         console.log("handleMouseLeave");
-        mouseStore.setState({x:0,y:0,hover:false})
-        // setTooltip({ show: false, x: 0, y: 0 });
+        mouseStore.setState({x:0,y:0})
     };
 
     useEffect(() => {
