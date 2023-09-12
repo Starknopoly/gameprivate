@@ -106,12 +106,7 @@ export default function RollDice() {
         rollCountRef.current = 0;
         setDice1(dices[playerEventRef.current.last_point - 1])
         actions.push("Roll " + playerEventRef.current.last_point + " , walk to : " + playerEventRef.current.position)
-        const b = storeBuildings.get(playerEventRef.current.position)
-        if (b?.type == HOTEL_ID) {
-            const price = (b.price * 0.1).toFixed(2)
-            actions.push("There is a hotel, you paid $" + price)
-            toastInfo("You paid $" + price + " for hotel.")
-        }
+        
         // if (b?.type == BOMB_ID) {
 
         // }
@@ -143,7 +138,7 @@ export default function RollDice() {
 
         console.log("click roll account:" + account.address);
         const result = await roll(account)
-        console.log(getTimestamp()+ " : rolling dice result:" + result);
+        console.log(getTimestamp()+ " : rolling dice result" , result);
 
         if (result && result.length > 0) {
             playerEventRef.current = result[0] as Player
@@ -154,11 +149,18 @@ export default function RollDice() {
     }
 
     const startWalking = () => {
+        walkCountRef.current = 0
         const intervalId = setInterval(walk, 600);
         walkInternalIdRef.current = intervalId
     }
 
     const walkEnd = () => {
+        const b = storeBuildings.get(playerEventRef.current!.position)
+        if (b?.type == HOTEL_ID) {
+            const price = (b.price * 0.1).toFixed(2)
+            actions.push("There is a hotel, you paid $" + price)
+            toastInfo("You paid $" + price + " for hotel.")
+        }
         walkCountRef.current = 0
         playerEventRef.current = undefined
         clearInterval(walkInternalIdRef.current)

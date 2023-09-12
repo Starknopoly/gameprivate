@@ -30,9 +30,8 @@ export function createSystemCalls(
         retryInterval: 100,
       });
 
-      console.log(receipt);
-
       const events = parseEvent(receipt);
+      console.log(events);
       return events;
     } catch (e) {
       console.log(e);
