@@ -1,20 +1,15 @@
 import { pixelCoordToTileCoord, tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
-import { useDojo } from "../hooks/useDojo";
 import { mouseStore } from "../store/mouseStore";
 import { useEffect, useState } from "react";
 import { store } from "../store/store";
 import { buildingCoorpToPosition, hexToString } from "../utils";
 import { EntityIndex, getComponentValue } from "@latticexyz/recs";
+import { tipStore } from "../store/tipStore";
 export default function BuildingTip() {
-    const { buildings,camera,PlayerComponent } = store()
+    const { buildings, camera, PlayerComponent } = store()
+    const { tooltip:ptooltip } = tipStore();
     const [tooltip, settooltip] = useState({ show: false, content: <></>, x: 0, y: 0 })
-
-    // const { phaserLayer: {
-    //     networkLayer: {
-    //         components: { Player }
-    //     },
-    // } } = useDojo()
 
     const { x: ex, y: ey } = mouseStore()
 
@@ -31,7 +26,7 @@ export default function BuildingTip() {
     }
 
     useEffect(() => {
-        if(!camera){
+        if (!camera) {
             return
         }
         const x = (ex + camera.phaserCamera.worldView.x * 2) / 2;
@@ -66,6 +61,18 @@ export default function BuildingTip() {
                     }
                 </div>
             )}
+
+            {ptooltip.show && (
+                <div
+                    className="tooltip"
+                    style={{ left: `${ptooltip.x}px`, top: `${ptooltip.y}px` }}
+                >
+                    {
+                        ptooltip.content
+                    }
+                </div>
+            )}
+
         </div>
     )
 }

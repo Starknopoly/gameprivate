@@ -7,9 +7,10 @@ import { Animations, MAP_WIDTH, TILE_HEIGHT, TILE_WIDTH } from "../phaser/consta
 import { hexToString, positionToCoorp } from "../utils";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { BANK_ID, HOTEL_ID, STARKBUCKS_ID } from "../config";
+import { tipStore } from "../store/tipStore";
 
 export default function PlayerPanel() {
-    const { account, player: storePlayer, buildings } = store();
+    const { account, player: storePlayer, buildings,PlayerComponent,camera } = store();
     const { phaserLayer: layer } = useDojo()
 
     const spriteListen = useRef<Map<EntityIndex, boolean>>(new Map())
@@ -19,13 +20,9 @@ export default function PlayerPanel() {
 
     const {
         world,
-        game,
         scenes: {
-            Main: { objectPool, camera, maps },
-        },
-        networkLayer: {
-            components: { Player }
-        },
+            Main: { objectPool },
+        }
     } = layer;
 
     useEffect(() => {
@@ -34,8 +31,8 @@ export default function PlayerPanel() {
         }
         console.log("defineSystem");
 
-        defineSystem(world, [Has(Player)], ({ entity }) => {
-            const player_ = getComponentValue(Player, entity);
+        defineSystem(world, [Has(PlayerComponent)], ({ entity }) => {
+            const player_ = getComponentValue(PlayerComponent, entity);
             if (!player_) {
                 return;
             }
@@ -48,7 +45,7 @@ export default function PlayerPanel() {
 
             // console.log("defineSystem account:" + account.address);
 
-            const position = player_.position - 1
+            const position = player_.position as number - 1
             const { x, y } = positionToCoorp(position)
 
             // console.log("defineSystem position:" + player_.position + ",x=" + x + ",y=" + y);
@@ -83,7 +80,7 @@ export default function PlayerPanel() {
                     sprite.setPosition(pixelPosition?.x, pixelPosition?.y);
                     // console.log("entity "+entity+",id:"+id);
                     if (entity == myEntityId) {
-                        camera.centerOn(pixelPosition?.x!, pixelPosition?.y!);
+                        camera?.centerOn(pixelPosition?.x!, pixelPosition?.y!);
                     }
                     if (sprite.width > 1) {
                         setHoverListener(entity, sprite)
@@ -98,36 +95,28 @@ export default function PlayerPanel() {
             return
         }
         spriteListen.current.set(entity, true)
-        // console.log("setHoverListener ",sprite);
-
         sprite.setInteractive()
-        sprite.on('pointerover', function (pointer: any) {
-            console.log('Mouse is over the sprite!' + entity);
-            // store.setState({ tooltip: { show: true, x: e.clientX + 10, y: e.clientY + 10 } })
-            const player_ = getComponentValue(Player, entity);
-            if (player_) {
-                const position = player_.position - 1
+        sprite.on('pointerover', function (_: any) {
+            const player_ = getComponentValue(PlayerComponent, entity);
+            if (player_ && camera) {
+                // console.log("player pointerover");
+                const position = player_.position as number - 1
                 const { x, y } = positionToCoorp(position)
                 const pixelPosition = tileCoordToPixelCoord({ x, y }, TILE_WIDTH, TILE_HEIGHT);
-                console.log("pointerover", position, x, y, pixelPosition);
-                console.log("camera", camera.phaserCamera.worldView);
-                console.log("camera zoom", camera.phaserCamera.zoom, game.scale);
-
                 const px = 2 * (pixelPosition.x - camera.phaserCamera.worldView.x)
                 const py = 2 * (pixelPosition.y - camera.phaserCamera.worldView.y)
-                console.log("px,py", px, py);
 
-                store.setState({
+                tipStore.setState({
                     tooltip: {
-                        show: true, x: px + 40, y: py - 60, content: <><p>{hexToString(player_.nick_name)}</p>
+                        show: true, x: px + 40, y: py - 60, content: <><p>{hexToString(player_.nick_name as string)}</p>
                             <p>Gold : ${player_.gold}</p></>
                     }
                 })
             }
         });
-        sprite.on('pointerout', function (pointer: any) {
-            console.log('Mouse left the sprite!' + entity);
-            store.setState({ tooltip: { show: false, x: 0, y: 0, content: null } })
+        sprite.on('pointerout', function (_: any) {
+            // console.log("player pointerout");
+            tipStore.setState({ tooltip: { show: false, x: 0, y: 0, content: null } })
         });
     }
 

@@ -8,7 +8,7 @@ import { TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
 import { ClickWrapper } from "./clickWrapper";
 
 export default function NamesUI() {
-    const { account, tooltip } = store();
+    const { account } = store();
     const { phaserLayer: layer } = useDojo()
     const {
         world,

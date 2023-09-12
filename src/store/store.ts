@@ -22,7 +22,6 @@ export type Store = {
     buildings: Map<number, Building>,
     playerState: PlayerState,
     treasury: 0,
-    tooltip: { show: boolean, x: number, y: number, content: ReactNode },
     camera:Camera|null,
     PlayerComponent:any
 };
@@ -37,7 +36,6 @@ export const store = create<Store>(() => ({
     buildings: new Map(),
     playerState: PlayerState.IDLE,
     treasury: 0,
-    tooltip: { show: false, x: 0, y: 0, content: null },
     camera:null,
     PlayerComponent:null
 }));
