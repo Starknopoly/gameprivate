@@ -6,37 +6,27 @@ import { store } from "../store/store";
 import { Animations, MAP_WIDTH, TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
 import { hexToString, positionToCoorp } from "../utils";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
+import { BANK_ID, HOTEL_ID, STARKBUCKS_ID } from "../config";
 
 export default function PlayerPanel() {
-    const { account, player: storePlayer } = store();
+    const { account, player: storePlayer, buildings } = store();
     const { phaserLayer: layer } = useDojo()
 
     const spriteListen = useRef<Map<EntityIndex, boolean>>(new Map())
-
-    // const [spriteListen, setSpriteListen] = useState<Map<EntityIndex, boolean>>(new Map())
-
-    // 添加一个键值对到Map中
-    // const addToMap = (key: EntityIndex, value: boolean) => {
-    //     setSpriteListen(prevMap => {
-    //         const newMap = new Map(prevMap);
-    //         newMap.set(key, value);
-    //         return newMap;
-    //     });
-    // };
-
+    const [bankAmount, setBank] = useState(0)
+    const [hotelAmount, setHotel] = useState(0)
+    const [bucksAmount, setBucks] = useState(0)
 
     const {
         world,
         game,
         scenes: {
-            Main: { objectPool, camera,maps },
+            Main: { objectPool, camera, maps },
         },
         networkLayer: {
             components: { Player }
         },
     } = layer;
-
-    // const [player, setPlayer] = useState<Player>()
 
     useEffect(() => {
         if (!layer || !account) {
@@ -121,21 +111,44 @@ export default function PlayerPanel() {
                 const pixelPosition = tileCoordToPixelCoord({ x, y }, TILE_WIDTH, TILE_HEIGHT);
                 console.log("pointerover", position, x, y, pixelPosition);
                 console.log("camera", camera.phaserCamera.worldView);
-                console.log("camera zoom", camera.phaserCamera.zoom,game.scale);
-                
+                console.log("camera zoom", camera.phaserCamera.zoom, game.scale);
+
                 const px = 2 * (pixelPosition.x - camera.phaserCamera.worldView.x)
                 const py = 2 * (pixelPosition.y - camera.phaserCamera.worldView.y)
                 console.log("px,py", px, py);
 
-                store.setState({ tooltip: { show: true, x: px + 40, y: py-60 ,content:<><p>{hexToString(player_.nick_name)}</p>
-                <p>Gold : ${player_.gold}</p></>} })
+                store.setState({
+                    tooltip: {
+                        show: true, x: px + 40, y: py - 60, content: <><p>{hexToString(player_.nick_name)}</p>
+                            <p>Gold : ${player_.gold}</p></>
+                    }
+                })
             }
         });
         sprite.on('pointerout', function (pointer: any) {
             console.log('Mouse left the sprite!' + entity);
-            store.setState({ tooltip: { show: false, x: 0, y: 0,content:null } })
+            store.setState({ tooltip: { show: false, x: 0, y: 0, content: null } })
         });
     }
+
+    useEffect(() => {
+        console.log("building change size:"+buildings.size);
+        var bank = 0
+        var hotel = 0
+        var starkbucks = 0        
+        buildings.forEach((build, _) => {
+            if (build.owner == account?.address) {
+                switch (build.type) {
+                    case BANK_ID: bank++; break;
+                    case HOTEL_ID: hotel++; break;
+                    case STARKBUCKS_ID: starkbucks++; break;
+                }
+            }
+        })
+        setBucks(starkbucks)
+        setBank(bank)
+        setHotel(hotel)
+    }, [buildings.keys()])
 
     return (
         <div>
@@ -145,9 +158,9 @@ export default function PlayerPanel() {
                 <p>Gold : ${storePlayer?.gold}</p>
                 <p>Energy : {storePlayer?.steps}</p>
                 <p>Postion : {storePlayer?.position}</p>
-                <p>Bank : 0</p>
-                <p>Hotel : 0</p>
-                <p>Starkbucks : 0</p>
+                <p>Bank : {bankAmount}</p>
+                <p>Hotel : {hotelAmount}</p>
+                <p>Starkbucks : {bucksAmount}</p>
             </div>
         </div>)
 }
