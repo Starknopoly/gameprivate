@@ -7,6 +7,7 @@ import { EntityIndex } from "@latticexyz/recs";
 import { Building } from "../types";
 import { PlayerState } from "../types/playerState";
 import { ReactNode } from "react";
+import { Camera } from "@latticexyz/phaserx";
 // import { Player } from "../dojo/createSystemCalls";
 
 export type Store = {
@@ -22,6 +23,8 @@ export type Store = {
     playerState: PlayerState,
     treasury: 0,
     tooltip: { show: boolean, x: number, y: number, content: ReactNode },
+    camera:Camera|null,
+    PlayerComponent:any
 };
 
 export const store = create<Store>(() => ({
@@ -34,6 +37,9 @@ export const store = create<Store>(() => ({
     buildings: new Map(),
     playerState: PlayerState.IDLE,
     treasury: 0,
-    tooltip: { show: false, x: 0, y: 0, content: null }
+    tooltip: { show: false, x: 0, y: 0, content: null },
+    camera:null,
+    PlayerComponent:null
 }));
+
 

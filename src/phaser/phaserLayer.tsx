@@ -2,9 +2,6 @@ import { useEffect } from "react";
 import { NetworkLayer } from "../dojo/createNetworkLayer";
 import { store } from "../store/store";
 import { usePhaserLayer } from "../hooks/usePhaserLayer";
-import { pixelCoordToTileCoord, tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { TILE_HEIGHT, TILE_WIDTH } from "./constants";
-import { useDojo } from "../hooks/useDojo";
 import { mouseStore } from "../store/mouseStore";
 
 type Props = {
@@ -35,8 +32,8 @@ export const PhaserLayer = ({ networkLayer }: Props) => {
 
     return (
         <div
-            // onMouseMove={handleMouseMove}
-            // onMouseLeave={handleMouseLeave}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
             ref={ref}
             style={{
                 position: "absolute",

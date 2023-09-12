@@ -2,22 +2,28 @@ import { Tileset } from "../../artTypes/world";
 import { PhaserLayer } from "..";
 import { createNoise2D } from "simplex-noise";
 import { MAP_WIDTH } from "../constants";
+import { store } from "../../store/store";
 
 export function mapSystem(layer: PhaserLayer) {
     const {
         scenes: {
             Main: {
+                camera,
                 maps: {
                     Main: { putTileAt },
                 },
             },
+        },
+        networkLayer: {
+            components: { Player }
         },
     } = layer;
 
     const noise = createNoise2D();
     const size = MAP_WIDTH
 
-
+    store.setState({camera:camera})
+    store.setState({PlayerComponent:Player})
 
     for (let x = 0; x < size; x++) {
         for (let y = 0; y < size; y++) {

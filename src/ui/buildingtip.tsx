@@ -7,16 +7,14 @@ import { store } from "../store/store";
 import { buildingCoorpToPosition, hexToString } from "../utils";
 import { EntityIndex, getComponentValue } from "@latticexyz/recs";
 export default function BuildingTip() {
-    const { buildings } = store()
+    const { buildings,camera,PlayerComponent } = store()
     const [tooltip, settooltip] = useState({ show: false, content: <></>, x: 0, y: 0 })
-    const { phaserLayer: {
-        scenes: {
-            Main: {  camera },
-        },
-        networkLayer: {
-            components: { Player }
-        },
-    } } = useDojo()
+
+    // const { phaserLayer: {
+    //     networkLayer: {
+    //         components: { Player }
+    //     },
+    // } } = useDojo()
 
     const { x: ex, y: ey } = mouseStore()
 
@@ -28,11 +26,14 @@ export default function BuildingTip() {
             return <span>You</span>
         }
         const entity = parseInt(currenLand?.owner) as EntityIndex;
-        const player = getComponentValue(Player, entity)
-        return <span>{hexToString(player?.nick_name)}</span>
+        const player = getComponentValue(PlayerComponent, entity)
+        return <span>{hexToString(player?.nick_name as string)}</span>
     }
 
     useEffect(() => {
+        if(!camera){
+            return
+        }
         const x = (ex + camera.phaserCamera.worldView.x * 2) / 2;
         const y = (ey + camera.phaserCamera.worldView.y * 2) / 2;
 
