@@ -1,33 +1,30 @@
 import { useEffect, useState } from "react";
-import { useDojo } from "../hooks/useDojo";
 import { ClickWrapper } from "./clickWrapper";
 import { store } from "../store/store";
 
 export default function TreasuryUI() {
-    const { account,treasury } = store();
+    const { account, treasury, networkLayer } = store();
     const {
-        networkLayer: {
-            network: { graphSdk }
-        },
-    } = useDojo();
+        network: { graphSdk }
+    } = networkLayer!
 
-    useEffect(()=>{
-        if(!account){
+    useEffect(() => {
+        if (!account) {
             return
         }
         fetchTreasury()
-    },[account])
+    }, [account])
 
-    const fetchTreasury =async () => {
+    const fetchTreasury = async () => {
         const result = await graphSdk.getTownHallBalance()
-        console.log("fetchTreasury : ",result);
+        console.log("fetchTreasury : ", result);
         const gold = result.data.entities?.edges![0]?.node?.components![0] as any
         console.log(gold);
-        store.setState({treasury:gold.gold})
+        store.setState({ treasury: gold.gold })
     }
 
-    const buyGold = async ()=>{
-        
+    const buyGold = async () => {
+
     }
 
     return (
@@ -36,7 +33,7 @@ export default function TreasuryUI() {
                 <p>Treasury</p>
                 <p>Balance : {treasury} Gold</p>
                 <p>Price : 0.00001 ETH</p>
-                <button onClick={()=>buyGold()}>Buy Gold</button>
+                <button onClick={() => buyGold()}>Buy Gold</button>
             </div>
         </ClickWrapper>
     )

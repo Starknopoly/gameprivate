@@ -1,5 +1,4 @@
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
-import { useDojo } from "../hooks/useDojo";
 import { ClickWrapper } from "./clickWrapper";
 import { store } from "../store/store";
 import { TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
@@ -8,17 +7,14 @@ import { EntityIndex, getComponentValue, getComponentValueStrict } from "@lattic
 import twitter from "/twitterlogo.png"
 
 export default function BottomIcons() {
-    const {
-        phaserLayer,
-        networkLayer
-    } = useDojo();
-    const { account } = store()
+    const { account,phaserLayer } = store()
 
     const {
         scenes: {
             Main: { camera },
-        }
-    } = phaserLayer;
+        },
+        networkLayer
+    } = phaserLayer!;
 
     const center = () => {
         if (!account) {

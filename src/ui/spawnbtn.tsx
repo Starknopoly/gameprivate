@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { hexToString, stringToHex, toastError, toastInfo, toastSuccess, toastWarning, truncateString } from "../utils";
 
 export const SpawnBtn = () => {
-    const { account, player } = store();
+    const { account, player,networkLayer } = store();
     const [nickName, setNickName] = useState("")
 
     const {
@@ -15,13 +15,14 @@ export const SpawnBtn = () => {
             list,
             select,
             isDeploying
-        },
-        networkLayer: {
-            components,
-            network: { graphSdk },
-            systemCalls: { spawn },
-        },
+        }
     } = useDojo();
+
+    const {
+        components,
+        network: { graphSdk },
+        systemCalls: { spawn },
+    } = networkLayer!
 
     useEffect(() => {
         if (account) {
@@ -173,9 +174,7 @@ export const SpawnBtn = () => {
                             Mint Player
                         </button>
                     </div>
-
             }
-
         </ClickWrapper>
     );
 };

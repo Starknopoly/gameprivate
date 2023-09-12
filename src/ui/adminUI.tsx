@@ -1,31 +1,26 @@
 import { useEffect, useState } from "react";
 import { ClickWrapper } from "./clickWrapper";
 import { store } from "../store/store";
-import { useDojo } from "../hooks/useDojo";
 import { EntityIndex, setComponent } from "@latticexyz/recs";
 import { Player } from "../dojo/createSystemCalls";
 
 export default function AdminUI() {
     const [moveTo, setMoveTo] = useState(0)
-    const { account } = store();
-    const { phaserLayer,networkLayer:{components} } = useDojo()
+    const { account,phaserLayer } = store();
 
     const [testMode,setTestmode] = useState(false)
 
     const {
         scenes: {
             Main: {
-                input,
-                camera,
-                maps: {
-                    Main: { putTileAt },
-                },
+                input
             },
         },
         networkLayer: {
+            components,
             systemCalls: { adminRoll },
         },
-    } = phaserLayer;
+    } = phaserLayer!;
 
     useEffect(()=>{
 

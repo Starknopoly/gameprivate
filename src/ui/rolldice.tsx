@@ -5,7 +5,6 @@ import dice3 from "/assets/dices/dice3.png"
 import dice4 from "/assets/dices/dice4.png"
 import dice5 from "/assets/dices/dice5.png"
 import dice6 from "/assets/dices/dice6.png"
-import { useDojo } from "../hooks/useDojo";
 
 import { ClickWrapper } from "./clickWrapper"
 import '../App.css';
@@ -23,7 +22,7 @@ const MaxRollTimes = 16
 const dices = [dice1, dice2, dice3, dice4, dice5, dice6]
 
 export default function RollDice() {
-    const { account, player, actions, buildings: storeBuildings, playerState } = store();
+    const { account, player, actions, buildings: storeBuildings, playerState, networkLayer } = store();
 
     const [diceImg1, setDice1] = useState(dice1)
 
@@ -34,19 +33,17 @@ export default function RollDice() {
     const walkCountRef = useRef(0)
 
     const {
-        networkLayer: {
-            components,
-            systemCalls: { roll },
-        },
-    } = useDojo();
+        components,
+        systemCalls: { roll },
+    } = networkLayer!
 
     useEffect(() => {
-        console.log("playerState change "+playerState);
-        
+        console.log("playerState change " + playerState);
+
         switch (playerState) {
-            case PlayerState.IDLE: 
+            case PlayerState.IDLE:
                 idle();
-            break;
+                break;
             case PlayerState.ROLLING:
                 playRollingAnimation();
                 break;
@@ -62,8 +59,8 @@ export default function RollDice() {
         }
     }, [playerState])
 
-    const idle = ()=>{
-        if(rollInternalIdRef.current){
+    const idle = () => {
+        if (rollInternalIdRef.current) {
             clearInterval(rollInternalIdRef.current)
             rollInternalIdRef.current = undefined
         }
@@ -109,7 +106,7 @@ export default function RollDice() {
         if (b?.type == HOTEL_ID) {
             const price = (b.price * 0.1).toFixed(2)
             actions.push("There is a hotel, you paid $" + price)
-            toastInfo("You paid $"+price+" for hotel.")
+            toastInfo("You paid $" + price + " for hotel.")
         }
         // if (b?.type == BOMB_ID) {
 
@@ -157,7 +154,7 @@ export default function RollDice() {
         walkInternalIdRef.current = intervalId
     }
 
-    const walkEnd = ()=>{
+    const walkEnd = () => {
         walkCountRef.current = 0
         playerEventRef.current = undefined
         clearInterval(walkInternalIdRef.current)

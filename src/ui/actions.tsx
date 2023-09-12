@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { BuildingList, OptionType } from "./buildinglist";
 import { ClickWrapper } from "./clickWrapper";
-import { useDojo } from "../hooks/useDojo";
 import { Tileset } from "../artTypes/world";
 import { store } from "../store/store";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
@@ -13,8 +12,7 @@ import { EntityIndex, setComponent } from "@latticexyz/recs";
 import { PlayerState } from "../types/playerState";
 
 export default function ActionsUI() {
-    const { account, player, buildings, actions, playerState } = store();
-    const { phaserLayer, networkLayer: { components } } = useDojo()
+    const { account, player, buildings, actions, playerState,phaserLayer } = store();
 
     const {
         scenes: {
@@ -26,9 +24,10 @@ export default function ActionsUI() {
             },
         },
         networkLayer: {
+            components,
             systemCalls: { buyBuilding, buyBack, explode },
         },
-    } = phaserLayer;
+    } = phaserLayer!;
 
     useEffect(() => {
         const x = MAP_WIDTH / 2

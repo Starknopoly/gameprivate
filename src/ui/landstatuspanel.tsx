@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useDojo } from "../hooks/useDojo";
 import { store } from "../store/store";
 import { Building } from "../types";
 import { buildingIdToMapid, hexToString, positionToBuildingCoorp } from "../utils";
@@ -7,21 +6,17 @@ import { Tileset } from "../artTypes/world";
 import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs";
 
 export default function LandStatusPanel() {
-    const { account, buildings, player: storePlayer } = store();
+    const { account, buildings, player: storePlayer,phaserLayer } = store();
 
     const [currenLand, setCurrentLand] = useState<Building>()
 
     const accountRef = useRef<string>()
-    // subscribe building change
-    const {
-        phaserLayer: {
-            world,
-            game,
-            scenes: {
-                Main: { objectPool, maps: {
-                    Main: { putTileAt,tiles },
-                } },
-            },
+
+    const  {
+        scenes: {
+            Main: {  maps: {
+                Main: { putTileAt },
+            } },
         },
         networkLayer: {
             components: {
@@ -29,8 +24,8 @@ export default function LandStatusPanel() {
                 Land: LandComponent,
             },
             network: { graphSdk, wsClient }
-        },
-    } = useDojo();
+        }
+    } = phaserLayer!
 
     useEffect(() => {
         console.log("account change ", account?.address);

@@ -1,5 +1,4 @@
 import { EntityIndex, Has, defineSystem, getComponentValue, getComponentValueStrict } from "@latticexyz/recs";
-import { useDojo } from "../hooks/useDojo";
 import { useEffect, useRef, useState } from "react";
 
 import { store } from "../store/store";
@@ -10,9 +9,7 @@ import { BANK_ID, HOTEL_ID, STARKBUCKS_ID } from "../config";
 import { tipStore } from "../store/tipStore";
 
 export default function PlayerPanel() {
-    const { account, player: storePlayer, buildings,PlayerComponent,camera } = store();
-    const { phaserLayer: layer } = useDojo()
-
+    const { account, player: storePlayer, buildings,PlayerComponent,camera,phaserLayer: layer  } = store();
     const spriteListen = useRef<Map<EntityIndex, boolean>>(new Map())
     const [bankAmount, setBank] = useState(0)
     const [hotelAmount, setHotel] = useState(0)
@@ -23,7 +20,7 @@ export default function PlayerPanel() {
         scenes: {
             Main: { objectPool },
         }
-    } = layer;
+    } = layer!;
 
     useEffect(() => {
         if (!layer || !account) {

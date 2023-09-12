@@ -1,15 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { store } from "../store/store";
-import { useDojo } from "../hooks/useDojo";
 import { EntityIndex, Has, defineSystem, getComponentValue, getComponentValueStrict } from "@latticexyz/recs";
 import { hexToString, positionToCoorp, truncateString } from "../utils";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
-import { ClickWrapper } from "./clickWrapper";
 
 export default function NamesUI() {
-    const { account } = store();
-    const { phaserLayer: layer } = useDojo()
+    const { account,phaserLayer: layer } = store();
+
     const {
         world,
         scenes: {
@@ -18,7 +16,7 @@ export default function NamesUI() {
         networkLayer: {
             components: { Player }
         },
-    } = layer;
+    } = layer!;
     
     useEffect(() => {
         if (!layer || !account) {
