@@ -52,8 +52,8 @@ export const PhaserLayer = ({ networkLayer }: Props) => {
 
     return (
         <div
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
+            // onMouseMove={handleMouseMove}
+            // onMouseLeave={handleMouseLeave}
             ref={ref}
             style={{
                 position: "absolute",
