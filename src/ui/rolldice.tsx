@@ -141,7 +141,12 @@ export default function RollDice() {
         console.log(getTimestamp()+ " : rolling dice result" , result);
 
         if (result && result.length > 0) {
-            playerEventRef.current = result[0] as Player
+            for (let index = 0; index < result.length; index++) {
+                const element = result[index];
+                if(element.type == "Player" && element.entity == account.address){
+                    playerEventRef.current = result[0] as Player
+                }
+            }
         } else {
             toastError("Rolling too quick!")
             changeState(PlayerState.IDLE)
