@@ -7,6 +7,16 @@ export class Building {
     public owner: string = ""
     public enable = true
     public isMine = false
+    //     { value: '10', label: 'Lv1 : $10' },
+    //     { value: '20', label: 'Lv2 : $20' },
+    //     { value: '50', label: 'Lv3 : $50' },
+    //     { value: '100', label: 'Lv4 : $100' },
+    //     { value: '200', label: 'Lv5 : $200' },
+    //     { value: '300', label: 'Lv6 : $300' },
+    //     { value: '500', label: 'Lv7 : $500' },
+    //     { value: '1000', label: 'Lv8 : $1000' },
+    // ];
+    public static BombPrices = [10, 20, 50, 100, 200, 300, 500, 1000]
 
     constructor(type: number, price: number, owner: string, position: number) {
         this.type = type
@@ -26,6 +36,17 @@ export class Building {
 
     public getLevel = () => {
         var price0 = 0;
+        var level = 1;
+        if (this.type == BOMB_ID) {
+            for (let index = 0; index <Building.BombPrices.length; index++) {
+                const element = Building.BombPrices[index];
+                if (element == this.price) {
+                    level = index + 1;
+                    break
+                }
+            }
+            return level
+        }
 
         switch (this.type) {
             case BOMB_ID: return 1;
@@ -33,9 +54,9 @@ export class Building {
             case STARKBUCKS_ID: price0 = BUILDING_PRICES['Starkbucks']; break;
             case BANK_ID: price0 = BUILDING_PRICES['Bank']; break;
         }
-        const ratio = this.price/price0;
-        const level =Math.floor(Math.log(ratio)/Math.log(1.3))+1
-        console.log("getLevel ",this.price,price0,ratio,level);
+        const ratio = this.price / price0;
+        level = Math.floor(Math.log(ratio) / Math.log(1.3)) + 1
+        console.log("getLevel ", this.price, price0, ratio, level);
         return level;
     }
 }

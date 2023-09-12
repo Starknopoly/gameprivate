@@ -171,6 +171,7 @@ export default function LandStatusPanel() {
                 putTileAt({ x: coord.x, y: coord.y }, mapid, "Foreground");
             } else {
                 putTileAt({ x: coord.x, y: coord.y }, Tileset.NoHeart, "Foreground");
+                putTileAt({ x: coord.x, y: coord.y }, Tileset.NoHeart, "Level");
             }
 
             if (build.isMine) {

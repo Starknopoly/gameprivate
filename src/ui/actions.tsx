@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { BuildingList, OptionType } from "./buildinglist";
 import { ClickWrapper } from "./clickWrapper";
 import { Tileset } from "../artTypes/world";
@@ -10,6 +10,7 @@ import { BANK_ID, BUILDING_PRICES, HOTEL_ID, STARKBUCKS_ID } from "../config";
 import { Player } from "../dojo/createSystemCalls";
 import { EntityIndex, setComponent } from "@latticexyz/recs";
 import { PlayerState } from "../types/playerState";
+import { Building } from "../types";
 
 export default function ActionsUI() {
     const { account, player, buildings, actions, playerState, phaserLayer } = store();
@@ -45,13 +46,14 @@ export default function ActionsUI() {
 
     const [selectBomb, setSelectBomb] = useState("10")
     const bomboptions: OptionType[] = [
-        { value: '10', label: 'Power : $10' },
-        { value: '20', label: 'Power : $20' },
-        { value: '50', label: 'Power : $50' },
-        { value: '100', label: 'Power : $100' },
-        { value: '200', label: 'Power : $200' },
-        { value: '300', label: 'Power : $300' },
-        { value: '500', label: 'Power : $500' },
+        { value: '10', label: 'Lv1 : $10' },
+        { value: '20', label: 'Lv2 : $20' },
+        { value: '50', label: 'Lv3 : $50' },
+        { value: '100', label: 'Lv4 : $100' },
+        { value: '200', label: 'Lv5 : $200' },
+        { value: '300', label: 'Lv6 : $300' },
+        { value: '500', label: 'Lv7 : $500' },
+        { value: '1000', label: 'Lv8 : $1000' },
     ];
 
     const handleSelectionChange = (value: string) => {
@@ -268,6 +270,18 @@ export default function ActionsUI() {
         }
     }
 
+    const getBombLevel = useMemo(()=>{
+        let price = parseInt(selectBomb)
+        for (let index = 0; index < Building.BombPrices.length; index++) {
+            const element = Building.BombPrices[index];
+            if(element==price){
+                var level = index+1
+                return "Lv"+level
+            }
+        }
+        return "Lv1"
+    },[selectBomb])
+
     return (<ClickWrapper style={{ display: "flex", flexDirection: "column" }}>
 
         <BuildingList options={options} onChange={handleSelectionChange} defaultValue="Hotel" />
@@ -275,7 +289,7 @@ export default function ActionsUI() {
 
         <div style={{ marginTop: 15 }}></div>
         <BuildingList options={bomboptions} onChange={(value) => setSelectBomb(value)} defaultValue="10" />
-        <button onClick={() => placeBomb()} >Place Bomb</button>
+        <button onClick={() => placeBomb()} >Place Bomb {getBombLevel}</button>
 
         <button onClick={() => buyBackClick()} style={{ marginTop: 15 }}>Buy Back Building</button>
 
