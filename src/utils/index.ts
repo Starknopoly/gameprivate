@@ -96,6 +96,9 @@ export function buildingCoorpToPosition(coord: Coord): number {
     if (y % 3 != 0) {
         return position
     }
+    if(x>=size){
+        return position
+    }
 
     const ycount = Math.floor(y / 3)
     if (ycount % 2 == 0) {

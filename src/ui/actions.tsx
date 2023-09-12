@@ -5,14 +5,14 @@ import { Tileset } from "../artTypes/world";
 import { store } from "../store/store";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { MAP_WIDTH, TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
-import { mapIdToBuildingId, positionToBuildingCoorp, positionToCoorp, toastError, toastInfo, toastWarning } from "../utils";
+import { mapIdToBuildingId, positionToBuildingCoorp, positionToCoorp, toastError, toastInfo, toastSuccess, toastWarning } from "../utils";
 import { BANK_ID, BUILDING_PRICES, HOTEL_ID, STARKBUCKS_ID } from "../config";
 import { Player } from "../dojo/createSystemCalls";
 import { EntityIndex, setComponent } from "@latticexyz/recs";
 import { PlayerState } from "../types/playerState";
 
 export default function ActionsUI() {
-    const { account, player, buildings, actions, playerState,phaserLayer } = store();
+    const { account, player, buildings, actions, playerState, phaserLayer } = store();
 
     const {
         scenes: {
@@ -85,7 +85,7 @@ export default function ActionsUI() {
         if (playerState != PlayerState.IDLE && playerState != PlayerState.WALK_END) {
             return
         }
-        if(player.position==1){
+        if (player.position == 1) {
             toastInfo("First land is reserved.")
             return
         }
@@ -94,7 +94,7 @@ export default function ActionsUI() {
             toastWarning("There is a building")
             return
         }
-        if(player.gold<selectBomb){
+        if (player.gold < selectBomb) {
             toastWarning("Gold is not enough")
             return
         }
@@ -119,14 +119,16 @@ export default function ActionsUI() {
                 })
                 putTileAt({ x: coord.x, y: coord.y }, Tileset.Bomb, "Foreground");
                 actions.push("Place $" + selectBomb + " bomb at : " + player.position)
+                toastSuccess("Place $" + selectBomb + " bomb success")
                 return
             }
         }
 
-        alert("Something wrong")
+        // alert("Something wrong")
+        toastError("Something error. Please refresh page")
     }
 
-    const buildClick =async () => {
+    const buildClick = async () => {
         if (!account) {
             toastError("Create burner wallet first.")
             return
@@ -138,7 +140,7 @@ export default function ActionsUI() {
         if (playerState != PlayerState.IDLE && playerState != PlayerState.WALK_END) {
             return
         }
-        if(player.position==1){
+        if (player.position == 1) {
             toastInfo("First land is reserved.")
             return
         }
@@ -164,31 +166,32 @@ export default function ActionsUI() {
             return
         }
 
-        const events =  await buyBuilding(account, buildingId)
-        if(events.length==0){
+        const events = await buyBuilding(account, buildingId)
+        if (events.length == 0) {
             toastError("Build fail. Please refresh and retry.")
-        }else{
+        } else {
             const playerEvent = events[0] as Player;
             const entity = parseInt(events[0].entity.toString()) as EntityIndex;
             setComponent(components.Player, entity, {
-              nick_name: playerEvent.nick_name,
-              position: playerEvent.position,
-              joined_time: playerEvent.joined_time,
-              direction: playerEvent.direction,
-              gold: playerEvent.gold,
-              steps: playerEvent.steps,
-              last_point: playerEvent.last_point,
-              last_time: playerEvent.last_time,
+                nick_name: playerEvent.nick_name,
+                position: playerEvent.position,
+                joined_time: playerEvent.joined_time,
+                direction: playerEvent.direction,
+                gold: playerEvent.gold,
+                steps: playerEvent.steps,
+                last_point: playerEvent.last_point,
+                last_time: playerEvent.last_time,
             });
-    
+
             putTileAt({ x: coord.x, y: coord.y }, id, "Foreground");
             putTileAt({ x: coord.x, y: coord.y }, Tileset.Heart, "Top");
             actions.push("Build " + selectBuild + " at : " + player.position)
+            toastSuccess("Build " + selectBuild + " success")
         }
 
     }
 
-    const buyBackClick = () => {
+    const buyBackClick = async () => {
         if (!account) {
             toastError("Create burner wallet first.")
             return
@@ -216,15 +219,29 @@ export default function ActionsUI() {
             return
         }
 
-        // const coord = positionToCoorp(player.position)
-        //TODO : check there is building
+        const events = await buyBack(account)
+        if (events.length == 0) {
+            toastError("Buy back fail. Please refresh and retry.")
+        } else {
+            const playerEvent = events[0] as Player;
+            const entity = parseInt(events[0].entity.toString()) as EntityIndex;
+            setComponent(components.Player, entity, {
+                nick_name: playerEvent.nick_name,
+                position: playerEvent.position,
+                joined_time: playerEvent.joined_time,
+                direction: playerEvent.direction,
+                gold: playerEvent.gold,
+                steps: playerEvent.steps,
+                last_point: playerEvent.last_point,
+                last_time: playerEvent.last_time,
+            });
+            toastSuccess("Buy back success")
+            actions.push("Buy back " + (building.getName()) + " at : " + player.position + ", spend $" + (building.price * 1.3).toFixed(2))
+        }
 
-        buyBack(account)
-
-        actions.push("Buy back " + (building.getName()) + " at : " + player.position + ", spend $" + (building.price * 1.3).toFixed(2))
     }
 
-    const buyEnergy = async ()=>{
+    const buyEnergy = async () => {
         if (!account) {
             toastError("Create burner wallet first.")
             return
@@ -239,9 +256,9 @@ export default function ActionsUI() {
         const postion = player.position
         const building = buildings.get(postion)
         if (building) {
-            if(building.type == STARKBUCKS_ID){
+            if (building.type == STARKBUCKS_ID) {
 
-            }else{
+            } else {
                 toastWarning("Not Starkbucks")
                 return
             }
@@ -263,6 +280,6 @@ export default function ActionsUI() {
         <button onClick={() => buyBackClick()} style={{ marginTop: 15 }}>Buy Back Building</button>
 
         <button onClick={() => buyEnergy()} style={{ marginTop: 15 }}>Buy Energy</button>
-        
+
     </ClickWrapper>)
 }

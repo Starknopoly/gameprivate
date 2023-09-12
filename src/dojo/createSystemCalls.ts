@@ -82,20 +82,6 @@ export function createSystemCalls(
 
     const events = parseEvent(receipt);
     console.log(events);
-
-    const playerEvent = events[0] as Player;
-    const entity = parseInt(events[0].entity.toString()) as EntityIndex;
-    setComponent(contractComponents.Player, entity, {
-      nick_name: playerEvent.nick_name,
-      position: playerEvent.position,
-      joined_time: playerEvent.joined_time,
-      direction: playerEvent.direction,
-      gold: playerEvent.gold,
-      steps: playerEvent.steps,
-      last_point: playerEvent.last_point,
-      last_time: playerEvent.last_time,
-    });
-
     // return player1 player2 townhall land
     return events;
   };

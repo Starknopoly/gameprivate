@@ -35,6 +35,9 @@ export default function BuildingTip() {
         const coord = pixelCoordToTileCoord({ x, y }, TILE_WIDTH, TILE_HEIGHT)
         const position = buildingCoorpToPosition(coord)
         const building = buildings.get(position)
+        // console.log("hover 1:",ex,ey,x,y);
+        // console.log("hover 2:",coord,position);
+        
         if (building && building.enable) {
             settooltip({
                 show: true, x: ex + 80, y: ey - 40, content: <div>
