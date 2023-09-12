@@ -144,7 +144,7 @@ export default function RollDice() {
             for (let index = 0; index < result.length; index++) {
                 const element = result[index];
                 if(element.type == "Player" && element.entity == account.address){
-                    playerEventRef.current = result[0] as Player
+                    playerEventRef.current = element as Player
                 }
             }
         } else {
