@@ -9,7 +9,7 @@ import dice6 from "/assets/dices/dice6.png"
 import { ClickWrapper } from "./clickWrapper"
 import '../App.css';
 import { Direction, Player } from "../dojo/createSystemCalls"
-import { getRandomIntBetween, toastError, toastInfo } from "../utils"
+import { getRandomIntBetween, getTimestamp, toastError, toastInfo } from "../utils"
 import { store } from "../store/store";
 import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs"
 import { MAP_WIDTH } from "../phaser/constants"
@@ -64,6 +64,7 @@ export default function RollDice() {
             clearInterval(rollInternalIdRef.current)
             rollInternalIdRef.current = undefined
         }
+        rollCountRef.current = 0;
     }
 
     const changeState = (state: PlayerState) => {
@@ -72,6 +73,7 @@ export default function RollDice() {
     }
 
     const playRollingAnimation = () => {
+        console.log(getTimestamp()+ " : playRollingAnimation");
         rollCountRef.current = 0;
         if (!rollInternalIdRef.current) {
             const intervalId = setInterval(rollingAnimation, 200);
@@ -80,6 +82,7 @@ export default function RollDice() {
     }
 
     const rollingAnimation = () => {
+        console.log(getTimestamp()+ " : rollingAnimation");
         if (rollCountRef.current == MaxRollTimes) {
             changeState(PlayerState.ROLL_END)
             return
@@ -100,6 +103,7 @@ export default function RollDice() {
 
         clearInterval(rollInternalIdRef.current)
         rollInternalIdRef.current = undefined
+        rollCountRef.current = 0;
         setDice1(dices[playerEventRef.current.last_point - 1])
         actions.push("Roll " + playerEventRef.current.last_point + " , walk to : " + playerEventRef.current.position)
         const b = storeBuildings.get(playerEventRef.current.position)
@@ -133,13 +137,13 @@ export default function RollDice() {
             return
         }
 
-        console.log("rollDice");
+        console.log(getTimestamp()+ " : rolling Dice " + rollCountRef.current);
         toastInfo("Rolling...")
         changeState(PlayerState.ROLLING)
 
         console.log("click roll account:" + account.address);
         const result = await roll(account)
-        console.log("rolldice result:" + result);
+        console.log(getTimestamp()+ " : rolling dice result:" + result);
 
         if (result && result.length > 0) {
             playerEventRef.current = result[0] as Player

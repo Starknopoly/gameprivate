@@ -9,6 +9,12 @@ export function isValidArray(input: any): input is any[] {
     return Array.isArray(input) && input != null;
 }
 
+export const getTimestamp = ()=>{
+    let timestamp = Math.floor(Date.now());
+  // console.log(timestampInSeconds);
+    return timestamp;
+}
+
 export function getFirstComponentByType(entities: any[] | null | undefined, typename: string): any | null {
     if (!isValidArray(entities)) return null;
 

@@ -5,7 +5,7 @@ import { Tileset } from "../artTypes/world";
 import { store } from "../store/store";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { MAP_WIDTH, TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
-import { mapIdToBuildingId, positionToBuildingCoorp, positionToCoorp, toastError, toastWarning } from "../utils";
+import { mapIdToBuildingId, positionToBuildingCoorp, positionToCoorp, toastError, toastInfo, toastWarning } from "../utils";
 import { BANK_ID, BUILDING_PRICES, HOTEL_ID, STARKBUCKS_ID } from "../config";
 import { Player } from "../dojo/createSystemCalls";
 import { EntityIndex, setComponent } from "@latticexyz/recs";
@@ -85,6 +85,10 @@ export default function ActionsUI() {
         if (playerState != PlayerState.IDLE && playerState != PlayerState.WALK_END) {
             return
         }
+        if(player.position==1){
+            toastInfo("First land is reserved.")
+            return
+        }
         const has = hasBuilding(player.position)
         if (has) {
             toastWarning("There is a building")
@@ -134,6 +138,10 @@ export default function ActionsUI() {
         if (playerState != PlayerState.IDLE && playerState != PlayerState.WALK_END) {
             return
         }
+        if(player.position==1){
+            toastInfo("First land is reserved.")
+            return
+        }
         const has = hasBuilding(player.position)
         if (has) {
             toastWarning("There is a building")
@@ -156,10 +164,28 @@ export default function ActionsUI() {
             return
         }
 
-        await buyBuilding(account, buildingId)
-        putTileAt({ x: coord.x, y: coord.y }, id, "Foreground");
-        putTileAt({ x: coord.x, y: coord.y }, Tileset.Heart, "Top");
-        actions.push("Build " + selectBuild + " at : " + player.position)
+        const events =  await buyBuilding(account, buildingId)
+        if(events.length==0){
+            toastError("Build fail. Please refresh and retry.")
+        }else{
+            const playerEvent = events[0] as Player;
+            const entity = parseInt(events[0].entity.toString()) as EntityIndex;
+            setComponent(components.Player, entity, {
+              nick_name: playerEvent.nick_name,
+              position: playerEvent.position,
+              joined_time: playerEvent.joined_time,
+              direction: playerEvent.direction,
+              gold: playerEvent.gold,
+              steps: playerEvent.steps,
+              last_point: playerEvent.last_point,
+              last_time: playerEvent.last_time,
+            });
+    
+            putTileAt({ x: coord.x, y: coord.y }, id, "Foreground");
+            putTileAt({ x: coord.x, y: coord.y }, Tileset.Heart, "Top");
+            actions.push("Build " + selectBuild + " at : " + player.position)
+        }
+
     }
 
     const buyBackClick = () => {

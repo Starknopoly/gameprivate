@@ -6,15 +6,15 @@ import { Tileset } from "../artTypes/world";
 import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs";
 
 export default function LandStatusPanel() {
-    const { account, buildings, player: storePlayer,phaserLayer } = store();
+    const { account, buildings, player: storePlayer, phaserLayer } = store();
 
     const [currenLand, setCurrentLand] = useState<Building>()
 
     const accountRef = useRef<string>()
 
-    const  {
+    const {
         scenes: {
-            Main: {  maps: {
+            Main: { maps: {
                 Main: { putTileAt },
             } },
         },
@@ -95,7 +95,7 @@ export default function LandStatusPanel() {
                 // console.log(element?.node?.keys![0], element?.node?.components![0]?.__typename);
                 if (players && players[0] && players[0].__typename == "Player" && players[0].last_time != 0) {
                     console.log(players[0]);
-                    if (element.node?.keys![0] == "0x0") {
+                    if (element.node?.keys![0] == "0x0" || element.node?.keys![0] == accountRef.current) {
                         continue
                     }
                     const player = players[0] as any
