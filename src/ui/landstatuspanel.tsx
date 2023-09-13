@@ -53,12 +53,13 @@ export default function LandStatusPanel() {
                         console.log(entityUpdated);
 
                         if (entityUpdated.componentNames == LandComponent.metadata.name) {
-                            fetchAllBuildings()
+                            fetchSingleBuilding(entityUpdated.keys[0])
                         } else if (entityUpdated.componentNames == PlayerComponent.metadata.name) {
                             console.log("We got something player my account:" + accountRef.current + ",change account:" + entityUpdated.keys[0]);
 
                             if (entityUpdated.keys[0] != "0x0" && entityUpdated.keys[0] != accountRef.current) {
-                                fetchAllPlayers()
+                                // fetchAllPlayers()
+                                fetchPlayerInfo(entityUpdated.keys[0])
                             }
                         } else if (entityUpdated.componentNames == "Townhall,Land") {
                             fetchTreasury()
@@ -80,17 +81,15 @@ export default function LandStatusPanel() {
         store.setState({ treasury: gold.gold })
     }
 
-    const fetchAllPlayers = async () => {
-        console.log("fetchAllPlayers");
-        const allPlayers = await graphSdk.getAllPlayers()
-        console.log("fetchAllPlayers allPlayers:");
-        console.log(allPlayers);
-        const edges = allPlayers.data.entities?.edges
+    const fetchPlayerInfo =async (entity:string) => {
+        const playerInfo = await graphSdk.getPlayerByKey({key:entity})
+        console.log("fetchPlayerInfo",playerInfo);
+        const edges = playerInfo.data.entities?.edges
 
         if (edges) {
-            // console.log("fetchAllPlayers game total players:" + edges.length);
+            // console.log("fetchPlayerInfo game total players:" + edges.length);
             for (let index = 0; index < edges.length; index++) {
-                // console.log("fetchAllPlayers length", edges.length);
+                // console.log("fetchPlayerInfo length", edges.length);
                 const element = edges[index];
                 const players = element?.node?.components
                 // console.log(element?.node?.keys![0], element?.node?.components![0]?.__typename);
@@ -117,14 +116,55 @@ export default function LandStatusPanel() {
         }
     }
 
-    const fetchAllBuildings = async () => {
-        const allBuildings = await graphSdk.getAllBuildings()
-        console.log("fetchAllBuildings");
-        console.log(allBuildings);
-        const edges = allBuildings.data.entities?.edges
+    // const fetchAllPlayers = async () => {
+    //     console.log("fetchAllPlayers");
+    //     const allPlayers = await graphSdk.getAllPlayers()
+    //     console.log("fetchAllPlayers allPlayers:");
+    //     console.log(allPlayers);
+    //     const edges = allPlayers.data.entities?.edges
+
+    //     if (edges) {
+    //         // console.log("fetchAllPlayers game total players:" + edges.length);
+    //         for (let index = 0; index < edges.length; index++) {
+    //             // console.log("fetchAllPlayers length", edges.length);
+    //             const element = edges[index];
+    //             const players = element?.node?.components
+    //             // console.log(element?.node?.keys![0], element?.node?.components![0]?.__typename);
+    //             if (players && players[0] && players[0].__typename == "Player" && players[0].last_time != 0) {
+    //                 console.log(players[0]);
+    //                 if (element.node?.keys![0] == "0x0" || element.node?.keys![0] == accountRef.current) {
+    //                     continue
+    //                 }
+    //                 const player = players[0] as any
+    //                 const entityId = parseInt(element.node?.keys![0]!) as EntityIndex
+
+    //                 setComponent(PlayerComponent, entityId, {
+    //                     position: player.position,
+    //                     joined_time: player.joined_time,
+    //                     direction: player.direction,
+    //                     nick_name: player.nick_name,
+    //                     gold: player.gold,
+    //                     steps: player.steps,
+    //                     last_point: player.last_point,
+    //                     last_time: player.last_time
+    //                 })
+    //             }
+    //         }
+    //     }
+    // }
+
+    const fetchSingleBuilding =async (entity:string) => {
+        console.log("fetchSingleBuilding "+entity);
+        const building = await graphSdk.getBuildingByKey({key:entity})
+        console.log("fetchSingleBuilding ",building);
+        const edges = building.data.entities?.edges
         if (!edges) {
             return
         }
+        handleBuildEdges(edges)
+    }
+
+    const handleBuildEdges = (edges:any)=>{
 
         const bs = store.getState().buildings
         for (let index = 0; index < edges.length; index++) {
@@ -159,6 +199,18 @@ export default function LandStatusPanel() {
             }
         }
         store.setState({ buildings: bs })
+    }
+
+
+    const fetchAllBuildings = async () => {
+        const allBuildings = await graphSdk.getAllBuildings()
+        console.log("fetchAllBuildings");
+        console.log(allBuildings);
+        const edges = allBuildings.data.entities?.edges
+        if (!edges) {
+            return
+        }
+        handleBuildEdges(edges)
     }
 
     useEffect(() => {

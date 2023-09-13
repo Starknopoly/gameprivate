@@ -8,7 +8,7 @@ import { MAP_WIDTH, TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
 import { mapIdToBuildingId, positionToBuildingCoorp, positionToCoorp, toastError, toastInfo, toastSuccess, toastWarning } from "../utils";
 import { BANK_ID, BUILDING_PRICES, HOTEL_ID, STARKBUCKS_ID } from "../config";
 import { Player } from "../dojo/createSystemCalls";
-import { EntityIndex, setComponent } from "@latticexyz/recs";
+import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs";
 import { PlayerState } from "../types/playerState";
 import { Building } from "../types";
 import { playerStore } from "../store/playerStore";
