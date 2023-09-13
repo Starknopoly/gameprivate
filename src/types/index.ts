@@ -75,7 +75,7 @@ export function Player2Player(player_:PlayerSQL):Player{
         steps: player_.steps,
         last_point: player_.last_point,
         last_time: player_.last_time,
-        banks:0,
+        banks:player_.banks,
         hotels:0,
         startbucks:0
     }

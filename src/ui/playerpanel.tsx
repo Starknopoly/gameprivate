@@ -15,7 +15,7 @@ export default function PlayerPanel() {
     const { player: storePlayer, PlayerComponent } = playerStore()
 
     const spriteListen = useRef<Map<EntityIndex, boolean>>(new Map())
-    const [bankAmount, setBank] = useState(0)
+    // const [bankAmount, setBank] = useState(0)
     const [hotelAmount, setHotel] = useState(0)
     const [bucksAmount, setBucks] = useState(0)
 
@@ -43,7 +43,6 @@ export default function PlayerPanel() {
                 console.log("playerpanel is myself nick name", player_.nick_name);
                 const player = Player2Player(player_);
                 player.entity = entity.toString();
-                // store.setState({ player: player })
                 playerStore.setState({ player: player })
             }
 
@@ -139,7 +138,7 @@ export default function PlayerPanel() {
             }
         })
         setBucks(starkbucks)
-        setBank(bank)
+        // setBank(bank)
         setHotel(hotel)
         // if (storePlayer) {
         //     const newPlayer = copyPlayer(storePlayer);
@@ -157,7 +156,7 @@ export default function PlayerPanel() {
                 <p>Gold : ${storePlayer?.gold}</p>
                 <p>Energy : {storePlayer?.steps}</p>
                 <p>Postion : {storePlayer?.position}</p>
-                <p>Bank : {bankAmount}</p>
+                <p>Bank : {storePlayer?.banks}</p>
                 <p>Hotel : {hotelAmount}</p>
                 <p>Starkbucks : {bucksAmount}</p>
             </div>

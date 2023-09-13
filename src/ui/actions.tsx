@@ -114,6 +114,7 @@ export default function ActionsUI() {
                 const player = events[0] as Player
 
                 setComponent(components.Player, entityId, {
+                    banks:player.banks,
                     position: player.position,
                     joined_time: player.joined_time,
                     direction: player.direction,
@@ -179,6 +180,7 @@ export default function ActionsUI() {
             const playerEvent = events[0] as Player;
             const entity = parseInt(events[0].entity.toString()) as EntityIndex;
             setComponent(components.Player, entity, {
+                banks:playerEvent.banks,
                 nick_name: playerEvent.nick_name,
                 position: playerEvent.position,
                 joined_time: playerEvent.joined_time,
@@ -232,6 +234,7 @@ export default function ActionsUI() {
             const playerEvent = events[0] as Player;
             const entity = parseInt(events[0].entity.toString()) as EntityIndex;
             setComponent(components.Player, entity, {
+                banks:playerEvent.banks,
                 nick_name: playerEvent.nick_name,
                 position: playerEvent.position,
                 joined_time: playerEvent.joined_time,
@@ -245,33 +248,6 @@ export default function ActionsUI() {
             actions.push("Buy back " + (building.getName()) + " at : " + player.position + ", spend $" + (building.price * 1.3).toFixed(2))
         }
 
-    }
-
-    const buyEnergy = async () => {
-        if (!account) {
-            toastError("Create burner wallet first.")
-            return
-        }
-        if (!player) {
-            toastError("Start game first.")
-            return
-        }
-        if (playerState != PlayerState.IDLE && playerState != PlayerState.WALK_END) {
-            return
-        }
-        const postion = player.position
-        const building = buildings.get(postion)
-        if (building) {
-            if (building.type == STARKBUCKS_ID) {
-
-            } else {
-                toastWarning("Not Starkbucks")
-                return
-            }
-        } else {
-            toastWarning("No Starkbucks here")
-            return
-        }
     }
 
     const getBombLevel = useMemo(() => {
@@ -296,8 +272,5 @@ export default function ActionsUI() {
         <button onClick={() => placeBomb()} >Place Bomb {getBombLevel}</button>
 
         <button onClick={() => buyBackClick()} style={{ marginTop: 15 }}>Buy Back Building</button>
-
-        <button onClick={() => buyEnergy()} style={{ marginTop: 15 }}>Buy Energy</button>
-
     </ClickWrapper>)
 }

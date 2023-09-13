@@ -102,6 +102,7 @@ export default function LandStatusPanel() {
                     const entityId = parseInt(element.node?.keys![0]!) as EntityIndex
 
                     setComponent(PlayerComponent, entityId, {
+                        banks:player.banks,
                         position: player.position,
                         joined_time: player.joined_time,
                         direction: player.direction,

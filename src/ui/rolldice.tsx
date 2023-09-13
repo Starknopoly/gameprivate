@@ -9,7 +9,7 @@ import dice6 from "/assets/dices/dice6.png"
 import { ClickWrapper } from "./clickWrapper"
 import '../App.css';
 import { Direction, Player } from "../dojo/createSystemCalls"
-import { getRandomIntBetween, getTimestamp, toastError, toastInfo } from "../utils"
+import { getRandomIntBetween, getTimestamp, toastError, toastInfo, toastSuccess } from "../utils"
 import { store } from "../store/store";
 import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs"
 import { MAP_WIDTH } from "../phaser/constants"
@@ -114,7 +114,8 @@ export default function RollDice() {
         console.log("checkRollEnd bank "+player?.banks);
         
         if(player && player.banks!=0){
-            actions.push("Your bank mining $"+(player.banks*20)+" Gold")
+            // actions.push("Banks received $"+(player.banks*20)+" Gold")
+            toastSuccess("Banks received $"+(player.banks*20)+" Gold")
         }
         actionStore.setState({actions:actions})
         // if (b?.type == BOMB_ID) {
@@ -216,6 +217,7 @@ export default function RollDice() {
         }
 
         setComponent(components.Player, entityId, {
+            banks:playerEvent.banks,
             position: position,
             nick_name: playerEvent.nick_name,
             joined_time: playerEvent.joined_time,

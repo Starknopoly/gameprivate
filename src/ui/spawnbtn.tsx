@@ -52,6 +52,7 @@ export const SpawnBtn = () => {
                             playersAddress.set(entityId, element.node.keys[0])
 
                             setComponent(components.Player, entityId, {
+                                banks:player.banks,
                                 position: player.position,
                                 joined_time: player.joined_time,
                                 nick_name: player.nick_name,
@@ -95,6 +96,7 @@ export const SpawnBtn = () => {
                                 console.log(players[0]);
                                 const player = players[0] as any
                                 setComponent(components.Player, entityId, {
+                                    banks:player.banks,
                                     position: player.position,
                                     joined_time: player.joined_time,
                                     direction: player.direction,
