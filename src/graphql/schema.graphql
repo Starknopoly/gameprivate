@@ -22,9 +22,56 @@ query getAllPlayers {
   }
 }
 
+query getPlayerByKey($key: String) {
+  entities(first:1000, keys: [$key]) {
+    totalCount
+    edges {
+      node {
+        keys
+        components {
+          __typename
+          ... on Player {
+            nick_name
+            joined_time
+            direction
+            gold
+            position
+            steps
+            last_point
+            last_time
+          }
+        }
+      }
+    }
+  }
+}
+
 query getAllBuildings {
   entities(first:1000, keys: ["%"]) {
     totalCount
+    edges {
+      node {
+        keys
+        components {
+          __typename
+          ... on
+           Land {
+            position
+            owner
+            building_type
+            price
+            bomb
+            bomber
+            bomb_price
+          }
+        }
+      }
+    }
+  }
+}
+
+query getBuildingByKey($key: String) {
+  entities(first:1000, keys: [$key]) {
     edges {
       node {
         keys
