@@ -224,6 +224,9 @@ export interface Player extends BaseEvent {
   steps: number;
   last_point: number;
   last_time: number;
+  banks:number;
+  hotels:number;
+  startbucks:number;
 }
 
 export interface Land extends BaseEvent {
@@ -274,7 +277,10 @@ export const parseEvent = (
           position: Number(raw.data[9]),
           steps: Number(raw.data[10]),
           last_point: Number(raw.data[11]),
-          last_time: Number(raw.data[12])
+          last_time: Number(raw.data[12]),
+          banks: Number(raw.data[13]),
+          hotels:0,
+          startbucks:0
         };
         console.log("parseEvent player",raw.data[5],playerData.nick_name);
         events.push(playerData);

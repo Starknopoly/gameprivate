@@ -16,13 +16,17 @@ import { MAP_WIDTH } from "../phaser/constants"
 import { Account } from "starknet"
 import { BOMB_ID, HOTEL_ID } from "../config"
 import { PlayerState } from "../types/playerState"
+import { playerStore } from "../store/playerStore"
+import { actionStore } from "../store/actionstore"
 
 
 const MaxRollTimes = 16
 const dices = [dice1, dice2, dice3, dice4, dice5, dice6]
 
 export default function RollDice() {
-    const { account, player, actions, buildings: storeBuildings, playerState, networkLayer } = store();
+    const { account, buildings: storeBuildings, networkLayer } = store();
+    const {actions} = actionStore()
+    const {player,playerState} = playerStore()
 
     const [diceImg1, setDice1] = useState(dice1)
 
@@ -69,7 +73,7 @@ export default function RollDice() {
 
     const changeState = (state: PlayerState) => {
         console.log("changeState " + state);
-        store.setState({ playerState: state })
+        playerStore.setState({ playerState: state })
     }
 
     const playRollingAnimation = () => {
@@ -82,7 +86,7 @@ export default function RollDice() {
     }
 
     const rollingAnimation = () => {
-        console.log(getTimestamp()+ " : rollingAnimation");
+        // console.log(getTimestamp()+ " : rollingAnimation");
         if (rollCountRef.current == MaxRollTimes) {
             changeState(PlayerState.ROLL_END)
             return
@@ -105,8 +109,14 @@ export default function RollDice() {
         rollInternalIdRef.current = undefined
         rollCountRef.current = 0;
         setDice1(dices[playerEventRef.current.last_point - 1])
+
         actions.push("Roll " + playerEventRef.current.last_point + " , walk to : " + playerEventRef.current.position)
+        console.log("checkRollEnd bank "+player?.banks);
         
+        if(player && player.banks!=0){
+            actions.push("Your bank mining $"+(player.banks*20)+" Gold")
+        }
+        actionStore.setState({actions:actions})
         // if (b?.type == BOMB_ID) {
 
         // }

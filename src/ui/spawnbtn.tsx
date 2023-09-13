@@ -4,9 +4,11 @@ import { ClickWrapper } from "./clickWrapper";
 import { store } from "../store/store";
 import { useEffect, useState } from "react";
 import { hexToString, stringToHex, toastError, toastInfo, toastSuccess, toastWarning, truncateString } from "../utils";
+import { playerStore } from "../store/playerStore";
 
 export const SpawnBtn = () => {
-    const { account, player,networkLayer } = store();
+    const { account,networkLayer } = store();
+    const {player} = playerStore()
     const [nickName, setNickName] = useState("")
 
     const {
@@ -64,7 +66,7 @@ export const SpawnBtn = () => {
                 }
             }
         }
-        store.setState({ playersAddress: playersAddress })
+        // playerStore.setState({ playersAddress: playersAddress })
     }
 
     const fetchAllPlayers = async () => {
@@ -136,10 +138,10 @@ export const SpawnBtn = () => {
         }
         await spawn(account, BigInt('0x' + hex));
 
-        var playersAddress = store.getState().playersAddress
-        const entity = parseInt(account.address) as EntityIndex;
-        playersAddress?.set(entity, account.address)
-        store.setState({ playersAddress: playersAddress })
+        // var playersAddress = playerStore.getState().playersAddress
+        // const entity = parseInt(account.address) as EntityIndex;
+        // playersAddress?.set(entity, account.address)
+        // playerStore.setState({ playersAddress: playersAddress })
         toastSuccess("Mint player success.")
     }
 

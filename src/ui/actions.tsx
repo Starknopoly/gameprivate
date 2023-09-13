@@ -11,9 +11,13 @@ import { Player } from "../dojo/createSystemCalls";
 import { EntityIndex, setComponent } from "@latticexyz/recs";
 import { PlayerState } from "../types/playerState";
 import { Building } from "../types";
+import { playerStore } from "../store/playerStore";
+import { actionStore } from "../store/actionstore";
 
 export default function ActionsUI() {
-    const { account, player, buildings, actions, playerState, phaserLayer } = store();
+    const { account, buildings, phaserLayer } = store();
+    const {actions} = actionStore()
+    const { player, playerState } = playerStore()
 
     const {
         scenes: {
@@ -96,7 +100,7 @@ export default function ActionsUI() {
             toastWarning("There is a building")
             return
         }
-        if (player.gold < selectBomb) {
+        if (player.gold < parseInt(selectBomb)) {
             toastWarning("Gold is not enough")
             return
         }
@@ -270,17 +274,17 @@ export default function ActionsUI() {
         }
     }
 
-    const getBombLevel = useMemo(()=>{
+    const getBombLevel = useMemo(() => {
         let price = parseInt(selectBomb)
         for (let index = 0; index < Building.BombPrices.length; index++) {
             const element = Building.BombPrices[index];
-            if(element==price){
-                var level = index+1
-                return "Lv"+level
+            if (element == price) {
+                var level = index + 1
+                return "Lv" + level
             }
         }
         return "Lv1"
-    },[selectBomb])
+    }, [selectBomb])
 
     return (<ClickWrapper style={{ display: "flex", flexDirection: "column" }}>
 

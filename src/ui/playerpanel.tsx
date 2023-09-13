@@ -7,9 +7,13 @@ import { hexToString, positionToCoorp } from "../utils";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { BANK_ID, HOTEL_ID, STARKBUCKS_ID } from "../config";
 import { tipStore } from "../store/tipStore";
+import { Player2Player, copyPlayer } from "../types";
+import { playerStore } from "../store/playerStore";
 
 export default function PlayerPanel() {
-    const { account, player: storePlayer, buildings,PlayerComponent,camera,phaserLayer: layer  } = store();
+    const { account, buildings, camera, phaserLayer: layer } = store();
+    const { player: storePlayer, PlayerComponent } = playerStore()
+
     const spriteListen = useRef<Map<EntityIndex, boolean>>(new Map())
     const [bankAmount, setBank] = useState(0)
     const [hotelAmount, setHotel] = useState(0)
@@ -37,7 +41,10 @@ export default function PlayerPanel() {
 
             if (entity == myEntityId) {
                 console.log("playerpanel is myself nick name", player_.nick_name);
-                store.setState({ player: player_ })
+                const player = Player2Player(player_);
+                player.entity = entity.toString();
+                // store.setState({ player: player })
+                playerStore.setState({ player: player })
             }
 
             // console.log("defineSystem account:" + account.address);
@@ -118,10 +125,10 @@ export default function PlayerPanel() {
     }
 
     useEffect(() => {
-        console.log("building change size:"+buildings.size);
+        console.log("building change size:" + buildings.size);
         var bank = 0
         var hotel = 0
-        var starkbucks = 0        
+        var starkbucks = 0
         buildings.forEach((build, _) => {
             if (build.owner == account?.address) {
                 switch (build.type) {
@@ -134,6 +141,12 @@ export default function PlayerPanel() {
         setBucks(starkbucks)
         setBank(bank)
         setHotel(hotel)
+        // if (storePlayer) {
+        //     const newPlayer = copyPlayer(storePlayer);
+        //     newPlayer.banks = bank;
+        //     newPlayer.hotels = hotel;
+        //     newPlayer.startbucks = starkbucks;
+        // }
     }, [buildings.keys()])
 
     return (

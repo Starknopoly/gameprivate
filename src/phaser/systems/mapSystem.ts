@@ -3,6 +3,7 @@ import { PhaserLayer } from "..";
 import { createNoise2D } from "simplex-noise";
 import { MAP_WIDTH } from "../constants";
 import { store } from "../../store/store";
+import { playerStore } from "../../store/playerStore";
 
 export function mapSystem(layer: PhaserLayer) {
     const {
@@ -23,7 +24,7 @@ export function mapSystem(layer: PhaserLayer) {
     const size = MAP_WIDTH
 
     store.setState({camera:camera})
-    store.setState({PlayerComponent:Player})
+    playerStore.setState({PlayerComponent:Player})
 
     for (let x = 0; x < size; x++) {
         for (let y = 0; y < size; y++) {

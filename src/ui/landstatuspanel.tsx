@@ -4,10 +4,11 @@ import { Building } from "../types";
 import { buildingIdToMapid, hexToString, positionToBuildingCoorp } from "../utils";
 import { Tileset } from "../artTypes/world";
 import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs";
+import { playerStore } from "../store/playerStore";
 
 export default function LandStatusPanel() {
-    const { account, buildings, player: storePlayer, phaserLayer } = store();
-
+    const { account, buildings, phaserLayer } = store();
+    const {player: storePlayer, } = playerStore()
     const [currenLand, setCurrentLand] = useState<Building>()
 
     const accountRef = useRef<string>()
@@ -191,7 +192,10 @@ export default function LandStatusPanel() {
 
     useEffect(() => {
         console.log("current land change");
-        const build = buildings.get(storePlayer?.position)
+        if(!storePlayer){
+            return
+        }
+        const build = buildings.get(storePlayer.position)
         setCurrentLand(build)
     }, [storePlayer, buildings.values()])
 
