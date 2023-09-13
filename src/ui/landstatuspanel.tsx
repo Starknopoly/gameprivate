@@ -61,7 +61,7 @@ export default function LandStatusPanel() {
                                 // fetchAllPlayers()
                                 fetchPlayerInfo(entityUpdated.keys[0])
                             }
-                        } else if (entityUpdated.componentNames == "Townhall,Land") {
+                        } else if (entityUpdated.componentNames == "Townhall,Land" || entityUpdated.componentNames == "Townhall") {
                             fetchTreasury()
                         }
                         console.log("We got something!", data);
@@ -116,43 +116,6 @@ export default function LandStatusPanel() {
             }
         }
     }
-
-    // const fetchAllPlayers = async () => {
-    //     console.log("fetchAllPlayers");
-    //     const allPlayers = await graphSdk.getAllPlayers()
-    //     console.log("fetchAllPlayers allPlayers:");
-    //     console.log(allPlayers);
-    //     const edges = allPlayers.data.entities?.edges
-
-    //     if (edges) {
-    //         // console.log("fetchAllPlayers game total players:" + edges.length);
-    //         for (let index = 0; index < edges.length; index++) {
-    //             // console.log("fetchAllPlayers length", edges.length);
-    //             const element = edges[index];
-    //             const players = element?.node?.components
-    //             // console.log(element?.node?.keys![0], element?.node?.components![0]?.__typename);
-    //             if (players && players[0] && players[0].__typename == "Player" && players[0].last_time != 0) {
-    //                 console.log(players[0]);
-    //                 if (element.node?.keys![0] == "0x0" || element.node?.keys![0] == accountRef.current) {
-    //                     continue
-    //                 }
-    //                 const player = players[0] as any
-    //                 const entityId = parseInt(element.node?.keys![0]!) as EntityIndex
-
-    //                 setComponent(PlayerComponent, entityId, {
-    //                     position: player.position,
-    //                     joined_time: player.joined_time,
-    //                     direction: player.direction,
-    //                     nick_name: player.nick_name,
-    //                     gold: player.gold,
-    //                     steps: player.steps,
-    //                     last_point: player.last_point,
-    //                     last_time: player.last_time
-    //                 })
-    //             }
-    //         }
-    //     }
-    // }
 
     const fetchSingleBuilding =async (entity:string) => {
         console.log("fetchSingleBuilding "+entity);

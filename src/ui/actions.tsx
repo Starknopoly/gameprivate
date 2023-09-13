@@ -45,7 +45,7 @@ export default function ActionsUI() {
     const options: OptionType[] = [
         { value: 'Hotel', label: 'Hotel($100)' },
         { value: 'Bank', label: 'Bank($500)' },
-        { value: 'Starkbucks', label: 'Starkbucks($1000)' }
+        { value: 'Starkbucks', label: 'Starkbucks($500)' }
     ];
 
     const [selectBomb, setSelectBomb] = useState("10")

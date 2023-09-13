@@ -8,5 +8,5 @@ export const STARKBUCKS_ID = 3
 export const BUILDING_PRICES = {
     "Hotel": 100,
     "Bank": 500,
-    "Starkbucks": 1000
+    "Starkbucks": 500
 }

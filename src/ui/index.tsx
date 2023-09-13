@@ -12,6 +12,7 @@ import AdminUI from "./adminUI";
 import ActionList from "./actionlist";
 import TreasuryUI from "./treasuryUI";
 import BuildingTip from "./buildingtip";
+import BuyEnergyUI from "./buyenergy";
 
 export default function UI() {
     const layers = store((state) => {
@@ -32,6 +33,7 @@ export default function UI() {
                 <SpawnBtn />
             </HeaderContainer>
 
+            <BuyEnergyUI/>
             <BottomContainer>
                 <RollDice />
             </BottomContainer>

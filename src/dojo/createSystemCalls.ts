@@ -18,10 +18,6 @@ export function createSystemCalls(
 
   const roll = async (signer: Account) => {
     console.log("roll signer:" + signer.address);
-    // const entityId = parseInt(signer.address) as EntityIndex;
-
-    // TODO: override steps
-
     try {
       const tx = await execute(signer, "roll", []);
 
@@ -43,6 +39,30 @@ export function createSystemCalls(
     }
     return undefined;
   };
+
+  const buyEnergy = async (
+    signer: Account,
+    amount: number
+  ) => {
+    const tx = await execute(signer, "supplement", [amount]);
+    console.log("buyEnergy signer:"+signer.address+",amount:"+amount);
+    
+    // TODO: override gold
+
+    console.log(tx);
+    const receipt = await signer.waitForTransaction(tx.transaction_hash, {
+      retryInterval: 100,
+    });
+
+    console.log(receipt);
+
+    const events = parseEvent(receipt);
+    console.log(events);
+
+    // return player,land
+    return events;
+  };
+
 
   const buyBuilding = async (
     signer: Account,
@@ -107,6 +127,7 @@ export function createSystemCalls(
       console.log("spawn event nick name",playerEvent.nick_name);
       
       setComponent(contractComponents.Player, entity, {
+        banks:playerEvent.banks,
         nick_name: playerEvent.nick_name,
         position: playerEvent.position,
         joined_time: playerEvent.joined_time,
@@ -184,6 +205,7 @@ export function createSystemCalls(
   };
 
   return {
+    buyEnergy,
     spawn,
     roll,
     buyBuilding,
