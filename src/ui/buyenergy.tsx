@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { STARKBUCKS_ID } from "../config";
+import { EnergyPrice, STARKBUCKS_ID } from "../config";
 import { actionStore } from "../store/actionstore";
 import { playerStore } from "../store/playerStore";
 import { store } from "../store/store";
@@ -8,11 +8,15 @@ import { toastError, toastSuccess, toastWarning } from "../utils";
 import { ClickWrapper } from "./clickWrapper";
 import { Player } from "../generated/graphql";
 import { EntityIndex, setComponent } from "@latticexyz/recs";
+import { useMemo, useState } from "react";
 
 export default function BuyEnergyUI() {
     const { account, buildings, phaserLayer } = store();
     const { actions } = actionStore()
     const { player, playerState } = playerStore()
+
+    const [showBox, setShow] = useState(false)
+    const [buyAmount,setBuyAmount] = useState(1)
 
     const {
         scenes: {
@@ -53,16 +57,29 @@ export default function BuyEnergyUI() {
             toastWarning("No Starkbucks here")
             return
         }
+        setBuyAmount(1)
+        setShow(pre=>!pre)
+    }
 
-        const events = await buyEnergy(account,1)
-        console.log("Buy Energy result",events);
-        if(events.length==0){
+    const buyConfirm = async () => {
+        if (!account || !player) {
+            return
+        }
+
+        if(player.gold<buyAmount*EnergyPrice){
+            toastWarning("Gold is not enough")
+            return
+        }
+
+        const events = await buyEnergy(account, buyAmount)
+        console.log("Buy Energy result", events);
+        if (events.length == 0) {
             toastError("Buy energy fail.Please refresh and try.")
-        }else{
+        } else {
             const playerEvent = events[0] as Player;
             const entity = parseInt(events[0].entity.toString()) as EntityIndex;
             setComponent(components.Player, entity, {
-                banks:playerEvent.banks,
+                banks: playerEvent.banks,
                 nick_name: playerEvent.nick_name,
                 position: playerEvent.position,
                 joined_time: playerEvent.joined_time,
@@ -73,6 +90,17 @@ export default function BuyEnergyUI() {
                 last_time: playerEvent.last_time,
             });
             toastSuccess("Buy energy success")
+            setShow(false)
+        }
+    }
+
+    const add =()=>{
+        setBuyAmount(pre=>pre+1)
+    }
+
+    const sub = ()=>{
+        if(buyAmount>1){
+            setBuyAmount(pre=>pre-1)
         }
     }
 
@@ -81,10 +109,40 @@ export default function BuyEnergyUI() {
             <BottomContainer>
                 <button onClick={() => clickBuyEnergy()} style={{ marginTop: 15 }}>Buy Energy</button>
             </BottomContainer>
+            <BuyBoxContainer>
+                {
+                    showBox &&
+                    <div style={{ width: 200, height: 180, lineHeight: "16px", backgroundColor: "rgba(0, 0, 0, 0.5)", padding: 10, borderRadius: 15 }}>
+                        <p >Buy Energy</p>
+                        <p style={{ marginTop: "30px" }}>Price : $100/Energy</p>
+                        <div style={{ display: "flex", gap: "0px", lineHeight: "0px" }}>
+                            <p style={{ marginRight: "10px" }}>Amount : </p>
+                            <p style={{cursor:"pointer"}} onClick={()=>sub()}>-</p>
+                            <p style={{ marginRight: "10px", marginLeft: "10px" }}>{buyAmount}</p>
+                            <p style={{cursor:"pointer"}} onClick={()=>add()}>+</p>
+                        </div>
+                        <div style={{ display: "flex", gap: "0px", lineHeight: "0px",marginTop:"10px" }}>
+                            <p style={{ marginRight: "20px" }}>Total : ${buyAmount*EnergyPrice}</p>
+                            <button onClick={()=>buyConfirm()}>Buy</button>
+                        </div>
+                    </div>
+                }
+
+            </BuyBoxContainer>
         </ClickWrapper>
     )
 }
 
+const BuyBoxContainer = styled.div`
+    position: absolute;
+    bottom: 10%;
+    right: 5%;
+    transform: translate(-50%, -50%);
+    color: white;
+    display: flex;
+    flex-direaction: row;
+    gap: 20px;
+`;
 
 const BottomContainer = styled.div`
     position: absolute;
