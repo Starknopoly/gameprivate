@@ -60,7 +60,8 @@ export const SpawnBtn = () => {
                                 gold: player.gold,
                                 steps: player.steps,
                                 last_point: player.last_point,
-                                last_time: player.last_time
+                                last_time: player.last_time,
+                                total_steps:player.total_steps,
                             })
                         }
                     }
@@ -104,7 +105,8 @@ export const SpawnBtn = () => {
                                     nick_name: player.nick_name,
                                     steps: player.steps,
                                     last_point: player.last_point,
-                                    last_time: player.last_time
+                                    last_time: player.last_time,
+                                    total_steps:player.total_steps,
                                 })
                                 return true
                             }

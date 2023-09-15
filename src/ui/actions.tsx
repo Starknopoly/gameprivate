@@ -122,7 +122,8 @@ export default function ActionsUI() {
                     gold: player.gold,
                     steps: player.steps,
                     last_point: player.last_point,
-                    last_time: player.last_time
+                    last_time: player.last_time,
+                    total_steps:player.total_steps
                 })
                 putTileAt({ x: coord.x, y: coord.y }, Tileset.Bomb, "Foreground");
                 actions.push("Place $" + selectBomb + " bomb at : " + player.position)
@@ -189,6 +190,7 @@ export default function ActionsUI() {
                 steps: playerEvent.steps,
                 last_point: playerEvent.last_point,
                 last_time: playerEvent.last_time,
+                total_steps:playerEvent.total_steps
             });
 
             putTileAt({ x: coord.x, y: coord.y }, id, "Foreground");
@@ -243,6 +245,7 @@ export default function ActionsUI() {
                 steps: playerEvent.steps,
                 last_point: playerEvent.last_point,
                 last_time: playerEvent.last_time,
+                total_steps:playerEvent.total_steps
             });
             toastSuccess("Buy back success")
             actions.push("Buy back " + (building.getName()) + " at : " + player.position + ", spend $" + (building.price * 1.3).toFixed(2))

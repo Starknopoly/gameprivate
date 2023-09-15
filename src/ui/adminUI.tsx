@@ -55,7 +55,9 @@ export default function AdminUI() {
             gold: player.gold,
             steps: player.steps,
             last_point: player.last_point,
-            last_time: player.last_time
+            last_time: player.last_time,
+            total_steps:player.total_steps,
+            banks:player.banks
         })
     }
 

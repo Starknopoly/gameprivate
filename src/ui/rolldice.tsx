@@ -225,7 +225,8 @@ export default function RollDice() {
             gold: playerEvent.gold,
             steps: playerEvent.steps,
             last_point: playerEvent.last_point,
-            last_time: playerEvent.last_time
+            last_time: playerEvent.last_time,
+            total_steps:playerEvent.total_steps,
         })
     }
 

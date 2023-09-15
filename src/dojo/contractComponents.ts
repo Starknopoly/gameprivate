@@ -17,6 +17,7 @@ export function defineContractComponents(world: World) {
           steps: RecsType.Number,
           last_point: RecsType.Number,
           last_time: RecsType.Number,
+          total_steps: RecsType.Number,
           banks: RecsType.Number,
         },
         {

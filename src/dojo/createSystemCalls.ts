@@ -17,15 +17,15 @@ export function createSystemCalls(
 
 
   const roll = async (signer: Account) => {
-    console.log("roll signer:" + signer.address);
     try {
+      console.log("roll start");
       const tx = await execute(signer, "roll", []);
-
-      console.log(tx);
+      console.log("roll tx");
+      
       const receipt = await signer.waitForTransaction(tx.transaction_hash, {
         retryInterval: 100,
       });
-
+      console.log("roll receipt:",receipt);
       const events = parseEvent(receipt);
       console.log(events);
       return events;
@@ -136,6 +136,7 @@ export function createSystemCalls(
         steps: playerEvent.steps,
         last_point: playerEvent.last_point,
         last_time: playerEvent.last_time,
+        total_steps:playerEvent.total_steps
       });
       return playerEvent;
       // store.setState({player})
@@ -244,6 +245,7 @@ export interface Player extends BaseEvent {
   direction: number;
   gold: number;
   steps: number;
+  total_steps:number;
   last_point: number;
   last_time: number;
   banks:number;
@@ -300,7 +302,8 @@ export const parseEvent = (
           steps: Number(raw.data[10]),
           last_point: Number(raw.data[11]),
           last_time: Number(raw.data[12]),
-          banks: Number(raw.data[13]),
+          total_steps:Number(raw.data[13]),
+          banks: Number(raw.data[14]),
           hotels:0,
           startbucks:0
         };

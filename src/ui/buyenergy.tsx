@@ -88,6 +88,7 @@ export default function BuyEnergyUI() {
                 steps: playerEvent.steps,
                 last_point: playerEvent.last_point,
                 last_time: playerEvent.last_time,
+                total_steps:player.total_steps,
             });
             toastSuccess("Buy energy success")
             setShow(false)
