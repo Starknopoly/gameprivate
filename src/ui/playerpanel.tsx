@@ -9,6 +9,7 @@ import { BANK_ID, HOTEL_ID, STARKBUCKS_ID } from "../config";
 import { tipStore } from "../store/tipStore";
 import { Player2Player, copyPlayer } from "../types";
 import { playerStore } from "../store/playerStore";
+import { useERC20Balance } from "../hooks/useERC20Balance";
 
 export default function PlayerPanel() {
     const { account, buildings, camera, phaserLayer: layer } = store();
@@ -25,6 +26,8 @@ export default function PlayerPanel() {
             Main: { objectPool },
         }
     } = layer!;
+
+    const userEthBalance = useERC20Balance("", account);
 
     useEffect(() => {
         if (!layer || !account) {
