@@ -39,7 +39,7 @@ export default function TreasuryUI() {
     }
 
     const buyGold = async () => {
-        setShow(true)
+        setShow(pre=>!pre)
     }
 
     const inputChange = (event: React.ChangeEvent<HTMLInputElement>) => {

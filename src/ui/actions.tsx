@@ -246,6 +246,11 @@ export default function ActionsUI() {
                 toastWarning("Gold is not enough. Need $" + (building.price * 1.3).toFixed(0))
                 return
             }
+            if(building.type == LANDID_RESERVED){
+                toastWarning("No Building here")
+                return
+            }
+            
         } else {
             toastWarning("No building here")
             return
@@ -301,6 +306,6 @@ export default function ActionsUI() {
         <button onClick={() => placeBomb()} >Place Bomb {getBombLevel}</button>
 
         <button onClick={() => buyBackClick()} style={{ marginTop: 15 }}>Buy Back Building</button>
-        <button onClick={() => { transfer() }}>Transfer</button>
+        {/* <button onClick={() => { transfer() }}>Transfer</button> */}
     </ClickWrapper>)
 }
