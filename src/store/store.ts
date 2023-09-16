@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { NetworkLayer } from "../dojo/createNetworkLayer";
 import { PhaserLayer } from "../phaser";
-import { Account } from "starknet";
+import { Account, Provider } from "starknet";
 import { Building } from "../types";
 import { Camera } from "@latticexyz/phaserx";
 // import { Player } from "../dojo/createSystemCalls";

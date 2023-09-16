@@ -30,10 +30,10 @@ export default function RollDice() {
 
     const [diceImg1, setDice1] = useState(dice1)
 
-    const rollInternalIdRef = useRef<NodeJS.Timer>()
+    const rollInternalIdRef = useRef<NodeJS.Timeout>()
     const rollCountRef = useRef(0)
     const playerEventRef = useRef<Player>()
-    const walkInternalIdRef = useRef<NodeJS.Timer>()
+    const walkInternalIdRef = useRef<NodeJS.Timeout>()
     const walkCountRef = useRef(0)
 
     const {
@@ -104,8 +104,10 @@ export default function RollDice() {
             changeState(PlayerState.ROLLING)
             return
         }
+        if(rollInternalIdRef.current){
+            clearInterval(rollInternalIdRef.current)
+        }
 
-        clearInterval(rollInternalIdRef.current)
         rollInternalIdRef.current = undefined
         rollCountRef.current = 0;
         setDice1(dices[playerEventRef.current.last_point - 1])

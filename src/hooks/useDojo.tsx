@@ -23,7 +23,7 @@ export const useDojo = () => {
 
     useEffect(() => {
         console.log("usedojo account " + account);
-        store.setState({ account })
+        store.setState({ account:account })
     }, [account])
 
     if (phaserLayer === null) {
