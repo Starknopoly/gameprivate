@@ -27,7 +27,11 @@ export default function PlayerPanel() {
         }
     } = layer!;
 
-    const userEthBalance = useERC20Balance("", account);
+    const [balance, updateBalance] = useERC20Balance("", account);
+
+    useEffect(()=>{
+        console.log(`===${account?.address}=== eth balance: ${balance}`);
+    }, [balance])
 
     useEffect(() => {
         if (!layer || !account) {
