@@ -7,8 +7,10 @@ import { buildingCoorpToPosition, hexToString } from "../utils";
 import { EntityIndex, getComponentValue } from "@latticexyz/recs";
 import { tipStore } from "../store/tipStore";
 import { playerStore } from "../store/playerStore";
+import { buildStore } from "../store/buildstore";
 export default function BuildingTip() {
-    const { buildings, camera } = store()
+    const { camera } = store()
+    const {buildings} = buildStore()
     const {PlayerComponent} = playerStore()
     const { tooltip:ptooltip } = tipStore();
     const [tooltip, settooltip] = useState({ show: false, content: <></>, x: 0, y: 0 })

@@ -6,18 +6,24 @@ import { store } from "../store/store";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { MAP_WIDTH, TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
 import { mapIdToBuildingId, positionToBuildingCoorp, positionToCoorp, toastError, toastInfo, toastSuccess, toastWarning } from "../utils";
-import { BANK_ID, BUILDING_PRICES, HOTEL_ID, STARKBUCKS_ID } from "../config";
+import { BANK_ID, BUILDING_PRICES, HOTEL_ID, LANDID_RESERVED, STARKBUCKS_ID } from "../config";
 import { Player } from "../dojo/createSystemCalls";
 import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs";
 import { PlayerState } from "../types/playerState";
 import { Building } from "../types";
 import { playerStore } from "../store/playerStore";
 import { actionStore } from "../store/actionstore";
+import { useERC20Balance } from "../hooks/useERC20Balance";
+import { buildStore } from "../store/buildstore";
+import { ethers } from "ethers";
 
 export default function ActionsUI() {
-    const { account, buildings, phaserLayer } = store();
-    const {actions} = actionStore()
+    const { account, phaserLayer } = store();
+    const { buildings } = buildStore()
+    const { actions } = actionStore()
     const { player, playerState } = playerStore()
+
+    const [balance, updateBalance] = useERC20Balance("", account);
 
     const {
         scenes: {
@@ -72,7 +78,17 @@ export default function ActionsUI() {
                 if (build.enable) {
                     return true
                 }
-            } else {
+            } else if (build.type != LANDID_RESERVED) {
+                return true
+            }
+        }
+        return false
+    }
+
+    const isReservedLand = (position: number) => {
+        const build = buildings.get(position)
+        if (build) {
+            if (build.type == LANDID_RESERVED) {
                 return true
             }
         }
@@ -95,6 +111,10 @@ export default function ActionsUI() {
             toastInfo("First land is reserved.")
             return
         }
+        if (isReservedLand(player.position)) {
+            toastWarning("Only can build on empty land.")
+            return
+        }
         const has = hasBuilding(player.position)
         if (has) {
             toastWarning("There is a building")
@@ -114,7 +134,7 @@ export default function ActionsUI() {
                 const player = events[0] as Player
 
                 setComponent(components.Player, entityId, {
-                    banks:player.banks,
+                    banks: player.banks,
                     position: player.position,
                     joined_time: player.joined_time,
                     direction: player.direction,
@@ -123,7 +143,7 @@ export default function ActionsUI() {
                     steps: player.steps,
                     last_point: player.last_point,
                     last_time: player.last_time,
-                    total_steps:player.total_steps
+                    total_steps: player.total_steps
                 })
                 putTileAt({ x: coord.x, y: coord.y }, Tileset.Bomb, "Foreground");
                 actions.push("Place $" + selectBomb + " bomb at : " + player.position)
@@ -150,6 +170,10 @@ export default function ActionsUI() {
         }
         if (player.position == 1) {
             toastInfo("First land is reserved.")
+            return
+        }
+        if (isReservedLand(player.position)) {
+            toastWarning("Only can build on empty land.")
             return
         }
         const has = hasBuilding(player.position)
@@ -181,7 +205,7 @@ export default function ActionsUI() {
             const playerEvent = events[0] as Player;
             const entity = parseInt(events[0].entity.toString()) as EntityIndex;
             setComponent(components.Player, entity, {
-                banks:playerEvent.banks,
+                banks: playerEvent.banks,
                 nick_name: playerEvent.nick_name,
                 position: playerEvent.position,
                 joined_time: playerEvent.joined_time,
@@ -190,7 +214,7 @@ export default function ActionsUI() {
                 steps: playerEvent.steps,
                 last_point: playerEvent.last_point,
                 last_time: playerEvent.last_time,
-                total_steps:playerEvent.total_steps
+                total_steps: playerEvent.total_steps
             });
 
             putTileAt({ x: coord.x, y: coord.y }, id, "Foreground");
@@ -236,7 +260,7 @@ export default function ActionsUI() {
             const playerEvent = events[0] as Player;
             const entity = parseInt(events[0].entity.toString()) as EntityIndex;
             setComponent(components.Player, entity, {
-                banks:playerEvent.banks,
+                banks: playerEvent.banks,
                 nick_name: playerEvent.nick_name,
                 position: playerEvent.position,
                 joined_time: playerEvent.joined_time,
@@ -245,7 +269,7 @@ export default function ActionsUI() {
                 steps: playerEvent.steps,
                 last_point: playerEvent.last_point,
                 last_time: playerEvent.last_time,
-                total_steps:playerEvent.total_steps
+                total_steps: playerEvent.total_steps
             });
             toastSuccess("Buy back success")
             actions.push("Buy back " + (building.getName()) + " at : " + player.position + ", spend $" + (building.price * 1.3).toFixed(2))
@@ -265,6 +289,10 @@ export default function ActionsUI() {
         return "Lv1"
     }, [selectBomb])
 
+    const transfer = () => {
+
+    }
+
     return (<ClickWrapper style={{ display: "flex", flexDirection: "column" }}>
 
         <BuildingList options={options} onChange={handleSelectionChange} defaultValue="Hotel" />
@@ -275,5 +303,8 @@ export default function ActionsUI() {
         <button onClick={() => placeBomb()} >Place Bomb {getBombLevel}</button>
 
         <button onClick={() => buyBackClick()} style={{ marginTop: 15 }}>Buy Back Building</button>
+
+        <p>Balance : {ethers.utils.formatEther(balance as string)} ETH</p>
+        <button onClick={() => { transfer() }}>Transfer</button>
     </ClickWrapper>)
 }

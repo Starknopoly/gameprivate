@@ -18,13 +18,15 @@ import { BOMB_ID, HOTEL_ID } from "../config"
 import { PlayerState } from "../types/playerState"
 import { playerStore } from "../store/playerStore"
 import { actionStore } from "../store/actionstore"
+import { buildStore } from "../store/buildstore"
 
 
 const MaxRollTimes = 16
 const dices = [dice1, dice2, dice3, dice4, dice5, dice6]
 
 export default function RollDice() {
-    const { account, buildings: storeBuildings, networkLayer } = store();
+    const { account, networkLayer } = store();
+    const {buildings:storeBuildings} = buildStore()
     const {actions} = actionStore()
     const {player,playerState} = playerStore()
 

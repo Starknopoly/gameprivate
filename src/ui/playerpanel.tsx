@@ -10,10 +10,12 @@ import { tipStore } from "../store/tipStore";
 import { Player2Player, copyPlayer } from "../types";
 import { playerStore } from "../store/playerStore";
 import { useERC20Balance } from "../hooks/useERC20Balance";
+import { buildStore } from "../store/buildstore";
 
 export default function PlayerPanel() {
-    const { account, buildings, camera, phaserLayer: layer } = store();
+    const { account, camera, phaserLayer: layer } = store();
     const { player: storePlayer, PlayerComponent } = playerStore()
+    const {buildings} = buildStore()
 
     const spriteListen = useRef<Map<EntityIndex, boolean>>(new Map())
     // const [bankAmount, setBank] = useState(0)

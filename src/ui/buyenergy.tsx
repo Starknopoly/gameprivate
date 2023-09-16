@@ -9,9 +9,11 @@ import { ClickWrapper } from "./clickWrapper";
 import { Player } from "../generated/graphql";
 import { EntityIndex, setComponent } from "@latticexyz/recs";
 import { useMemo, useState } from "react";
+import { buildStore } from "../store/buildstore";
 
 export default function BuyEnergyUI() {
-    const { account, buildings, phaserLayer } = store();
+    const { account, phaserLayer } = store();
+    const {buildings} = buildStore()
     const { actions } = actionStore()
     const { player, playerState } = playerStore()
 

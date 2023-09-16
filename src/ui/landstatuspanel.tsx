@@ -5,10 +5,13 @@ import { buildingIdToMapid, hexToString, positionToBuildingCoorp } from "../util
 import { Tileset } from "../artTypes/world";
 import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs";
 import { playerStore } from "../store/playerStore";
+import { buildStore } from "../store/buildstore";
+import { LANDID_RESERVED, LandsOnChain } from "../config";
 
 export default function LandStatusPanel() {
-    const { account, buildings, phaserLayer } = store();
-    const {player: storePlayer, } = playerStore()
+    const { account, phaserLayer } = store();
+    const { buildings } = buildStore()
+    const { player: storePlayer, } = playerStore()
     const [currenLand, setCurrentLand] = useState<Building>()
 
     const accountRef = useRef<string>()
@@ -29,9 +32,25 @@ export default function LandStatusPanel() {
     } = phaserLayer!
 
     useEffect(() => {
+        if(!account){
+            return
+        }
         console.log("account change ", account?.address);
         accountRef.current = account?.address
+        initMap()
     }, [account])
+
+    const initMap = () => {
+        const map = new Map<number, Building>()
+        for (let index = 0; index < LandsOnChain.length; index++) {
+            const element = LandsOnChain[index];
+            if (!element) {
+                const b = new Building(LANDID_RESERVED, 0, "", index);
+                map.set(index, b);
+            }
+        }
+        buildStore.setState({ buildings: map })
+    }
 
     useEffect(() => {
         const query = `subscription {
@@ -81,9 +100,9 @@ export default function LandStatusPanel() {
         store.setState({ treasury: gold.gold })
     }
 
-    const fetchPlayerInfo =async (entity:string) => {
-        const playerInfo = await graphSdk.getPlayerByKey({key:entity})
-        console.log("fetchPlayerInfo",playerInfo);
+    const fetchPlayerInfo = async (entity: string) => {
+        const playerInfo = await graphSdk.getPlayerByKey({ key: entity })
+        console.log("fetchPlayerInfo", playerInfo);
         const edges = playerInfo.data.entities?.edges
 
         if (edges) {
@@ -102,7 +121,7 @@ export default function LandStatusPanel() {
                     const entityId = parseInt(element.node?.keys![0]!) as EntityIndex
 
                     setComponent(PlayerComponent, entityId, {
-                        banks:player.banks,
+                        banks: player.banks,
                         position: player.position,
                         joined_time: player.joined_time,
                         direction: player.direction,
@@ -111,17 +130,17 @@ export default function LandStatusPanel() {
                         steps: player.steps,
                         last_point: player.last_point,
                         last_time: player.last_time,
-                        total_steps:player.total_steps,
+                        total_steps: player.total_steps,
                     })
                 }
             }
         }
     }
 
-    const fetchSingleBuilding =async (entity:string) => {
-        console.log("fetchSingleBuilding "+entity);
-        const building = await graphSdk.getBuildingByKey({key:entity})
-        console.log("fetchSingleBuilding ",building);
+    const fetchSingleBuilding = async (entity: string) => {
+        console.log("fetchSingleBuilding " + entity);
+        const building = await graphSdk.getBuildingByKey({ key: entity })
+        console.log("fetchSingleBuilding ", building);
         const edges = building.data.entities?.edges
         if (!edges) {
             return
@@ -129,9 +148,9 @@ export default function LandStatusPanel() {
         handleBuildEdges(edges)
     }
 
-    const handleBuildEdges = (edges:any)=>{
+    const handleBuildEdges = (edges: any) => {
 
-        const bs = store.getState().buildings
+        const bs = buildStore.getState().buildings
         for (let index = 0; index < edges.length; index++) {
             const element = edges[index];
             const building = element?.node?.components![0];
@@ -163,7 +182,7 @@ export default function LandStatusPanel() {
                 }
             }
         }
-        store.setState({ buildings: bs })
+        buildStore.setState({ buildings: bs })
     }
 
 
@@ -181,21 +200,21 @@ export default function LandStatusPanel() {
     useEffect(() => {
         console.log("buildings change size:" + buildings.size);
         buildings.forEach((build, position) => {
-            const coord = positionToBuildingCoorp(position)
-            const mapid = buildingIdToMapid(build.type)
-
-            if (build.enable) {
-                putTileAt({ x: coord.x, y: coord.y }, Tileset.Num0 + build.getLevel(), "Level");
-                putTileAt({ x: coord.x, y: coord.y }, mapid, "Foreground");
-            } else {
-                putTileAt({ x: coord.x, y: coord.y }, Tileset.NoHeart, "Foreground");
-                putTileAt({ x: coord.x, y: coord.y }, Tileset.NoHeart, "Level");
-            }
-
-            if (build.isMine) {
-                putTileAt({ x: coord.x, y: coord.y }, Tileset.Heart, "Top");
-            } else {
-                putTileAt({ x: coord.x, y: coord.y }, Tileset.NoHeart, "Top");
+            if(build.type != LANDID_RESERVED){
+                const coord = positionToBuildingCoorp(position)
+                const mapid = buildingIdToMapid(build.type)
+                if (build.enable) {
+                    putTileAt({ x: coord.x, y: coord.y }, Tileset.Num0 + build.getLevel(), "Level");
+                    putTileAt({ x: coord.x, y: coord.y }, mapid, "Foreground");
+                } else {
+                    putTileAt({ x: coord.x, y: coord.y }, Tileset.NoHeart, "Foreground");
+                    putTileAt({ x: coord.x, y: coord.y }, Tileset.NoHeart, "Level");
+                }
+                if (build.isMine) {
+                    putTileAt({ x: coord.x, y: coord.y }, Tileset.Heart, "Top");
+                } else {
+                    putTileAt({ x: coord.x, y: coord.y }, Tileset.NoHeart, "Top");
+                }
             }
         })
     }, [buildings.values()])
@@ -209,7 +228,7 @@ export default function LandStatusPanel() {
 
     useEffect(() => {
         console.log("current land change");
-        if(!storePlayer){
+        if (!storePlayer) {
             return
         }
         const build = buildings.get(storePlayer.position)
