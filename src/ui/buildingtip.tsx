@@ -8,6 +8,7 @@ import { EntityIndex, getComponentValue } from "@latticexyz/recs";
 import { tipStore } from "../store/tipStore";
 import { playerStore } from "../store/playerStore";
 import { buildStore } from "../store/buildstore";
+import { LANDID_RESERVED } from "../config";
 export default function BuildingTip() {
     const { camera } = store()
     const {buildings} = buildStore()
@@ -42,7 +43,7 @@ export default function BuildingTip() {
         // console.log("hover 1:",ex,ey,x,y);
         // console.log("hover 2:",coord,position);
         
-        if (building && building.enable) {
+        if (building && building.enable && building.type!=LANDID_RESERVED) {
             settooltip({
                 show: true, x: ex + 80, y: ey - 40, content: <div>
                     <p>{building.getName()}</p>
