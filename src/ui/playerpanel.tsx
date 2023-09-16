@@ -159,10 +159,9 @@ export default function PlayerPanel() {
 
     return (
         <div>
-            <div style={{ width: 200, height: 250, lineHeight: 0.9, backgroundColor: "rgba(0, 0, 0, 0.5)", padding: 10, borderRadius: 15 }}>
+            <div style={{ width: 200, height: 230, lineHeight: 0.9, backgroundColor: "rgba(0, 0, 0, 0.5)", padding: 10, borderRadius: 15 }}>
                 {/* <p style={{ color: "white" }}>Player Status</p> */}
                 <p>Name : {hexToString(storePlayer?.nick_name)}</p>
-                <p>Gold : ${storePlayer?.gold}</p>
                 <p>Steps : {storePlayer?.total_steps}</p>
                 <p>Energy : {storePlayer?.steps}</p>
                 <p>Postion : {storePlayer?.position}</p>

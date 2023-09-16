@@ -13,6 +13,7 @@ import ActionList from "./actionlist";
 import TreasuryUI from "./treasuryUI";
 import BuildingTip from "./buildingtip";
 import BuyEnergyUI from "./buyenergy";
+import WalletUI from "./walletui";
 
 export default function UI() {
     const layers = store((state) => {
@@ -42,6 +43,7 @@ export default function UI() {
             </RightContainer>
             <TopRightContainer>
                 <LandStatusPanel />
+                <WalletUI/>
             </TopRightContainer>
 
             <BottomRightContainer>
@@ -86,7 +88,7 @@ const TopLeftContainer = styled.div`
 
 const TreasuryContainer = styled.div`
 position: absolute;
-top: 260px;
+top: 240px;
 right: -80px;
 transform: translate(-50%, -50%);
 color: white;
@@ -108,7 +110,7 @@ const LeftCenterContainer = styled.div`
 
 const TopRightContainer = styled.div`
     position: absolute;
-    top: 100px;
+    top: 80px;
     right: -80px;
     transform: translate(-50%, -50%);
     color: white;

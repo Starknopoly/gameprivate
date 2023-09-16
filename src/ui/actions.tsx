@@ -23,8 +23,6 @@ export default function ActionsUI() {
     const { actions } = actionStore()
     const { player, playerState } = playerStore()
 
-    const [balance, updateBalance] = useERC20Balance("", account);
-
     const {
         scenes: {
             Main: {
@@ -303,8 +301,6 @@ export default function ActionsUI() {
         <button onClick={() => placeBomb()} >Place Bomb {getBombLevel}</button>
 
         <button onClick={() => buyBackClick()} style={{ marginTop: 15 }}>Buy Back Building</button>
-
-        <p>Balance : {ethers.utils.formatEther(balance as string)} ETH</p>
         <button onClick={() => { transfer() }}>Transfer</button>
     </ClickWrapper>)
 }
