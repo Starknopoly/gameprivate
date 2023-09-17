@@ -56,7 +56,7 @@ export function mapSystem(layer: PhaserLayer) {
                         position = y * size + size - x - 1;
                     }
                     const canBuild = LandsOnChain[position];
-                    console.log("postion:" + position + ",can:" + canBuild);
+                    // console.log("postion:" + position + ",can:" + canBuild);
                     if (canBuild) {
 
                     } else {

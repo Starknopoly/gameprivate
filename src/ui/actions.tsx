@@ -295,7 +295,7 @@ export default function ActionsUI() {
     }, [selectBomb])
 
     const test = async () => {
-        const building = await graphSdk.getBuildingByKey({key : "0x1"})
+        const building = await graphSdk.getBuildingByKey({key : "0x5"})
         console.log(building);
     }
 
