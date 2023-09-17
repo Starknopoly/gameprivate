@@ -31,7 +31,6 @@ export default function TreasuryUI() {
         store.setState({ treasury: gold.gold })
     }
 
-
     const buyConfirm = async () => {
         if (!account || !player) {
             return

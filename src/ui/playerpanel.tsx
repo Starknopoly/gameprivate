@@ -113,6 +113,7 @@ export default function PlayerPanel() {
                 tipStore.setState({
                     tooltip: {
                         show: true, x: px + 40, y: py - 60, content: <><p>{hexToString(player_.nick_name as string)}</p>
+                            <p>Steps : {player_.total_steps}</p>
                             <p>Gold : ${player_.gold}</p></>
                     }
                 })
