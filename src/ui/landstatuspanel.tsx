@@ -45,8 +45,8 @@ export default function LandStatusPanel() {
         for (let index = 0; index < LandsOnChain.length; index++) {
             const element = LandsOnChain[index];
             if (!element) {
-                const b = new Building(LANDID_RESERVED, 0, "", index);
-                map.set(index, b);
+                const b = new Building(LANDID_RESERVED, 0, "", index+1);
+                map.set(index+1, b);
             }
         }
         buildStore.setState({ buildings: map })

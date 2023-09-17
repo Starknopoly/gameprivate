@@ -85,6 +85,7 @@ export default function ActionsUI() {
 
     const isReservedLand = (position: number) => {
         const build = buildings.get(position)
+        console.log(build);
         if (build) {
             if (build.type == LANDID_RESERVED) {
                 return true
