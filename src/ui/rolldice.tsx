@@ -9,7 +9,7 @@ import dice6 from "/assets/dices/dice6.png"
 import { ClickWrapper } from "./clickWrapper"
 import '../App.css';
 import { Direction, Player } from "../dojo/createSystemCalls"
-import { getRandomIntBetween, getTimestamp, toastError, toastInfo, toastSuccess } from "../utils"
+import { getRandomIntBetween, getTimestamp, toastError, toastInfo, toastSuccess, toastWarning } from "../utils"
 import { store } from "../store/store";
 import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs"
 import { MAP_WIDTH } from "../phaser/constants"
@@ -144,6 +144,11 @@ export default function RollDice() {
 
         if (player.gold == 0) {
             toastError("You are broke. Can't roll dice.")
+            return
+        }
+
+        if(player.steps==0){
+            toastWarning("Energy is 0")
             return
         }
 
