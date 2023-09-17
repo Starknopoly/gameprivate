@@ -107,8 +107,8 @@ export default function Leaderboard() {
                 {
                     showPanel && <div style={{ width: 480, height: 600, lineHeight: 1, backgroundColor: "rgba(0, 0, 0, 1)", padding: 10, borderRadius: 15 }}>
                         <div style={{ display: "flex", flexDirection: "row" }}>
-                            <p style={{ marginLeft: 160 }}>Leaderboard</p>
-                            <button style={{ height: 25, marginLeft: 160 }} onClick={() => setShow(false)}>X</button>
+                            <p style={{ marginLeft: 180 }}>Leaderboard</p>
+                            <button style={{ height: 25, marginLeft: 180 }} onClick={() => setShow(false)}>X</button>
                         </div>
 
                         <table border={1} style={{ marginLeft: 15 }}>
