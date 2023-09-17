@@ -4,12 +4,12 @@ import { useEffect } from 'react';
 import { useNetworkLayer } from './hooks/useNetworkLayer';
 import { PhaserLayer } from './phaser/phaserLayer';
 import { store } from "./store/store";
-import { UI } from './ui';
-import NamesUI from './ui/names';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import UI from './ui';
 
 function App() {
   const networkLayer = useNetworkLayer();
-
   useEffect(() => {
     if (!networkLayer) return;
 
@@ -24,6 +24,7 @@ function App() {
     <div>
       <PhaserLayer networkLayer={networkLayer} />
       <UI />
+      <ToastContainer />
     </div>
   );
 }

@@ -1,9 +1,26 @@
 .scrollable-list {
-    max-height: 200px; /* 你可以根据需要调整这个值 */
-    overflow-y: auto;  /* 当内容超出容器时，显示垂直滚动条 */
+    max-height: 200px;
+    /* 你可以根据需要调整这个值 */
+    overflow-y: auto;
+    /* 当内容超出容器时，显示垂直滚动条 */
     padding: 10px;
 }
 
 .list-item {
     padding: 5px 0;
+}
+
+.tooltip {
+    position: absolute;
+    background-color: #333;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 4px;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+}
+
+button{
+    cursor: pointer;
 }

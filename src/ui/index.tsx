@@ -10,8 +10,13 @@ import BottomIcons from "./bottomicons";
 import NamesUI from "./names";
 import AdminUI from "./adminUI";
 import ActionList from "./actionlist";
+import TreasuryUI from "./treasuryUI";
+import BuildingTip from "./buildingtip";
+import BuyEnergyUI from "./buyenergy";
+import WalletUI from "./walletui";
+import Leaderboard from "./leaderboard";
 
-export const UI = () => {
+export default function UI() {
     const layers = store((state) => {
         return {
             networkLayer: state.networkLayer,
@@ -30,6 +35,7 @@ export const UI = () => {
                 <SpawnBtn />
             </HeaderContainer>
 
+            <BuyEnergyUI/>
             <BottomContainer>
                 <RollDice />
             </BottomContainer>
@@ -38,6 +44,7 @@ export const UI = () => {
             </RightContainer>
             <TopRightContainer>
                 <LandStatusPanel />
+                <WalletUI/>
             </TopRightContainer>
 
             <BottomRightContainer>
@@ -49,7 +56,12 @@ export const UI = () => {
             <LeftCenterContainer>
                 <ActionList />
             </LeftCenterContainer>
+            <TreasuryContainer>
+                <TreasuryUI />
+            </TreasuryContainer>
             <NamesUI />
+            <BuildingTip />
+            <Leaderboard/>
         </Wrapper>
     );
 };
@@ -67,13 +79,24 @@ const HeaderContainer = styled.div`
 
 const TopLeftContainer = styled.div`
     position: absolute;
-    top: 130px;
+    top: 140px;
     left: 130px;
     transform: translate(-50%, -50%);
     color: white;
     display: flex;
     flex-direaction: row;
     gap: 10px;
+`;
+
+const TreasuryContainer = styled.div`
+position: absolute;
+top: 240px;
+right: -80px;
+transform: translate(-50%, -50%);
+color: white;
+display: flex;
+flex-direaction: row;
+gap: 10px;
 `;
 
 const LeftCenterContainer = styled.div`
@@ -89,7 +112,7 @@ const LeftCenterContainer = styled.div`
 
 const TopRightContainer = styled.div`
     position: absolute;
-    top: 100px;
+    top: 80px;
     right: -80px;
     transform: translate(-50%, -50%);
     color: white;
@@ -135,8 +158,8 @@ const BottomLeftContainer = styled.div`
 
 const RightContainer = styled.div`
     position: absolute;
-    bottom: 50%;
-    right: 2%;
+    top: 58%;
+    right: 0%;
     transform: translate(-50%, -50%);
     color: white;
 `;

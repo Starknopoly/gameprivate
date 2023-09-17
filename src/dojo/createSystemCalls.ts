@@ -1,9 +1,8 @@
 import { SetupNetworkResult } from "./setupNetwork";
 import {
   Account,
-  InvokeTransactionReceiptResponse,
-  num,
   shortString,
+  GetTransactionReceiptResponse
 } from "starknet";
 import { EntityIndex, setComponent } from "@latticexyz/recs";
 import { ClientComponents } from "./createClientComponents";
@@ -17,35 +16,18 @@ export function createSystemCalls(
 
 
   const roll = async (signer: Account) => {
-    console.log("roll signer:" + signer.address);
-    // const entityId = parseInt(signer.address) as EntityIndex;
-
-    // TODO: override steps
-
     try {
+      console.log("roll start");
       const tx = await execute(signer, "roll", []);
+      console.log("roll tx");
 
-      console.log(tx);
       const receipt = await signer.waitForTransaction(tx.transaction_hash, {
         retryInterval: 100,
       });
-
-      console.log(receipt);
-
+      console.log("roll receipt:", receipt);
       const events = parseEvent(receipt);
-      // const entity = parseInt(events[0].entity.toString()) as EntityIndex
-
-      const playerEvent = events[0] as Player;
-      // setComponent(contractComponents.Player, entity, {
-      //     position: playerEvent.position,
-      //     joined_time: playerEvent.joined_time,
-      //     direction: playerEvent.direction,
-      //     gold: playerEvent.gold,
-      //     steps: playerEvent.steps,
-      //     last_point: playerEvent.last_point,
-      //     last_time: playerEvent.last_time
-      // })
-      return playerEvent;
+      console.log(events);
+      return events;
     } catch (e) {
       console.log(e);
       // Position.removeOverride(positionId);
@@ -57,13 +39,13 @@ export function createSystemCalls(
     return undefined;
   };
 
-  const buyBuilding = async (
+  const buyEnergy = async (
     signer: Account,
-    buidingId: number
+    amount: number
   ) => {
-    const tx = await execute(signer, "build", [buidingId]);
-    console.log("buyBuilding signer:"+signer.address+",buidingId:"+buidingId);
-    
+    const tx = await execute(signer, "supplement", [amount]);
+    console.log("buyEnergy signer:" + signer.address + ",amount:" + amount);
+
     // TODO: override gold
 
     console.log(tx);
@@ -76,18 +58,29 @@ export function createSystemCalls(
     const events = parseEvent(receipt);
     console.log(events);
 
-    const playerEvent = events[0] as Player;
-    const entity = parseInt(events[0].entity.toString()) as EntityIndex;
-    setComponent(contractComponents.Player, entity, {
-      nick_name: playerEvent.nick_name,
-      position: playerEvent.position,
-      joined_time: playerEvent.joined_time,
-      direction: playerEvent.direction,
-      gold: playerEvent.gold,
-      steps: playerEvent.steps,
-      last_point: playerEvent.last_point,
-      last_time: playerEvent.last_time,
+    // return player,land
+    return events;
+  };
+
+
+  const buyBuilding = async (
+    signer: Account,
+    buidingId: number
+  ) => {
+    const tx = await execute(signer, "build", [buidingId]);
+    console.log("buyBuilding signer:" + signer.address + ",buidingId:" + buidingId);
+
+    // TODO: override gold
+
+    console.log(tx);
+    const receipt = await signer.waitForTransaction(tx.transaction_hash, {
+      retryInterval: 100,
     });
+
+    console.log(receipt);
+
+    const events = parseEvent(receipt);
+    console.log(events);
 
     // return player,land
     return events;
@@ -108,26 +101,12 @@ export function createSystemCalls(
 
     const events = parseEvent(receipt);
     console.log(events);
-
-    const playerEvent = events[0] as Player;
-    const entity = parseInt(events[0].entity.toString()) as EntityIndex;
-    setComponent(contractComponents.Player, entity, {
-      nick_name: playerEvent.nick_name,
-      position: playerEvent.position,
-      joined_time: playerEvent.joined_time,
-      direction: playerEvent.direction,
-      gold: playerEvent.gold,
-      steps: playerEvent.steps,
-      last_point: playerEvent.last_point,
-      last_time: playerEvent.last_time,
-    });
-
     // return player1 player2 townhall land
     return events;
   };
 
   const spawn = async (signer: Account, nick_name: BigInt) => {
-    console.log("spawn signer:" + signer.address+",nickname:"+nick_name);
+    console.log("spawn signer:" + signer.address + ",nickname:" + nick_name);
 
     // const entityId = parseInt(signer.address) as EntityIndex;
     try {
@@ -144,9 +123,10 @@ export function createSystemCalls(
 
       const playerEvent = events[0] as Player;
 
-      console.log("spawn event nick name",playerEvent.nick_name);
-      
+      console.log("spawn event nick name", playerEvent.nick_name);
+
       setComponent(contractComponents.Player, entity, {
+        banks: playerEvent.banks,
         nick_name: playerEvent.nick_name,
         position: playerEvent.position,
         joined_time: playerEvent.joined_time,
@@ -155,6 +135,7 @@ export function createSystemCalls(
         steps: playerEvent.steps,
         last_point: playerEvent.last_point,
         last_time: playerEvent.last_time,
+        total_steps: playerEvent.total_steps
       });
       return playerEvent;
       // store.setState({player})
@@ -169,7 +150,7 @@ export function createSystemCalls(
     return null;
   };
 
-  const explode = async (signer: Account,price:number) => {
+  const explode = async (signer: Account, price: number) => {
     console.log(`explode`)
     // const entityId = parseInt(signer.address) as EntityIndex;
     try {
@@ -201,7 +182,7 @@ export function createSystemCalls(
     }
   };
 
-  const adminRoll = async (signer: Account,position:number) => {
+  const adminRoll = async (signer: Account, position: number) => {
     console.log(`adminRoll`)
     try {
       const tx = await execute(signer, "admin_roll", [position]);
@@ -210,6 +191,7 @@ export function createSystemCalls(
       const receipt = await signer.waitForTransaction(tx.transaction_hash, {
         retryInterval: 100,
       });
+      console.log(receipt);
 
       const events = parseEvent(receipt);
       console.log(events);
@@ -223,6 +205,7 @@ export function createSystemCalls(
   };
 
   return {
+    buyEnergy,
     spawn,
     roll,
     buyBuilding,
@@ -261,8 +244,12 @@ export interface Player extends BaseEvent {
   direction: number;
   gold: number;
   steps: number;
+  total_steps: number;
   last_point: number;
   last_time: number;
+  banks: number;
+  hotels: number;
+  startbucks: number;
 }
 
 export interface Land extends BaseEvent {
@@ -287,8 +274,13 @@ export interface Position extends BaseEvent {
 }
 
 export const parseEvent = (
-  receipt: InvokeTransactionReceiptResponse
+  receipt: GetTransactionReceiptResponse
 ): Array<Player | Land | Townhall> => {
+  // if(typeof receipt == SuccessfulTransactionReceiptResponse)
+  if (receipt.status == "NOT_RECEIVED" || receipt.status == "REJECTED" || receipt.status == "REVERTED") {
+    return []
+  }
+
   if (!receipt.events) {
     throw new Error(`No events found`);
   }
@@ -313,9 +305,13 @@ export const parseEvent = (
           position: Number(raw.data[9]),
           steps: Number(raw.data[10]),
           last_point: Number(raw.data[11]),
-          last_time: Number(raw.data[12])
+          last_time: Number(raw.data[12]),
+          total_steps: Number(raw.data[13]),
+          banks: Number(raw.data[14]),
+          hotels: 0,
+          startbucks: 0
         };
-        console.log("parseEvent player",raw.data[5],playerData.nick_name);
+        console.log("parseEvent player", raw.data[5], playerData.nick_name);
         events.push(playerData);
         break;
 

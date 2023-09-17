@@ -3,10 +3,14 @@ import { useDojo } from "../hooks/useDojo";
 import { ClickWrapper } from "./clickWrapper";
 import { store } from "../store/store";
 import { useEffect, useState } from "react";
-import { hexToString, stringToHex, truncateString } from "../utils";
+import { hexToString, stringToHex, toastError, toastInfo, toastSuccess, toastWarning, truncateString } from "../utils";
+import { playerStore } from "../store/playerStore";
+import { Player } from "../dojo/createSystemCalls";
+import { Player2Player } from "../types";
 
 export const SpawnBtn = () => {
-    const { account, player } = store();
+    const { account,networkLayer } = store();
+    const {player} = playerStore()
     const [nickName, setNickName] = useState("")
 
     const {
@@ -15,13 +19,14 @@ export const SpawnBtn = () => {
             list,
             select,
             isDeploying
-        },
-        networkLayer: {
-            components,
-            network: { graphSdk },
-            systemCalls: { spawn },
-        },
+        }
     } = useDojo();
+
+    const {
+        components,
+        network: { graphSdk },
+        systemCalls: { spawn },
+    } = networkLayer!
 
     useEffect(() => {
         if (account) {
@@ -33,7 +38,7 @@ export const SpawnBtn = () => {
         if (!edges) {
             return
         }
-        const playersAddress = new Map<EntityIndex, string>()
+        const players = new Map<EntityIndex, Player>()
 
         for (let index = 0; index < edges.length; index++) {
             const element = edges[index];
@@ -41,24 +46,18 @@ export const SpawnBtn = () => {
                 if (element.node?.keys) {
                     if (element.node.keys[0]) {
                         const player = element.node.components[0]
-                        if (player && player.__typename == "Player" && player.last_time!=0) {
+                        if (player && player.__typename == "Player") {
+                            if(element.node.keys[0]=="0x0"){
+                                continue
+                            }
                             const entityId = parseInt(element.node.keys[0]) as EntityIndex;
-                            playersAddress.set(entityId, element.node.keys[0])
-                        }
-                    }
-                }
-            }
-        }
-        store.setState({ playersAddress: playersAddress })
-        for (let index = 0; index < edges.length; index++) {
-            const element = edges[index];
-            if (element) {
-                if (element.node?.keys) {
-                    if (element.node.keys[0]) {
-                        const player = element.node.components[0]
-                        if (player && player.__typename == "Player"&& player.last_time!=0) {
-                            const entityId = parseInt(element.node.keys[0]) as EntityIndex;
+
+                            const player_ = Player2Player(player)
+                            player_.entity = entityId.toString()
+                            players.set(entityId,player_)
+
                             setComponent(components.Player, entityId, {
+                                banks:player.banks,
                                 position: player.position,
                                 joined_time: player.joined_time,
                                 nick_name: player.nick_name,
@@ -66,13 +65,15 @@ export const SpawnBtn = () => {
                                 gold: player.gold,
                                 steps: player.steps,
                                 last_point: player.last_point,
-                                last_time: player.last_time
+                                last_time: player.last_time,
+                                total_steps:player.total_steps,
                             })
                         }
                     }
                 }
             }
         }
+        playerStore.setState({ players: players })
     }
 
     const fetchAllPlayers = async () => {
@@ -101,6 +102,7 @@ export const SpawnBtn = () => {
                                 console.log(players[0]);
                                 const player = players[0] as any
                                 setComponent(components.Player, entityId, {
+                                    banks:player.banks,
                                     position: player.position,
                                     joined_time: player.joined_time,
                                     direction: player.direction,
@@ -108,7 +110,8 @@ export const SpawnBtn = () => {
                                     nick_name: player.nick_name,
                                     steps: player.steps,
                                     last_point: player.last_point,
-                                    last_time: player.last_time
+                                    last_time: player.last_time,
+                                    total_steps:player.total_steps,
                                 })
                                 return true
                             }
@@ -122,32 +125,28 @@ export const SpawnBtn = () => {
 
     const startGame = async () => {
         if (!account) {
-            alert("Create burner wallet first.")
+            toastError("Create burner wallet first.")
             return
         }
         // await spawn(account)
         console.log("startGame name:" + nickName + ",length:" + nickName.length);
 
         if (nickName.length < 2) {
-            alert("Name is too short.")
+            toastWarning("Name is too short.")
             return
         }
         if (nickName.length > 30) {
-            alert("Name is too long.")
+            toastWarning("Name is too long.")
             return
         }
         const hex = stringToHex(nickName)
         console.log("startGame name hex", hex,hex.length);
         if (hex.length > 64) {
-            alert("Illegal name.")
+            toastWarning("Illegal name.")
             return
         }
         await spawn(account, BigInt('0x' + hex));
-
-        var playersAddress = store.getState().playersAddress
-        const entity = parseInt(account.address) as EntityIndex;
-        playersAddress?.set(entity, account.address)
-        store.setState({ playersAddress: playersAddress })
+        toastSuccess("Mint player success.")
     }
 
     const inputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -181,9 +180,7 @@ export const SpawnBtn = () => {
                             Mint Player
                         </button>
                     </div>
-
             }
-
         </ClickWrapper>
     );
 };

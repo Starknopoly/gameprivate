@@ -1,12 +1,14 @@
 import { useEffect, useRef } from "react";
 import { store } from "../store/store"
+import { actionStore } from "../store/actionstore";
 
 export default function ActionList() {
-    const { actions } = store()
+    const { actions } = actionStore()
 
     const listRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        console.log("actions change size:"+actions.length);
         if (listRef.current) {
             listRef.current.scrollTop = listRef.current.scrollHeight;
         }

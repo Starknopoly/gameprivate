@@ -5,90 +5,206 @@ import dice3 from "/assets/dices/dice3.png"
 import dice4 from "/assets/dices/dice4.png"
 import dice5 from "/assets/dices/dice5.png"
 import dice6 from "/assets/dices/dice6.png"
-import { useDojo } from "../hooks/useDojo";
+
 import { ClickWrapper } from "./clickWrapper"
 import '../App.css';
 import { Direction, Player } from "../dojo/createSystemCalls"
-import { getRandomIntBetween } from "../utils"
+import { getRandomIntBetween, getTimestamp, toastError, toastInfo, toastSuccess, toastWarning } from "../utils"
 import { store } from "../store/store";
 import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs"
 import { MAP_WIDTH } from "../phaser/constants"
 import { Account } from "starknet"
-import { HOTEL_ID } from "../config"
+import { BOMB_ID, HOTEL_ID } from "../config"
+import { PlayerState } from "../types/playerState"
+import { playerStore } from "../store/playerStore"
+import { actionStore } from "../store/actionstore"
+import { buildStore } from "../store/buildstore"
+
+
+const MaxRollTimes = 16
+const dices = [dice1, dice2, dice3, dice4, dice5, dice6]
 
 export default function RollDice() {
-    const MaxRollTimes = 12
+    const { account, networkLayer } = store();
+    const {buildings:storeBuildings} = buildStore()
+    const {actions} = actionStore()
+    const {player,playerState} = playerStore()
+
     const [diceImg1, setDice1] = useState(dice1)
 
-    const rollInternalIdRef = useRef<NodeJS.Timer>()
+    const rollInternalIdRef = useRef<NodeJS.Timeout>()
     const rollCountRef = useRef(0)
-
-    //wait for roll dice result on chain
-    // const chainDiceRef = useRef(0)
     const playerEventRef = useRef<Player>()
-    const walkInternalIdRef = useRef<NodeJS.Timer>()
+    const walkInternalIdRef = useRef<NodeJS.Timeout>()
     const walkCountRef = useRef(0)
 
-    const { account, player, actions, buildings: storeBuildings } = store();
-    const dices = [dice1, dice2, dice3, dice4, dice5, dice6]
     const {
-        networkLayer: {
-            components,
-            systemCalls: { roll },
-        },
-    } = useDojo();
+        components,
+        systemCalls: { roll },
+    } = networkLayer!
 
-    const waitForChainResult = async () => {
-        rollCountRef.current = rollCountRef.current + 1;
-        if (rollCountRef.current <= MaxRollTimes || !playerEventRef.current) {
-            var random1 = getRandomIntBetween(0, 5);
-            if (dices[random1] == diceImg1) {
-                random1 = getRandomIntBetween(0, 5);
-            }
-            setDice1(dices[random1])
-        } else {
+    useEffect(() => {
+        console.log("playerState change " + playerState);
+
+        switch (playerState) {
+            case PlayerState.IDLE:
+                idle();
+                break;
+            case PlayerState.ROLLING:
+                playRollingAnimation();
+                break;
+            case PlayerState.ROLL_END:
+                checkRollEnd();
+                break;
+            case PlayerState.WALKING:
+                startWalking()
+                break;
+            case PlayerState.WALK_END:
+                walkEnd()
+                break;
+        }
+    }, [playerState])
+
+    const idle = () => {
+        if (rollInternalIdRef.current) {
             clearInterval(rollInternalIdRef.current)
-            rollCountRef.current = 0;
-            if (playerEventRef.current) {
-                setDice1(dices[playerEventRef.current.last_point - 1])
-            }
-            const intervalId = setInterval(walk, 600);
-            walkInternalIdRef.current = intervalId
+            rollInternalIdRef.current = undefined
+        }
+        rollCountRef.current = 0;
+    }
 
-            actions.push("Roll " + playerEventRef.current.last_point + " , walk to : " + playerEventRef.current.position)
-            // if(playerEventRef.current.type)
-            const b = storeBuildings.get(playerEventRef.current.position)
-            if (b?.type == HOTEL_ID) {
-                actions.push("There is a bank, you pay $"+(b.price*0.1).toFixed(2))
-            }
+    const changeState = (state: PlayerState) => {
+        console.log("changeState " + state);
+        playerStore.setState({ playerState: state })
+    }
+
+    const playRollingAnimation = () => {
+        console.log(getTimestamp()+ " : playRollingAnimation");
+        rollCountRef.current = 0;
+        if (!rollInternalIdRef.current) {
+            const intervalId = setInterval(rollingAnimation, 200);
+            rollInternalIdRef.current = intervalId
         }
     }
 
-    const walk = async () => {
+    const rollingAnimation = () => {
+        // console.log(getTimestamp()+ " : rollingAnimation");
+        if (rollCountRef.current == MaxRollTimes) {
+            changeState(PlayerState.ROLL_END)
+            return
+        }
+        rollCountRef.current = rollCountRef.current + 1;
+        var random1 = getRandomIntBetween(0, 5);
+        if (dices[random1] == diceImg1) {
+            random1 = getRandomIntBetween(0, 5);
+        }
+        setDice1(dices[random1])
+    }
+
+    const checkRollEnd = () => {
+        if (!playerEventRef.current) {
+            changeState(PlayerState.ROLLING)
+            return
+        }
+        if(rollInternalIdRef.current){
+            clearInterval(rollInternalIdRef.current)
+        }
+
+        rollInternalIdRef.current = undefined
+        rollCountRef.current = 0;
+        setDice1(dices[playerEventRef.current.last_point - 1])
+
+        actions.push("Roll " + playerEventRef.current.last_point + " , walk to : " + playerEventRef.current.position)
+        console.log("checkRollEnd bank "+player?.banks);
+        
+        if(player && player.banks!=0){
+            // actions.push("Banks received $"+(player.banks*20)+" Gold")
+            toastSuccess("Banks received $"+(player.banks*20)+" Gold")
+        }
+        actionStore.setState({actions:actions})
+        // if (b?.type == BOMB_ID) {
+
+        // }
+        changeState(PlayerState.WALKING)
+    }
+
+    const rollDice = async () => {
         if (!account) {
-            alert("Create burner wallet first.")
+            toastError("Create burner wallet first.")
             return
         }
         if (!player) {
-            alert("Start game first.")
+            toastError("Start game first.")
             return
         }
-        if (walkCountRef.current == playerEventRef.current?.last_point) {
-            walkCountRef.current = 0
-            playerEventRef.current = undefined
-            clearInterval(walkInternalIdRef.current)
+        console.log("rolldice " + rollCountRef.current);
+        if (playerState != PlayerState.IDLE) {
             return
         }
 
+        if (player.gold == 0) {
+            toastError("You are broke. Can't roll dice.")
+            return
+        }
+
+        if(player.steps==0){
+            toastWarning("Energy is 0")
+            return
+        }
+
+        console.log(getTimestamp()+ " : rolling Dice " + rollCountRef.current);
+        toastInfo("Rolling...")
+        changeState(PlayerState.ROLLING)
+
+        console.log("click roll account:" + account.address);
+        const result = await roll(account)
+        console.log(getTimestamp()+ " : rolling dice result" , result);
+
+        if (result && result.length > 0) {
+            for (let index = 0; index < result.length; index++) {
+                const element = result[index];
+                if(element.type == "Player" && element.entity == account.address){
+                    playerEventRef.current = element as Player
+                }
+            }
+        } else {
+            toastError("Rolling too quick!")
+            changeState(PlayerState.IDLE)
+        }
+    }
+
+    const startWalking = () => {
+        walkCountRef.current = 0
+        const intervalId = setInterval(walk, 600);
+        walkInternalIdRef.current = intervalId
+    }
+
+    const walkEnd = () => {
+        const b = storeBuildings.get(playerEventRef.current!.position)
+        if (b?.type == HOTEL_ID) {
+            const price = (b.price * 0.1).toFixed(2)
+            actions.push("There is a hotel, you paid $" + price)
+            toastInfo("You paid $" + price + " for hotel.")
+        }
+        walkCountRef.current = 0
+        playerEventRef.current = undefined
+        clearInterval(walkInternalIdRef.current)
+        walkInternalIdRef.current = undefined
+        changeState(PlayerState.IDLE)
+    }
+
+    const walk = async () => {
+        if (walkCountRef.current == playerEventRef.current?.last_point) {
+            changeState(PlayerState.WALK_END)
+            return
+        }
         walkCountRef.current = walkCountRef.current + 1
-        if (playerEventRef.current)
-            move(account, Direction.Right, playerEventRef.current)
+        move(account!, Direction.Right, playerEventRef.current!)
     }
 
     const move = (signer: Account, direction: Direction, playerEvent: Player) => {
         const entityId = parseInt(signer.address) as EntityIndex;
 
-        //TODO : request Player on chain
         const value = getComponentValue(components.Player, entityId)
         console.log(value);
         if (!value) {
@@ -110,6 +226,7 @@ export default function RollDice() {
         }
 
         setComponent(components.Player, entityId, {
+            banks:playerEvent.banks,
             position: position,
             nick_name: playerEvent.nick_name,
             joined_time: playerEvent.joined_time,
@@ -117,38 +234,9 @@ export default function RollDice() {
             gold: playerEvent.gold,
             steps: playerEvent.steps,
             last_point: playerEvent.last_point,
-            last_time: playerEvent.last_time
+            last_time: playerEvent.last_time,
+            total_steps:playerEvent.total_steps,
         })
-    }
-
-
-    const rollDice = async () => {
-        if (!account) {
-            alert("Create burner wallet first.")
-            return
-        }
-        if (!player) {
-            alert("Start game first.")
-            return
-        }
-        console.log("rolldice " + rollCountRef.current);
-
-        if (rollCountRef.current != 0) {
-            return
-        }
-        if (walkCountRef.current != 0) {
-            return
-        }
-        console.log("rollDice");
-        const intervalId = setInterval(waitForChainResult, 200);
-        rollInternalIdRef.current = intervalId
-
-        console.log("click roll account:" + account.address);
-        const result = await roll(account)
-        console.log("rolldice result:" + result);
-        if (result) {
-            playerEventRef.current = result
-        }
     }
 
     return (
