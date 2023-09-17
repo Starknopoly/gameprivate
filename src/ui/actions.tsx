@@ -33,8 +33,10 @@ export default function ActionsUI() {
             },
         },
         networkLayer: {
+            
             components,
             systemCalls: { buyBuilding, buyBack, explode },
+            network:{graphSdk}
         },
     } = phaserLayer!;
 
@@ -292,8 +294,9 @@ export default function ActionsUI() {
         return "Lv1"
     }, [selectBomb])
 
-    const transfer = () => {
-
+    const test = async () => {
+        const building = await graphSdk.getBuildingByKey({key : "0x1"})
+        console.log(building);
     }
 
     return (<ClickWrapper style={{ display: "flex", flexDirection: "column" }}>
@@ -307,5 +310,6 @@ export default function ActionsUI() {
 
         <button onClick={() => buyBackClick()} style={{ marginTop: 15 }}>Buy Back Building</button>
         {/* <button onClick={() => { transfer() }}>Transfer</button> */}
+        <button onClick={()=>test()}>Test</button>
     </ClickWrapper>)
 }
