@@ -54,7 +54,7 @@ export default function PlayerPanel() {
             const position = player_.position as number - 1
             const { x, y } = positionToCoorp(position)
 
-            console.log("defineSystem position:" + player_.position + ",x=" + x + ",y=" + y);
+            // console.log("defineSystem position:" + player_.position + ",x=" + x + ",y=" + y);
             const playerObj = objectPool.get(entity, "Sprite")
 
             const size = MAP_WIDTH

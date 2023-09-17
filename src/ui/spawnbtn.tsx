@@ -53,7 +53,7 @@ export const SpawnBtn = () => {
                             const player_ = Player2Player(player)
                             player_.entity = entityId.toString()
                             players.set(entityId,player_)
-                            console.log("showAllPlayers",player_);
+                            // console.log("showAllPlayers",player_);
                             
                             setComponent(components.Player, entityId, {
                                 banks:player.banks,
