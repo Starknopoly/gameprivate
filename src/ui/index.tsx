@@ -14,6 +14,7 @@ import TreasuryUI from "./treasuryUI";
 import BuildingTip from "./buildingtip";
 import BuyEnergyUI from "./buyenergy";
 import WalletUI from "./walletui";
+import Leaderboard from "./leaderboard";
 
 export default function UI() {
     const layers = store((state) => {
@@ -60,6 +61,7 @@ export default function UI() {
             </TreasuryContainer>
             <NamesUI />
             <BuildingTip />
+            <Leaderboard/>
         </Wrapper>
     );
 };

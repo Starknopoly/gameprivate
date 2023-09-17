@@ -5,6 +5,8 @@ import { store } from "../store/store";
 import { useEffect, useState } from "react";
 import { hexToString, stringToHex, toastError, toastInfo, toastSuccess, toastWarning, truncateString } from "../utils";
 import { playerStore } from "../store/playerStore";
+import { Player } from "../dojo/createSystemCalls";
+import { Player2Player } from "../types";
 
 export const SpawnBtn = () => {
     const { account,networkLayer } = store();
@@ -36,7 +38,7 @@ export const SpawnBtn = () => {
         if (!edges) {
             return
         }
-        const playersAddress = new Map<EntityIndex, string>()
+        const players = new Map<EntityIndex, Player>()
 
         for (let index = 0; index < edges.length; index++) {
             const element = edges[index];
@@ -49,7 +51,10 @@ export const SpawnBtn = () => {
                                 continue
                             }
                             const entityId = parseInt(element.node.keys[0]) as EntityIndex;
-                            playersAddress.set(entityId, element.node.keys[0])
+
+                            const player_ = Player2Player(player)
+                            player_.entity = entityId.toString()
+                            players.set(entityId,player_)
 
                             setComponent(components.Player, entityId, {
                                 banks:player.banks,
@@ -68,7 +73,7 @@ export const SpawnBtn = () => {
                 }
             }
         }
-        // playerStore.setState({ playersAddress: playersAddress })
+        playerStore.setState({ players: players })
     }
 
     const fetchAllPlayers = async () => {
@@ -141,11 +146,6 @@ export const SpawnBtn = () => {
             return
         }
         await spawn(account, BigInt('0x' + hex));
-
-        // var playersAddress = playerStore.getState().playersAddress
-        // const entity = parseInt(account.address) as EntityIndex;
-        // playersAddress?.set(entity, account.address)
-        // playerStore.setState({ playersAddress: playersAddress })
         toastSuccess("Mint player success.")
     }
 

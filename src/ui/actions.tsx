@@ -250,7 +250,6 @@ export default function ActionsUI() {
                 toastWarning("No Building here")
                 return
             }
-            
         } else {
             toastWarning("No building here")
             return

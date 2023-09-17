@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { store } from "../store/store";
-import { Building } from "../types";
+import { Building, Player2Player } from "../types";
 import { buildingIdToMapid, hexToString, positionToBuildingCoorp } from "../utils";
 import { Tileset } from "../artTypes/world";
 import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs";
@@ -11,7 +11,7 @@ import { LANDID_RESERVED, LandsOnChain } from "../config";
 export default function LandStatusPanel() {
     const { account, phaserLayer } = store();
     const { buildings } = buildStore()
-    const { player: storePlayer, } = playerStore()
+    const { player: storePlayer, players: storePlayers } = playerStore()
     const [currenLand, setCurrentLand] = useState<Building>()
 
     const accountRef = useRef<string>()
@@ -32,7 +32,7 @@ export default function LandStatusPanel() {
     } = phaserLayer!
 
     useEffect(() => {
-        if(!account){
+        if (!account) {
             return
         }
         console.log("account change ", account?.address);
@@ -120,6 +120,13 @@ export default function LandStatusPanel() {
                     const player = players[0] as any
                     const entityId = parseInt(element.node?.keys![0]!) as EntityIndex
 
+                    // const temp = new Map(storePlayers);
+                    // const player_ = Player2Player(player)
+                    // player_.entity = entityId.toString()
+                    // temp.set(entityId, player_)
+                    // playerStore.setState({ players: temp })
+                    // players.set(entityId,player_)
+
                     setComponent(PlayerComponent, entityId, {
                         banks: player.banks,
                         position: player.position,
@@ -149,7 +156,6 @@ export default function LandStatusPanel() {
     }
 
     const handleBuildEdges = (edges: any) => {
-
         const bs = buildStore.getState().buildings
         for (let index = 0; index < edges.length; index++) {
             const element = edges[index];
@@ -164,16 +170,13 @@ export default function LandStatusPanel() {
                     price = building.bomb_price
                 }
                 const build = new Building(type, price, owner, position)
-                // console.log("fetchAllBuildings postion ", position, owner, type);
                 if (bomb) {
                     console.log("is bomb price:" + building.bomb_price);
                     owner = building.bomber
                 }
                 if (owner == accountRef.current) {
-                    // console.log("is mine ", owner, position);
                     build.isMine = true;
                 }
-                // console.log(build);
                 if (type == 0) {
                     build.enable = bomb
                     bs.set(position, build)
@@ -200,7 +203,7 @@ export default function LandStatusPanel() {
     useEffect(() => {
         console.log("buildings change size:" + buildings.size);
         buildings.forEach((build, position) => {
-            if(build.type != LANDID_RESERVED){
+            if (build.type != LANDID_RESERVED) {
                 const coord = positionToBuildingCoorp(position)
                 const mapid = buildingIdToMapid(build.type)
                 if (build.enable) {

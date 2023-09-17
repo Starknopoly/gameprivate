@@ -9,7 +9,6 @@ import { BANK_ID, HOTEL_ID, STARKBUCKS_ID } from "../config";
 import { tipStore } from "../store/tipStore";
 import { Player2Player, copyPlayer } from "../types";
 import { playerStore } from "../store/playerStore";
-import { useERC20Balance } from "../hooks/useERC20Balance";
 import { buildStore } from "../store/buildstore";
 
 export default function PlayerPanel() {
@@ -18,7 +17,6 @@ export default function PlayerPanel() {
     const {buildings} = buildStore()
 
     const spriteListen = useRef<Map<EntityIndex, boolean>>(new Map())
-    // const [bankAmount, setBank] = useState(0)
     const [hotelAmount, setHotel] = useState(0)
     const [bucksAmount, setBucks] = useState(0)
 
@@ -141,20 +139,12 @@ export default function PlayerPanel() {
             }
         })
         setBucks(starkbucks)
-        // setBank(bank)
         setHotel(hotel)
-        // if (storePlayer) {
-        //     const newPlayer = copyPlayer(storePlayer);
-        //     newPlayer.banks = bank;
-        //     newPlayer.hotels = hotel;
-        //     newPlayer.startbucks = starkbucks;
-        // }
     }, [buildings.keys()])
 
     return (
         <div>
             <div style={{ width: 200, height: 230, lineHeight: 0.9, backgroundColor: "rgba(0, 0, 0, 0.5)", padding: 10, borderRadius: 15 }}>
-                {/* <p style={{ color: "white" }}>Player Status</p> */}
                 <p>Name : {hexToString(storePlayer?.nick_name)}</p>
                 <p>Steps : {storePlayer?.total_steps}</p>
                 <p>Energy : {storePlayer?.steps}</p>
