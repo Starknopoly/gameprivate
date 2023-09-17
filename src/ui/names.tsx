@@ -19,7 +19,7 @@ export default function NamesUI() {
     } = layer!;
     
     useEffect(() => {
-        if (!layer || !account) {
+        if (!layer) {
             return
         }
 

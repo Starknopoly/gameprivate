@@ -29,9 +29,7 @@ export const SpawnBtn = () => {
     } = networkLayer!
 
     useEffect(() => {
-        if (account) {
-            fetchAllPlayers()
-        }
+        fetchAllPlayers()
     }, [account])
 
     const showAllPlayers = (edges: any) => {
@@ -55,7 +53,8 @@ export const SpawnBtn = () => {
                             const player_ = Player2Player(player)
                             player_.entity = entityId.toString()
                             players.set(entityId,player_)
-
+                            console.log("showAllPlayers",player_);
+                            
                             setComponent(components.Player, entityId, {
                                 banks:player.banks,
                                 position: player.position,
@@ -79,24 +78,20 @@ export const SpawnBtn = () => {
     const fetchAllPlayers = async () => {
         console.log("fetchAllPlayers");
 
-        if (!account) {
-            return false
-        }
         const allPlayers = await graphSdk.getAllPlayers()
         console.log("startGame allPlayers");
         console.log(allPlayers);
         const edges = allPlayers.data.entities?.edges
         showAllPlayers(edges)
-        const entityId = parseInt(account.address) as EntityIndex;
-        console.log("startGame account.address:" + account.address + ",entityId:" + entityId);
 
-        if (edges) {
+        if (edges && account) {
             console.log("start game total players:" + edges.length);
             for (let index = 0; index < edges.length; index++) {
                 const element = edges[index];
                 if (element) {
                     if (element.node?.keys) {
                         if (element.node.keys[0] == account.address) {
+                            const entityId = parseInt(account.address) as EntityIndex;
                             const players = element.node.components
                             if (players && players[0]) {
                                 console.log(players[0]);
