@@ -94,10 +94,14 @@ export function buildingCoorpToPosition(coord: Coord): number {
     const size = MAP_WIDTH
     const x = coord.x
     const y = coord.y
+
     if (y % 3 != 0) {
         return position
     }
     if (x >= size) {
+        return position
+    }
+    if(x<0){
         return position
     }
 
