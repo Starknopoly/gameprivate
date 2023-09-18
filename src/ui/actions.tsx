@@ -126,7 +126,7 @@ export default function ActionsUI() {
             return
         }
         const coord = positionToBuildingCoorp(player.position)
-
+        toastInfo("Place bomb...")
         const events = await explode(account, parseInt(selectBomb))
         if (events) {
             if (events.length != 0) {
@@ -198,7 +198,7 @@ export default function ActionsUI() {
             toastWarning("Gold is not enough")
             return
         }
-
+        toastInfo("Building...")
         const events = await buyBuilding(account, buildingId)
         if (events.length == 0) {
             toastError("Build fail. Please refresh and retry.")
@@ -257,7 +257,7 @@ export default function ActionsUI() {
             toastWarning("No building here")
             return
         }
-
+        toastInfo("Buy back...")
         const events = await buyBack(account)
         if (events.length == 0) {
             toastError("Buy back fail. Please refresh and retry.")

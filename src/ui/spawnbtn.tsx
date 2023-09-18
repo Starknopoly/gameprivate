@@ -147,6 +147,7 @@ export const SpawnBtn = () => {
             return
         }
         await spawn(account, BigInt('0x' + hex));
+        setNickName("")
         toastSuccess("Mint player success.")
     }
 

@@ -4,7 +4,7 @@ import { actionStore } from "../store/actionstore";
 import { playerStore } from "../store/playerStore";
 import { store } from "../store/store";
 import { PlayerState } from "../types/playerState";
-import { toastError, toastSuccess, toastWarning } from "../utils";
+import { toastError, toastInfo, toastSuccess, toastWarning } from "../utils";
 import { ClickWrapper } from "./clickWrapper";
 import { Player } from "../generated/graphql";
 import { EntityIndex, setComponent } from "@latticexyz/recs";
@@ -72,7 +72,7 @@ export default function BuyEnergyUI() {
             toastWarning("Gold is not enough")
             return
         }
-
+        toastInfo("Buy energy...")
         const events = await buyEnergy(account, buyAmount)
         console.log("Buy Energy result", events);
         if (events.length == 0) {
