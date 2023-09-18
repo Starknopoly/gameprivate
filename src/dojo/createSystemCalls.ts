@@ -316,6 +316,7 @@ export const parseEvent = (
         break;
 
       case ComponentEvents.Land:
+
         const landData: Land = {
           type: ComponentEvents.Land,
           entity: raw.data[2],
@@ -324,7 +325,10 @@ export const parseEvent = (
           building_type: Number(raw.data[6]),
           price: Number(raw.data[7]),
         };
-
+        if (Number(raw.data[10]) != 0) {
+          landData.price = Number(raw.data[10]);
+          landData.building_type = 0;
+        }
         events.push(landData);
         break;
 

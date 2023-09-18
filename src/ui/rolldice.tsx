@@ -8,7 +8,7 @@ import dice6 from "/assets/dices/dice6.png"
 
 import { ClickWrapper } from "./clickWrapper"
 import '../App.css';
-import { Direction, Player } from "../dojo/createSystemCalls"
+import { Direction, Land, Player, Townhall } from "../dojo/createSystemCalls"
 import { getRandomIntBetween, getTimestamp, toastError, toastInfo, toastSuccess, toastWarning } from "../utils"
 import { store } from "../store/store";
 import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs"
@@ -26,15 +26,18 @@ const dices = [dice1, dice2, dice3, dice4, dice5, dice6]
 
 export default function RollDice() {
     const { account, networkLayer } = store();
-    const {buildings:storeBuildings} = buildStore()
-    const {actions} = actionStore()
-    const {player,playerState} = playerStore()
+    const { buildings: storeBuildings } = buildStore()
+    const { actions } = actionStore()
+    const { player, playerState } = playerStore()
 
     const [diceImg1, setDice1] = useState(dice1)
 
     const rollInternalIdRef = useRef<NodeJS.Timeout>()
     const rollCountRef = useRef(0)
     const playerEventRef = useRef<Player>()
+
+    const rollEventRef = useRef<(Player | Land | Townhall)[]>([])
+
     const walkInternalIdRef = useRef<NodeJS.Timeout>()
     const walkCountRef = useRef(0)
 
@@ -79,7 +82,7 @@ export default function RollDice() {
     }
 
     const playRollingAnimation = () => {
-        console.log(getTimestamp()+ " : playRollingAnimation");
+        console.log(getTimestamp() + " : playRollingAnimation");
         rollCountRef.current = 0;
         if (!rollInternalIdRef.current) {
             const intervalId = setInterval(rollingAnimation, 200);
@@ -106,7 +109,7 @@ export default function RollDice() {
             changeState(PlayerState.ROLLING)
             return
         }
-        if(rollInternalIdRef.current){
+        if (rollInternalIdRef.current) {
             clearInterval(rollInternalIdRef.current)
         }
 
@@ -115,13 +118,13 @@ export default function RollDice() {
         setDice1(dices[playerEventRef.current.last_point - 1])
 
         actions.push("Roll " + playerEventRef.current.last_point + " , walk to : " + playerEventRef.current.position)
-        console.log("checkRollEnd bank "+player?.banks);
-        
-        if(player && player.banks!=0){
+        console.log("checkRollEnd bank " + player?.banks);
+
+        if (player && player.banks != 0) {
             // actions.push("Banks received $"+(player.banks*20)+" Gold")
-            toastSuccess("Banks received $"+(player.banks*20)+" Gold")
+            toastSuccess("Banks received $" + (player.banks * 20) + " Gold")
         }
-        actionStore.setState({actions:actions})
+        actionStore.setState({ actions: actions })
         // if (b?.type == BOMB_ID) {
 
         // }
@@ -147,23 +150,24 @@ export default function RollDice() {
             return
         }
 
-        if(player.steps==0){
+        if (player.steps == 0) {
             toastWarning("Energy is 0")
             return
         }
 
-        console.log(getTimestamp()+ " : rolling Dice " + rollCountRef.current);
+        console.log(getTimestamp() + " : rolling Dice " + rollCountRef.current);
         toastInfo("Rolling...")
         changeState(PlayerState.ROLLING)
 
         console.log("click roll account:" + account.address);
         const result = await roll(account)
-        console.log(getTimestamp()+ " : rolling dice result" , result);
+        console.log(getTimestamp() + " : rolling dice result", result);
 
         if (result && result.length > 0) {
+            rollEventRef.current = result
             for (let index = 0; index < result.length; index++) {
                 const element = result[index];
-                if(element.type == "Player" && element.entity == account.address){
+                if (element.type == "Player" && element.entity == account.address) {
                     playerEventRef.current = element as Player
                 }
             }
@@ -186,6 +190,18 @@ export default function RollDice() {
             actions.push("There is a hotel, you paid $" + price)
             toastInfo("You paid $" + price + " for hotel.")
         }
+        if (rollEventRef.current.length != 0) {
+            for (let index = 0; index < rollEventRef.current.length; index++) {
+                const element = rollEventRef.current[index];
+                if (element.type == "Land") {
+                    const land = element as Land;
+                    if (land.building_type == 0) {
+                        toastError("BOOM! You lost $" + (land.price * 2) + "!");
+                    }
+                }
+            }
+        }
+        rollEventRef.current = []
         walkCountRef.current = 0
         playerEventRef.current = undefined
         clearInterval(walkInternalIdRef.current)
@@ -226,7 +242,7 @@ export default function RollDice() {
         }
 
         setComponent(components.Player, entityId, {
-            banks:playerEvent.banks,
+            banks: playerEvent.banks,
             position: position,
             nick_name: playerEvent.nick_name,
             joined_time: playerEvent.joined_time,
@@ -235,7 +251,7 @@ export default function RollDice() {
             steps: playerEvent.steps,
             last_point: playerEvent.last_point,
             last_time: playerEvent.last_time,
-            total_steps:playerEvent.total_steps,
+            total_steps: playerEvent.total_steps,
         })
     }
 
