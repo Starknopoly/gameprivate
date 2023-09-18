@@ -1,7 +1,7 @@
 import { Tileset } from "../../artTypes/world";
 import { PhaserLayer } from "..";
 import { createNoise2D } from "simplex-noise";
-import { MAP_WIDTH } from "../constants";
+import { MAP_HEIGHT, MAP_WIDTH } from "../constants";
 import { store } from "../../store/store";
 import { playerStore } from "../../store/playerStore";
 import { getRandomIntBetween, landCanBuild } from "../../utils";
@@ -90,5 +90,6 @@ export function mapSystem(layer: PhaserLayer) {
             }
         }
     }
-    putTileAt({ x: 0, y: 0 }, Tileset.Mountains, "Foreground");
+    putTileAt({ x: 0, y: 0 }, Tileset.Magic, "Foreground");
+    putTileAt({ x: 0, y: MAP_HEIGHT * 3 -3 }, Tileset.Magic, "Foreground");
 }

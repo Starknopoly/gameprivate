@@ -10,6 +10,7 @@ export enum Tileset {
     Bomb = 7,
     Heart = 8,
     Stair = 9,
+    Magic = 10,
     NoHeart = 19,
     Num0 = 20,
 }
