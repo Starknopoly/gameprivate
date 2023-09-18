@@ -36,7 +36,7 @@ export default function RollDice() {
     const rollCountRef = useRef(0)
     const playerEventRef = useRef<Player>()
 
-    const rollEventRef = useRef<(Player | Land | Townhall)[]>([])
+    const rollResultRef = useRef<(Player | Land | Townhall)[]>([])
 
     const walkInternalIdRef = useRef<NodeJS.Timeout>()
     const walkCountRef = useRef(0)
@@ -164,7 +164,7 @@ export default function RollDice() {
         console.log(getTimestamp() + " : rolling dice result", result);
 
         if (result && result.length > 0) {
-            rollEventRef.current = result
+            rollResultRef.current = result
             for (let index = 0; index < result.length; index++) {
                 const element = result[index];
                 if (element.type == "Player" && element.entity == account.address) {
@@ -190,9 +190,9 @@ export default function RollDice() {
             actions.push("There is a hotel, you paid $" + price)
             toastInfo("You paid $" + price + " for hotel.")
         }
-        if (rollEventRef.current.length != 0) {
-            for (let index = 0; index < rollEventRef.current.length; index++) {
-                const element = rollEventRef.current[index];
+        if (rollResultRef.current.length != 0) {
+            for (let index = 0; index < rollResultRef.current.length; index++) {
+                const element = rollResultRef.current[index];
                 if (element.type == "Land") {
                     const land = element as Land;
                     if (land.building_type == 0) {
@@ -201,7 +201,7 @@ export default function RollDice() {
                 }
             }
         }
-        rollEventRef.current = []
+        rollResultRef.current = []
         walkCountRef.current = 0
         playerEventRef.current = undefined
         clearInterval(walkInternalIdRef.current)
