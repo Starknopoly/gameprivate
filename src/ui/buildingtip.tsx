@@ -9,6 +9,7 @@ import { tipStore } from "../store/tipStore";
 import { playerStore } from "../store/playerStore";
 import { buildStore } from "../store/buildstore";
 import { LANDID_RESERVED } from "../config";
+import { Building } from "../types";
 export default function BuildingTip() {
     const { camera } = store()
     const {buildings} = buildStore()
@@ -18,12 +19,9 @@ export default function BuildingTip() {
 
     const { x: ex, y: ey } = mouseStore()
 
-    const getOwnerName = (currenLand: any) => {
+    const getOwnerName = (currenLand: Building) => {
         if (!currenLand) {
             return <span>0x000</span>
-        }
-        if (currenLand.type == 0) {
-            return <span>You</span>
         }
         const entity = parseInt(currenLand?.owner) as EntityIndex;
         const player = getComponentValue(PlayerComponent, entity)

@@ -173,8 +173,9 @@ export default function LandStatusPanel() {
                 }
                 const build = new Building(type, price, owner, position)
                 if (bomb) {
-                    console.log("is bomb price:" + building.bomb_price);
                     owner = building.bomber
+                    build.owner = building.bomber;
+                    console.log("is bomb price:" + building.bomb_price+",owner="+owner);
                 }
                 if (owner == accountRef.current) {
                     build.isMine = true;
