@@ -39,9 +39,10 @@ export default function PlayerPanel() {
                 return;
             }
             var myEntityId = -1 as EntityIndex
-            if(account)
-            myEntityId = parseInt(account.address) as EntityIndex;
 
+            if (account) {
+                myEntityId = parseInt(account.address) as EntityIndex;
+            }
             if (entity == myEntityId) {
                 console.log("playerpanel is myself nick name", player_.nick_name);
                 const player = Player2Player(player_);
@@ -60,12 +61,24 @@ export default function PlayerPanel() {
             const size = MAP_WIDTH
 
             const ycount = Math.floor(position / size)
+
+            const pixelPosition = tileCoordToPixelCoord({ x, y }, TILE_WIDTH, TILE_HEIGHT);
+
             //1,4,7
             if (ycount % 2 == 0) {
                 playerObj.setComponent({
                     id: 'animation',
                     once: (sprite) => {
                         sprite.play(Animations.SwordsmanIdle);
+                        // console.log("player obj:",entity, sprite,sprite.width);
+                        sprite.setPosition(pixelPosition?.x, pixelPosition?.y);
+                        // console.log("entity "+entity+",id:"+id);
+                        if (entity == myEntityId) {
+                            camera?.centerOn(pixelPosition?.x!, pixelPosition?.y!);
+                        }
+                        if (sprite.width > 1) {
+                            setHoverListener(entity, sprite)
+                        }
                     }
                 });
             }
@@ -74,25 +87,18 @@ export default function PlayerPanel() {
                     id: 'animation',
                     once: (sprite) => {
                         sprite.play(Animations.SwordsmanIdleReverse);
+                        // console.log("player obj:",entity, sprite,sprite.width);
+                        sprite.setPosition(pixelPosition?.x, pixelPosition?.y);
+                        // console.log("entity "+entity+",id:"+id);
+                        if (entity == myEntityId) {
+                            camera?.centerOn(pixelPosition?.x!, pixelPosition?.y!);
+                        }
+                        if (sprite.width > 1) {
+                            setHoverListener(entity, sprite)
+                        }
                     }
                 });
             }
-
-            const pixelPosition = tileCoordToPixelCoord({ x, y }, TILE_WIDTH, TILE_HEIGHT);
-            playerObj.setComponent({
-                id: 'position',
-                once: (sprite) => {
-                    // console.log("player obj:",entity, sprite,sprite.width);
-                    sprite.setPosition(pixelPosition?.x, pixelPosition?.y);
-                    // console.log("entity "+entity+",id:"+id);
-                    if (entity == myEntityId) {
-                        camera?.centerOn(pixelPosition?.x!, pixelPosition?.y!);
-                    }
-                    if (sprite.width > 1) {
-                        setHoverListener(entity, sprite)
-                    }
-                }
-            })
         });
     }, [layer, account])
 
