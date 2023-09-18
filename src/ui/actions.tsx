@@ -294,11 +294,6 @@ export default function ActionsUI() {
         return "Lv1"
     }, [selectBomb])
 
-    const test = async () => {
-        const building = await graphSdk.getBuildingByKey({key : "0x5"})
-        console.log(building);
-    }
-
     return (<ClickWrapper style={{ display: "flex", flexDirection: "column" }}>
 
         <BuildingList options={options} onChange={handleSelectionChange} defaultValue="Hotel" />
@@ -309,7 +304,5 @@ export default function ActionsUI() {
         <button onClick={() => placeBomb()} >Place Bomb {getBombLevel}</button>
 
         <button onClick={() => buyBackClick()} style={{ marginTop: 15 }}>Buy Back Building</button>
-        {/* <button onClick={() => { transfer() }}>Transfer</button> */}
-        <button onClick={()=>test()}>Test</button>
     </ClickWrapper>)
 }
