@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { store } from "../store/store";
 import { Building, Player2Player } from "../types";
-import { buildingIdToMapid, hexToString, positionToBuildingCoorp } from "../utils";
+import { buildingIdToMapid, hexToString, landCanBuild, positionToBuildingCoorp } from "../utils";
 import { Tileset } from "../artTypes/world";
 import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs";
 import { playerStore } from "../store/playerStore";
 import { buildStore } from "../store/buildstore";
-import { LANDID_RESERVED, LandsOnChain } from "../config";
+import { LANDID_RESERVED } from "../config";
+import { MAP_HEIGHT, MAP_WIDTH } from "../phaser/constants";
 
 export default function LandStatusPanel() {
     const { account, phaserLayer } = store();
@@ -40,13 +41,14 @@ export default function LandStatusPanel() {
         initMap()
     }, [account])
 
+
     const initMap = () => {
         const map = new Map<number, Building>()
-        for (let index = 0; index < LandsOnChain.length; index++) {
-            const element = LandsOnChain[index];
+        for (let index = 1; index <= MAP_WIDTH * MAP_HEIGHT; index++) {
+            const element = landCanBuild(index)
             if (!element) {
-                const b = new Building(LANDID_RESERVED, 0, "", index+1);
-                map.set(index+1, b);
+                const b = new Building(LANDID_RESERVED, 0, "", index + 1);
+                map.set(index + 1, b);
             }
         }
         buildStore.setState({ buildings: map })
@@ -223,9 +225,9 @@ export default function LandStatusPanel() {
     }, [buildings.values()])
 
     useEffect(() => {
-        if (!account) {
-            return
-        }
+        // if (!account) {
+        //     return
+        // }
         fetchAllBuildings()
     }, [account])
 

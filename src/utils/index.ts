@@ -4,14 +4,15 @@ import { MAP_WIDTH } from "../phaser/constants";
 import { Tileset } from "../artTypes/world";
 import { BANK_ID, BOMB_ID, HOTEL_ID, STARKBUCKS_ID } from "../config";
 import { ToastContainer, toast } from 'react-toastify';
+import * as scure from "@scure/starknet"
 
 export function isValidArray(input: any): input is any[] {
     return Array.isArray(input) && input != null;
 }
 
-export const getTimestamp = ()=>{
+export const getTimestamp = () => {
     let timestamp = Math.floor(Date.now());
-  // console.log(timestampInSeconds);
+    // console.log(timestampInSeconds);
     return timestamp;
 }
 
@@ -96,7 +97,7 @@ export function buildingCoorpToPosition(coord: Coord): number {
     if (y % 3 != 0) {
         return position
     }
-    if(x>=size){
+    if (x >= size) {
         return position
     }
 
@@ -210,4 +211,10 @@ export function toastSuccess(msg: string) {
         progress: undefined,
         theme: "light",
     });
+}
+
+export const landCanBuild = (position: number) => {
+    let hashStr = scure.poseidonHashMany([BigInt(position + 1), 2023n, 1024n])
+    let hex = BigInt(hashStr.toString(10))
+    return hex % 2n == 0n
 }

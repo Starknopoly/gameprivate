@@ -58,7 +58,7 @@ export class Building {
         }
         const ratio = this.price / price0;
         level = Math.floor(Math.log(ratio) / Math.log(1.3)) + 1
-        console.log("getLevel ", this.price, price0, ratio, level);
+        // console.log("getLevel ", this.price, price0, ratio, level);
         return level;
     }
 }

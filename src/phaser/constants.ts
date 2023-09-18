@@ -33,4 +33,5 @@ export const TILE_WIDTH = 32;
 // contract offset so we don't overflow
 export const POSITION_OFFSET = 1000;
 
-export const MAP_WIDTH = 10
+export const MAP_WIDTH = 20
+export const MAP_HEIGHT = 20

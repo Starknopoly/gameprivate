@@ -14,7 +14,7 @@ import { buildStore } from "../store/buildstore";
 export default function PlayerPanel() {
     const { account, camera, phaserLayer: layer } = store();
     const { player: storePlayer, PlayerComponent } = playerStore()
-    const {buildings} = buildStore()
+    const { buildings } = buildStore()
 
     const spriteListen = useRef<Map<EntityIndex, boolean>>(new Map())
     const [hotelAmount, setHotel] = useState(0)
@@ -28,7 +28,7 @@ export default function PlayerPanel() {
     } = layer!;
 
     useEffect(() => {
-        if (!layer || !account) {
+        if (!layer) {
             return
         }
         console.log("defineSystem");
@@ -38,7 +38,9 @@ export default function PlayerPanel() {
             if (!player_) {
                 return;
             }
-            const myEntityId = parseInt(account.address) as EntityIndex;
+            var myEntityId = -1 as EntityIndex
+            if(account)
+            myEntityId = parseInt(account.address) as EntityIndex;
 
             if (entity == myEntityId) {
                 console.log("playerpanel is myself nick name", player_.nick_name);

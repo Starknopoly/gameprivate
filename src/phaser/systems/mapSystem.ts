@@ -4,10 +4,7 @@ import { createNoise2D } from "simplex-noise";
 import { MAP_WIDTH } from "../constants";
 import { store } from "../../store/store";
 import { playerStore } from "../../store/playerStore";
-import { getRandomIntBetween } from "../../utils";
-import { buildStore } from "../../store/buildstore";
-import { Building } from "../../types";
-import { LANDID_RESERVED, LandsOnChain } from "../../config";
+import { getRandomIntBetween, landCanBuild } from "../../utils";
 
 export function mapSystem(layer: PhaserLayer) {
     const {
@@ -23,8 +20,6 @@ export function mapSystem(layer: PhaserLayer) {
             components: { Player }
         },
     } = layer;
-
-    const noise = createNoise2D();
     const size = MAP_WIDTH
 
     store.setState({ camera: camera })
@@ -39,14 +34,8 @@ export function mapSystem(layer: PhaserLayer) {
 
                 if (index == 0) {
                     const coord = { x, y: yy };
-                    // const seed = noise(x, yy);
                     const seed = getRandomIntBetween(0, 1)
                     putTileAt(coord, Tileset.Grass, "Background");
-                    // if (seed >= 0.3) {
-                    //     putTileAt(coord, Tileset.Mountains, "Foreground");
-                    // } else if (seed < -0.3) {
-                    //     putTileAt(coord, Tileset.Forest, "Foreground");
-                    // }
 
                     var position = y * size + x;
                     if (y % 2 == 0) {
@@ -55,7 +44,10 @@ export function mapSystem(layer: PhaserLayer) {
                         // position = y * size - x;
                         position = y * size + size - x - 1;
                     }
-                    const canBuild = LandsOnChain[position];
+
+                    // const canBuild = LandsOnChain[position];
+                    const canBuild = landCanBuild(position)
+                    
                     // console.log("postion:" + position + ",can:" + canBuild);
                     if (canBuild) {
 

@@ -14,9 +14,11 @@
   "dependencies": {
     "@dojoengine/create-burner": "^0.0.3",
     "@dojoengine/react": "^0.0.3",
+    "@dojoengine/utils": "^0.0.2",
     "@latticexyz/phaserx": "^1.43.0",
     "@latticexyz/recs": "^1.43.0",
     "@latticexyz/utils": "^1.43.0",
+    "@scure/starknet": "^0.3.0",
     "ethers": "^5.7.2",
     "events": "^3.3.0",
     "graphql": "^16.7.1",
@@ -29,12 +31,12 @@
     "react-dom": "^18.2.0",
     "rxjs": "^7.8.1",
     "simplex-noise": "^4.0.1",
-    "starknet": "^5.14.1",
+    "starknet": "^5.19.5",
     "styled-components": "^6.0.7",
     "zustand": "^4.4.1"
   },
   "devDependencies": {
-    "@dojoengine/core": "^0.0.19",
+    "@dojoengine/core": "^0.0.20",
     "@graphql-codegen/cli": "^5.0.0",
     "@graphql-codegen/typescript": "^4.0.1",
     "@graphql-codegen/typescript-graphql-request": "^5.0.0",
