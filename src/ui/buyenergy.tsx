@@ -9,14 +9,15 @@ import { Player } from "../generated/graphql";
 import { EntityIndex, setComponent } from "@latticexyz/recs";
 import { useMemo, useState } from "react";
 import { buildStore } from "../store/buildstore";
+import { Player2Player } from "../types";
 
 export default function BuyEnergyUI() {
     const { account, phaserLayer } = store();
-    const {buildings} = buildStore()
+    const { buildings } = buildStore()
     const { player, playerState } = playerStore()
 
     const [showBox, setShow] = useState(false)
-    const [buyAmount,setBuyAmount] = useState(1)
+    const [buyAmount, setBuyAmount] = useState(1)
 
     const {
         networkLayer: {
@@ -50,7 +51,7 @@ export default function BuyEnergyUI() {
             return
         }
         setBuyAmount(1)
-        setShow(pre=>!pre)
+        setShow(pre => !pre)
     }
 
     const buyConfirm = async () => {
@@ -58,7 +59,7 @@ export default function BuyEnergyUI() {
             return
         }
 
-        if(player.gold<buyAmount*EnergyPrice){
+        if (player.gold < buyAmount * EnergyPrice) {
             toastWarning("Gold is not enough")
             return
         }
@@ -70,31 +71,21 @@ export default function BuyEnergyUI() {
         } else {
             const playerEvent = events[0] as Player;
             const entity = parseInt(events[0].entity.toString()) as EntityIndex;
-            setComponent(components.Player, entity, {
-                banks: playerEvent.banks,
-                nick_name: playerEvent.nick_name,
-                position: playerEvent.position,
-                joined_time: playerEvent.joined_time,
-                direction: playerEvent.direction,
-                gold: playerEvent.gold,
-                steps: playerEvent.steps,
-                last_point: playerEvent.last_point,
-                last_time: playerEvent.last_time,
-                total_steps:player.total_steps,
-                total_used_eth:player.total_used_eth
-            });
+            const player = Player2Player(playerEvent);
+            player.entity = entity.toString();
+            playerStore.setState({ player: player })
             toastSuccess("Buy energy success")
             setShow(false)
         }
     }
 
-    const add =()=>{
-        setBuyAmount(pre=>pre+1)
+    const add = () => {
+        setBuyAmount(pre => pre + 1)
     }
 
-    const sub = ()=>{
-        if(buyAmount>1){
-            setBuyAmount(pre=>pre-1)
+    const sub = () => {
+        if (buyAmount > 1) {
+            setBuyAmount(pre => pre - 1)
         }
     }
 
@@ -111,13 +102,13 @@ export default function BuyEnergyUI() {
                         <p style={{ marginTop: "30px" }}>Price : $100/Energy</p>
                         <div style={{ display: "flex", gap: "0px", lineHeight: "0px" }}>
                             <p style={{ marginRight: "10px" }}>Amount : </p>
-                            <p style={{cursor:"pointer"}} onClick={()=>sub()}>-</p>
+                            <p style={{ cursor: "pointer" }} onClick={() => sub()}>-</p>
                             <p style={{ marginRight: "10px", marginLeft: "10px" }}>{buyAmount}</p>
-                            <p style={{cursor:"pointer"}} onClick={()=>add()}>+</p>
+                            <p style={{ cursor: "pointer" }} onClick={() => add()}>+</p>
                         </div>
-                        <div style={{ display: "flex", gap: "0px", lineHeight: "0px",marginTop:"10px" }}>
-                            <p style={{ marginRight: "20px" }}>Total : ${buyAmount*EnergyPrice}</p>
-                            <button onClick={()=>buyConfirm()}>Buy</button>
+                        <div style={{ display: "flex", gap: "0px", lineHeight: "0px", marginTop: "10px" }}>
+                            <p style={{ marginRight: "20px" }}>Total : ${buyAmount * EnergyPrice}</p>
+                            <button onClick={() => buyConfirm()}>Buy</button>
                         </div>
                     </div>
                 }
