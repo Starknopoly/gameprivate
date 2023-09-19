@@ -118,9 +118,14 @@ export const SpawnBtn = () => {
             toastWarning("Illegal name.")
             return
         }
-        await spawn(account, BigInt('0x' + hex));
-        setNickName("")
-        toastSuccess("Mint player success.")
+        const events =  await spawn(account, BigInt('0x' + hex));
+        if(events && events.length>0){
+            setNickName("")
+            toastSuccess("Mint player success.")
+            playerStore.setState({eth:BigInt(5e17)})
+        }else{
+            toastError("Mint failed")
+        }
     }
 
     const inputChange = (event: React.ChangeEvent<HTMLInputElement>) => {

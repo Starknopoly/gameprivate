@@ -159,7 +159,7 @@ export function createSystemCalls(
         total_steps: playerEvent.total_steps,
         total_used_eth: playerEvent.total_used_eth
       });
-      return playerEvent;
+      return events;
       // store.setState({player})
     } catch (e) {
       console.log(e);
