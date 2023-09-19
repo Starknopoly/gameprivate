@@ -8,13 +8,15 @@ export type PlayerStore = {
     playerState: PlayerState,
     PlayerComponent:any,
     players:Map<EntityIndex,Player>,
+    eth:bigint,
 };
 
 export const playerStore = create<PlayerStore>(() => ({
     player: null,
     playerState: PlayerState.IDLE,
     PlayerComponent:null,
-    players:new Map()
+    players:new Map(),
+    eth:0n
 }));
 
 

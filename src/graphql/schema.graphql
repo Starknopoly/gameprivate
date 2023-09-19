@@ -17,6 +17,11 @@ query getAllPlayers {
             last_time
             total_steps
             banks
+            total_used_eth
+          }
+          __typename
+          ... on ETH{
+            balance
           }
         }
       }
@@ -43,12 +48,18 @@ query getPlayerByKey($key: String) {
             last_time
             total_steps
             banks
+            total_used_eth
+          }
+          __typename
+          ... on ETH{
+            balance
           }
         }
       }
     }
   }
 }
+
 
 query getAllBuildings {
   entities(first:1000, keys: ["%"]) {
@@ -90,6 +101,22 @@ query getBuildingByKey($key: String) {
             bomb
             bomber
             bomb_price
+          }
+        }
+      }
+    }
+  }
+}
+
+query getETHByKey($key: String) {
+  entities(first:1000, keys: [$key]) {
+    edges {
+      node {
+        keys
+        components {
+          __typename
+          ... on ETH {
+            balance
           }
         }
       }

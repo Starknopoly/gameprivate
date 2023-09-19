@@ -11,7 +11,6 @@ export const WORLD_ADDRESS = import.meta.env.VITE_PUBLIC_WORLD_ADDRESS!
 export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>;
 
 export async function setupNetwork() {
-
     const client = new GraphQLClient(import.meta.env.VITE_PUBLIC_TORII!);
     const wsClient = new SubscriptionClient(import.meta.env.VITE_GRAPHQL_ENDPOINT,{
         reconnect: true,

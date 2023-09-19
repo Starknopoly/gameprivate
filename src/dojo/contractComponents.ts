@@ -19,6 +19,7 @@ export function defineContractComponents(world: World) {
           last_time: RecsType.Number,
           total_steps: RecsType.Number,
           banks: RecsType.Number,
+          total_used_eth: RecsType.Number,
         },
         {
           metadata: {
@@ -52,6 +53,20 @@ export function defineContractComponents(world: World) {
         world,
         {
           gold: RecsType.Number,
+        },
+        {
+          metadata: {
+            name: name,
+          },
+        }
+      );
+    })(),
+    ETH: (() => {
+      const name = "ETH";
+      return defineComponent(
+        world,
+        {
+          balance: RecsType.Number,
         },
         {
           metadata: {

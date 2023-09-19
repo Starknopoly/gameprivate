@@ -22,6 +22,7 @@ export type Scalars = {
   bool: { input: any; output: any; }
   felt252: { input: any; output: any; }
   u64: { input: any; output: any; }
+  u128: { input: any; output: any; }
 };
 
 export type Component = {
@@ -45,12 +46,56 @@ export type ComponentEdge = {
   node?: Maybe<Component>;
 };
 
-export type ComponentUnion = Land | Player | Townhall;
+export type ComponentUnion = Eth | Land | Player | Townhall;
 
 export enum Direction {
   Asc = 'ASC',
   Desc = 'DESC'
 }
+
+export type Eth = {
+  __typename?: 'ETH';
+  balance?: Maybe<Scalars['u128']['output']>;
+  entity?: Maybe<Entity>;
+  id?: Maybe<Scalars['ContractAddress']['output']>;
+};
+
+export type EthConnection = {
+  __typename?: 'ETHConnection';
+  edges?: Maybe<Array<Maybe<EthEdge>>>;
+  totalCount: Scalars['Int']['output'];
+};
+
+export type EthEdge = {
+  __typename?: 'ETHEdge';
+  cursor: Scalars['Cursor']['output'];
+  node?: Maybe<Eth>;
+};
+
+export type EthOrder = {
+  direction: Direction;
+  field: EthOrderOrderField;
+};
+
+export enum EthOrderOrderField {
+  Balance = 'BALANCE',
+  Id = 'ID'
+}
+
+export type EthWhereInput = {
+  balance?: InputMaybe<Scalars['String']['input']>;
+  balanceGT?: InputMaybe<Scalars['String']['input']>;
+  balanceGTE?: InputMaybe<Scalars['String']['input']>;
+  balanceLT?: InputMaybe<Scalars['String']['input']>;
+  balanceLTE?: InputMaybe<Scalars['String']['input']>;
+  balanceNEQ?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  idGT?: InputMaybe<Scalars['String']['input']>;
+  idGTE?: InputMaybe<Scalars['String']['input']>;
+  idLT?: InputMaybe<Scalars['String']['input']>;
+  idLTE?: InputMaybe<Scalars['String']['input']>;
+  idNEQ?: InputMaybe<Scalars['String']['input']>;
+};
 
 export type Entity = {
   __typename?: 'Entity';
@@ -194,6 +239,7 @@ export type Player = {
   position?: Maybe<Scalars['u64']['output']>;
   steps?: Maybe<Scalars['u64']['output']>;
   total_steps?: Maybe<Scalars['u64']['output']>;
+  total_used_eth?: Maybe<Scalars['u128']['output']>;
 };
 
 export type PlayerConnection = {
@@ -224,7 +270,8 @@ export enum PlayerOrderOrderField {
   NickName = 'NICK_NAME',
   Position = 'POSITION',
   Steps = 'STEPS',
-  TotalSteps = 'TOTAL_STEPS'
+  TotalSteps = 'TOTAL_STEPS',
+  TotalUsedEth = 'TOTAL_USED_ETH'
 }
 
 export type PlayerWhereInput = {
@@ -294,6 +341,12 @@ export type PlayerWhereInput = {
   total_stepsLT?: InputMaybe<Scalars['Int']['input']>;
   total_stepsLTE?: InputMaybe<Scalars['Int']['input']>;
   total_stepsNEQ?: InputMaybe<Scalars['Int']['input']>;
+  total_used_eth?: InputMaybe<Scalars['String']['input']>;
+  total_used_ethGT?: InputMaybe<Scalars['String']['input']>;
+  total_used_ethGTE?: InputMaybe<Scalars['String']['input']>;
+  total_used_ethLT?: InputMaybe<Scalars['String']['input']>;
+  total_used_ethLTE?: InputMaybe<Scalars['String']['input']>;
+  total_used_ethNEQ?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Query = {
@@ -302,6 +355,7 @@ export type Query = {
   components?: Maybe<ComponentConnection>;
   entities?: Maybe<EntityConnection>;
   entity: Entity;
+  ethComponents?: Maybe<EthConnection>;
   event: Event;
   events?: Maybe<EventConnection>;
   landComponents?: Maybe<LandConnection>;
@@ -330,6 +384,16 @@ export type QueryEntitiesArgs = {
 
 export type QueryEntityArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type QueryEthComponentsArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  order?: InputMaybe<EthOrder>;
+  where?: InputMaybe<EthWhereInput>;
 };
 
 
@@ -474,31 +538,38 @@ export type TownhallWhereInput = {
 export type GetAllPlayersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllPlayersQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', totalCount: number, edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, components?: Array<{ __typename: 'Land' } | { __typename: 'Player', nick_name?: any | null, joined_time?: any | null, direction?: any | null, gold?: any | null, position?: any | null, steps?: any | null, last_point?: any | null, last_time?: any | null, total_steps?: any | null, banks?: any | null } | { __typename: 'Townhall' } | null> | null } | null } | null> | null } | null };
+export type GetAllPlayersQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', totalCount: number, edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, components?: Array<{ __typename: 'ETH', balance?: any | null } | { __typename: 'Land' } | { __typename: 'Player', nick_name?: any | null, joined_time?: any | null, direction?: any | null, gold?: any | null, position?: any | null, steps?: any | null, last_point?: any | null, last_time?: any | null, total_steps?: any | null, banks?: any | null, total_used_eth?: any | null } | { __typename: 'Townhall' } | null> | null } | null } | null> | null } | null };
 
 export type GetPlayerByKeyQueryVariables = Exact<{
   key?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type GetPlayerByKeyQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', totalCount: number, edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, components?: Array<{ __typename: 'Land' } | { __typename: 'Player', nick_name?: any | null, joined_time?: any | null, direction?: any | null, gold?: any | null, position?: any | null, steps?: any | null, last_point?: any | null, last_time?: any | null, total_steps?: any | null, banks?: any | null } | { __typename: 'Townhall' } | null> | null } | null } | null> | null } | null };
+export type GetPlayerByKeyQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', totalCount: number, edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, components?: Array<{ __typename: 'ETH', balance?: any | null } | { __typename: 'Land' } | { __typename: 'Player', nick_name?: any | null, joined_time?: any | null, direction?: any | null, gold?: any | null, position?: any | null, steps?: any | null, last_point?: any | null, last_time?: any | null, total_steps?: any | null, banks?: any | null, total_used_eth?: any | null } | { __typename: 'Townhall' } | null> | null } | null } | null> | null } | null };
 
 export type GetAllBuildingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllBuildingsQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', totalCount: number, edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, components?: Array<{ __typename: 'Land', position?: any | null, owner?: any | null, building_type?: any | null, price?: any | null, bomb?: any | null, bomber?: any | null, bomb_price?: any | null } | { __typename: 'Player' } | { __typename: 'Townhall' } | null> | null } | null } | null> | null } | null };
+export type GetAllBuildingsQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', totalCount: number, edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, components?: Array<{ __typename: 'ETH' } | { __typename: 'Land', position?: any | null, owner?: any | null, building_type?: any | null, price?: any | null, bomb?: any | null, bomber?: any | null, bomb_price?: any | null } | { __typename: 'Player' } | { __typename: 'Townhall' } | null> | null } | null } | null> | null } | null };
 
 export type GetBuildingByKeyQueryVariables = Exact<{
   key?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type GetBuildingByKeyQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, components?: Array<{ __typename: 'Land', position?: any | null, owner?: any | null, building_type?: any | null, price?: any | null, bomb?: any | null, bomber?: any | null, bomb_price?: any | null } | { __typename: 'Player' } | { __typename: 'Townhall' } | null> | null } | null } | null> | null } | null };
+export type GetBuildingByKeyQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, components?: Array<{ __typename: 'ETH' } | { __typename: 'Land', position?: any | null, owner?: any | null, building_type?: any | null, price?: any | null, bomb?: any | null, bomber?: any | null, bomb_price?: any | null } | { __typename: 'Player' } | { __typename: 'Townhall' } | null> | null } | null } | null> | null } | null };
+
+export type GetEthByKeyQueryVariables = Exact<{
+  key?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetEthByKeyQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, components?: Array<{ __typename: 'ETH', balance?: any | null } | { __typename: 'Land' } | { __typename: 'Player' } | { __typename: 'Townhall' } | null> | null } | null } | null> | null } | null };
 
 export type GetTownHallBalanceQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetTownHallBalanceQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, components?: Array<{ __typename: 'Land' } | { __typename: 'Player' } | { __typename: 'Townhall', gold?: any | null } | null> | null } | null } | null> | null } | null };
+export type GetTownHallBalanceQuery = { __typename?: 'Query', entities?: { __typename?: 'EntityConnection', edges?: Array<{ __typename?: 'EntityEdge', node?: { __typename?: 'Entity', keys?: Array<string | null> | null, components?: Array<{ __typename: 'ETH' } | { __typename: 'Land' } | { __typename: 'Player' } | { __typename: 'Townhall', gold?: any | null } | null> | null } | null } | null> | null } | null };
 
 
 export const GetAllPlayersDocument = gql`
@@ -521,6 +592,11 @@ export const GetAllPlayersDocument = gql`
             last_time
             total_steps
             banks
+            total_used_eth
+          }
+          __typename
+          ... on ETH {
+            balance
           }
         }
       }
@@ -548,6 +624,11 @@ export const GetPlayerByKeyDocument = gql`
             last_time
             total_steps
             banks
+            total_used_eth
+          }
+          __typename
+          ... on ETH {
+            balance
           }
         }
       }
@@ -602,6 +683,23 @@ export const GetBuildingByKeyDocument = gql`
   }
 }
     `;
+export const GetEthByKeyDocument = gql`
+    query getETHByKey($key: String) {
+  entities(first: 1000, keys: [$key]) {
+    edges {
+      node {
+        keys
+        components {
+          __typename
+          ... on ETH {
+            balance
+          }
+        }
+      }
+    }
+  }
+}
+    `;
 export const GetTownHallBalanceDocument = gql`
     query getTownHallBalance {
   entities(first: 1000, keys: ["0x1"]) {
@@ -628,6 +726,7 @@ const GetAllPlayersDocumentString = print(GetAllPlayersDocument);
 const GetPlayerByKeyDocumentString = print(GetPlayerByKeyDocument);
 const GetAllBuildingsDocumentString = print(GetAllBuildingsDocument);
 const GetBuildingByKeyDocumentString = print(GetBuildingByKeyDocument);
+const GetEthByKeyDocumentString = print(GetEthByKeyDocument);
 const GetTownHallBalanceDocumentString = print(GetTownHallBalanceDocument);
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
@@ -642,6 +741,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     getBuildingByKey(variables?: GetBuildingByKeyQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetBuildingByKeyQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetBuildingByKeyQuery>(GetBuildingByKeyDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getBuildingByKey', 'query');
+    },
+    getETHByKey(variables?: GetEthByKeyQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetEthByKeyQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
+        return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetEthByKeyQuery>(GetEthByKeyDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getETHByKey', 'query');
     },
     getTownHallBalance(variables?: GetTownHallBalanceQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<{ data: GetTownHallBalanceQuery; extensions?: any; headers: Dom.Headers; status: number; }> {
         return withWrapper((wrappedRequestHeaders) => client.rawRequest<GetTownHallBalanceQuery>(GetTownHallBalanceDocumentString, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getTownHallBalance', 'query');

@@ -135,7 +135,8 @@ export function createSystemCalls(
         steps: playerEvent.steps,
         last_point: playerEvent.last_point,
         last_time: playerEvent.last_time,
-        total_steps: playerEvent.total_steps
+        total_steps: playerEvent.total_steps,
+        total_used_eth:playerEvent.total_used_eth
       });
       return playerEvent;
       // store.setState({player})
@@ -250,6 +251,7 @@ export interface Player extends BaseEvent {
   banks: number;
   hotels: number;
   startbucks: number;
+  total_used_eth:number;
 }
 
 export interface Land extends BaseEvent {
@@ -308,6 +310,7 @@ export const parseEvent = (
           last_time: Number(raw.data[12]),
           total_steps: Number(raw.data[13]),
           banks: Number(raw.data[14]),
+          total_used_eth: Number(raw.data[15]),
           hotels: 0,
           startbucks: 0
         };

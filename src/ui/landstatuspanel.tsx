@@ -140,6 +140,7 @@ export default function LandStatusPanel() {
                         last_point: player.last_point,
                         last_time: player.last_time,
                         total_steps: player.total_steps,
+                        total_used_eth:player.total_used_eth
                     })
                 }
             }

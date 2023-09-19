@@ -1,9 +1,9 @@
-import { EntityIndex, setComponent } from "@latticexyz/recs";
+import { EntityIndex, getComponentValue, getEntityComponents, hasComponent, setComponent } from "@latticexyz/recs";
 import { useDojo } from "../hooks/useDojo";
 import { ClickWrapper } from "./clickWrapper";
 import { store } from "../store/store";
 import { useEffect, useMemo, useState } from "react";
-import { hexToString, stringToHex, toastError, toastInfo, toastSuccess, toastWarning, truncateString } from "../utils";
+import { getTimestamp, hexToString, stringToHex, toastError, toastInfo, toastSuccess, toastWarning, truncateString } from "../utils";
 import { playerStore } from "../store/playerStore";
 import { Player } from "../dojo/createSystemCalls";
 import { Player2Player } from "../types";
@@ -46,17 +46,22 @@ export const SpawnBtn = () => {
             if (element) {
                 if (element.node?.keys) {
                     if (element.node.keys[0]) {
+                        const eth = element.node.components[1] as any
+                        if (eth && eth.__typename == "ETH" && element.node.keys[0] == account?.address) {
+                            //hex
+                            const b: string = eth.balance;
+                            playerStore.setState({ eth: BigInt(b) })
+                        }
                         const player = element.node.components[0]
                         if (player && player.__typename == "Player") {
                             if (element.node.keys[0] == "0x0") {
                                 continue
                             }
                             const entityId = parseInt(element.node.keys[0]) as EntityIndex;
-
                             const player_ = Player2Player(player)
                             player_.entity = entityId.toString()
                             players.set(entityId, player_)
-                            // console.log("showAllPlayers",player_);
+                            // console.log("showAllPlayers",entityId,element.node.keys[0]);
                             setComponent(components.Player, entityId, {
                                 banks: player.banks,
                                 position: player.position,
@@ -68,6 +73,7 @@ export const SpawnBtn = () => {
                                 last_point: player.last_point,
                                 last_time: player.last_time,
                                 total_steps: player.total_steps,
+                                total_used_eth: player.total_used_eth
                             })
                         }
                     }
@@ -79,49 +85,15 @@ export const SpawnBtn = () => {
 
     const fetchAllPlayers = async () => {
         console.log("fetchAllPlayers");
-
         const allPlayers = await graphSdk.getAllPlayers()
-        console.log("startGame allPlayers");
-        console.log(allPlayers);
+        // console.log("startGame allPlayers");
+        console.log("fetchAllPlayers",allPlayers);
         const edges = allPlayers.data.entities?.edges
         showAllPlayers(edges)
-
-        if (edges && account) {
-            console.log("start game total players:" + edges.length);
-            for (let index = 0; index < edges.length; index++) {
-                const element = edges[index];
-                if (element) {
-                    if (element.node?.keys) {
-                        if (element.node.keys[0] == account.address) {
-                            const entityId = parseInt(account.address) as EntityIndex;
-                            const players = element.node.components
-                            if (players && players[0]) {
-                                console.log(players[0]);
-                                const player = players[0] as any
-                                setComponent(components.Player, entityId, {
-                                    banks: player.banks,
-                                    position: player.position,
-                                    joined_time: player.joined_time,
-                                    direction: player.direction,
-                                    gold: player.gold,
-                                    nick_name: player.nick_name,
-                                    steps: player.steps,
-                                    last_point: player.last_point,
-                                    last_time: player.last_time,
-                                    total_steps: player.total_steps,
-                                })
-                                return true
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return false
     }
 
     const startGame = async () => {
-        if(isDeploying){
+        if (isDeploying) {
             toastWarning("Waiting for creating wallet...")
             return
         }
@@ -173,12 +145,12 @@ export const SpawnBtn = () => {
         }
     }, [account])
 
-    useEffect(()=>{
-        console.log("isDeploying",isDeploying);
-        if(isDeploying){
+    useEffect(() => {
+        console.log("isDeploying", isDeploying);
+        if (isDeploying) {
             playerStore.setState({ player: null })
         }
-    },[isDeploying])
+    }, [isDeploying])
 
     return (
         <ClickWrapper>

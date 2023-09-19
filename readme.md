@@ -98,3 +98,9 @@ go contracts folder
 
 To avoid redeploying contracts, you can save the Katana state by using the following command.
 `katana --disable-fee --load-state ./dump-state.bin --dump-state ./dump-state.bin`
+
+4. generate component
+`yarn components`
+
+5. generate sql indexer
+`yarn codegen`

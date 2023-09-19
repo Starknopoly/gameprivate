@@ -17,13 +17,13 @@ export function mapSystem(layer: PhaserLayer) {
             },
         },
         networkLayer: {
-            components: { Player }
+            components
         },
     } = layer;
     const size = MAP_WIDTH
 
     store.setState({ camera: camera })
-    playerStore.setState({ PlayerComponent: Player })
+    playerStore.setState({ PlayerComponent: components.Player })
 
     for (let y = 0; y < size; y++) {
         for (let x = 0; x < size; x++) {

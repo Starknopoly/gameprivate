@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { EnergyPrice, STARKBUCKS_ID } from "../config";
-import { actionStore } from "../store/actionstore";
 import { playerStore } from "../store/playerStore";
 import { store } from "../store/store";
 import { PlayerState } from "../types/playerState";
@@ -14,21 +13,12 @@ import { buildStore } from "../store/buildstore";
 export default function BuyEnergyUI() {
     const { account, phaserLayer } = store();
     const {buildings} = buildStore()
-    const { actions } = actionStore()
     const { player, playerState } = playerStore()
 
     const [showBox, setShow] = useState(false)
     const [buyAmount,setBuyAmount] = useState(1)
 
     const {
-        scenes: {
-            Main: {
-                camera,
-                maps: {
-                    Main: { putTileAt },
-                },
-            },
-        },
         networkLayer: {
             components,
             systemCalls: { buyEnergy },
@@ -91,6 +81,7 @@ export default function BuyEnergyUI() {
                 last_point: playerEvent.last_point,
                 last_time: playerEvent.last_time,
                 total_steps:player.total_steps,
+                total_used_eth:player.total_used_eth
             });
             toastSuccess("Buy energy success")
             setShow(false)

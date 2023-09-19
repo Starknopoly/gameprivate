@@ -78,7 +78,8 @@ export function Player2Player(player_:PlayerSQL):Player{
         total_steps:player_.total_steps,
         banks:player_.banks,
         hotels:0,
-        startbucks:0
+        startbucks:0,
+        total_eth_used:player_.total_used_eth
     }
     return player;
 }
@@ -98,7 +99,8 @@ export function copyPlayer(player_:Player):Player{
         total_steps:player_.total_steps,
         banks:0,
         hotels:0,
-        startbucks:0
+        startbucks:0,
+        total_eth_used:player_.total_eth_used
     }
     return player;
 }

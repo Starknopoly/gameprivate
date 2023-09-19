@@ -12,6 +12,7 @@
     "components": "npx @dojoengine/core ./contracts/target/dev/manifest.json src/dojo/contractComponents.ts"
   },
   "dependencies": {
+    "@dojoengine/core": "^0.0.20",
     "@dojoengine/create-burner": "^0.0.3",
     "@dojoengine/react": "^0.0.3",
     "@dojoengine/utils": "^0.0.2",
@@ -36,7 +37,6 @@
     "zustand": "^4.4.1"
   },
   "devDependencies": {
-    "@dojoengine/core": "^0.0.20",
     "@graphql-codegen/cli": "^5.0.0",
     "@graphql-codegen/typescript": "^4.0.1",
     "@graphql-codegen/typescript-graphql-request": "^5.0.0",

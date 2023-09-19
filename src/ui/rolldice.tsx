@@ -28,7 +28,7 @@ export default function RollDice() {
     const { account, networkLayer } = store();
     const { buildings: storeBuildings } = buildStore()
     const { actions } = actionStore()
-    const { player, playerState } = playerStore()
+    const { player, playerState, PlayerComponent } = playerStore()
 
     const [diceImg1, setDice1] = useState(dice1)
 
@@ -214,20 +214,23 @@ export default function RollDice() {
             changeState(PlayerState.WALK_END)
             return
         }
+        if (!account) {
+            return
+        }
         walkCountRef.current = walkCountRef.current + 1
-        move(account!, Direction.Right, playerEventRef.current!)
+        move(account, Direction.Right, playerEventRef.current!)
     }
 
     const move = (signer: Account, direction: Direction, playerEvent: Player) => {
         const entityId = parseInt(signer.address) as EntityIndex;
-
-        const value = getComponentValue(components.Player, entityId)
+        console.log("move", entityId, signer.address);
+        const value = getComponentValue(PlayerComponent, entityId)
         console.log(value);
         if (!value) {
             return
         }
         const size = MAP_WIDTH
-        var position = value.position
+        var position:number = value.position as number;
         if (direction == Direction.Left) {
             position -= 1
             if (position < 0) {
@@ -252,6 +255,7 @@ export default function RollDice() {
             last_point: playerEvent.last_point,
             last_time: playerEvent.last_time,
             total_steps: playerEvent.total_steps,
+            total_used_eth: playerEvent.total_used_eth
         })
     }
 

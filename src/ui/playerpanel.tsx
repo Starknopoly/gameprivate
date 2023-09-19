@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { store } from "../store/store";
 import { Animations, MAP_WIDTH, TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
-import { hexToString, positionToCoorp } from "../utils";
+import { getTimestamp, hexToString, positionToCoorp } from "../utils";
 import { tileCoordToPixelCoord } from "@latticexyz/phaserx";
 import { BANK_ID, HOTEL_ID, STARKBUCKS_ID } from "../config";
 import { tipStore } from "../store/tipStore";
@@ -19,6 +19,7 @@ export default function PlayerPanel() {
     const spriteListen = useRef<Map<EntityIndex, boolean>>(new Map())
     const [hotelAmount, setHotel] = useState(0)
     const [bucksAmount, setBucks] = useState(0)
+    const [defined,setDefined] = useState(false)
 
     const {
         world,
@@ -31,10 +32,17 @@ export default function PlayerPanel() {
         if (!layer) {
             return
         }
-        console.log("defineSystem");
-
+        if(defined){
+            return
+        }
+        if(!account){
+            return
+        }
+        console.log("defineSystem:"+getTimestamp());
+        setDefined(true)
         defineSystem(world, [Has(PlayerComponent)], ({ entity }) => {
             const player_ = getComponentValue(PlayerComponent, entity);
+            console.log("defineSystem",entity,player_);
             if (!player_) {
                 return;
             }
@@ -43,13 +51,13 @@ export default function PlayerPanel() {
             if (account) {
                 myEntityId = parseInt(account.address) as EntityIndex;
             }
+            console.log("defineSystem",entity,myEntityId);
             if (entity == myEntityId) {
                 console.log("playerpanel is myself nick name", player_.nick_name);
                 const player = Player2Player(player_);
                 player.entity = entity.toString();
                 playerStore.setState({ player: player })
             }
-
             // console.log("defineSystem account:" + account.address);
 
             const position = player_.position as number - 1
