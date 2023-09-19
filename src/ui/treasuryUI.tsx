@@ -56,20 +56,7 @@ export default function TreasuryUI() {
         if (result && result.length > 0) {
             toastSuccess("Buy Gold Success!")
             const playerEvent = result[0] as Player
-            const entity = parseInt(account.address) as EntityIndex
-            setComponent(PlayerComponent, entity, {
-                banks: playerEvent.banks,
-                nick_name: playerEvent.nick_name,
-                position: playerEvent.position,
-                joined_time: playerEvent.joined_time,
-                direction: playerEvent.direction,
-                gold: playerEvent.gold,
-                steps: playerEvent.steps,
-                last_point: playerEvent.last_point,
-                last_time: playerEvent.last_time,
-                total_steps: playerEvent.total_steps,
-                total_used_eth:playerEvent.total_used_eth
-            });
+            playerStore.setState({ player: playerEvent })
             const eth = result[1] as ETH
             playerStore.setState({eth:eth.balance})
         } else {
@@ -77,7 +64,6 @@ export default function TreasuryUI() {
         }
         setShow(false)
     }
-
 
     const inputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value

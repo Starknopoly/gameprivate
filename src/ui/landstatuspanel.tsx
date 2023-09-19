@@ -122,13 +122,6 @@ export default function LandStatusPanel() {
                     const player = players[0] as any
                     const entityId = parseInt(element.node?.keys![0]!) as EntityIndex
 
-                    // const temp = new Map(storePlayers);
-                    // const player_ = Player2Player(player)
-                    // player_.entity = entityId.toString()
-                    // temp.set(entityId, player_)
-                    // playerStore.setState({ players: temp })
-                    // players.set(entityId,player_)
-
                     setComponent(PlayerComponent, entityId, {
                         banks: player.banks,
                         position: player.position,

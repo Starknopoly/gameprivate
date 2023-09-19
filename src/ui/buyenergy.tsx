@@ -5,11 +5,11 @@ import { store } from "../store/store";
 import { PlayerState } from "../types/playerState";
 import { toastError, toastInfo, toastSuccess, toastWarning } from "../utils";
 import { ClickWrapper } from "./clickWrapper";
-import { Player } from "../generated/graphql";
 import { EntityIndex, setComponent } from "@latticexyz/recs";
 import { useMemo, useState } from "react";
 import { buildStore } from "../store/buildstore";
 import { Player2Player } from "../types";
+import { Player } from "../dojo/createSystemCalls";
 
 export default function BuyEnergyUI() {
     const { account, phaserLayer } = store();
@@ -70,10 +70,10 @@ export default function BuyEnergyUI() {
             toastError("Buy energy fail.Please refresh and try.")
         } else {
             const playerEvent = events[0] as Player;
-            const entity = parseInt(events[0].entity.toString()) as EntityIndex;
-            const player = Player2Player(playerEvent);
-            player.entity = entity.toString();
-            playerStore.setState({ player: player })
+            // const entity = parseInt(events[0].entity.toString()) as EntityIndex;
+            // const player = Player2Player(playerEvent);
+            // player.entity = entity.toString();
+            playerStore.setState({ player: playerEvent })
             toastSuccess("Buy energy success")
             setShow(false)
         }

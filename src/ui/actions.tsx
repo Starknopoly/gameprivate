@@ -10,7 +10,7 @@ import { BANK_ID, BUILDING_PRICES, HOTEL_ID, LANDID_RESERVED, STARKBUCKS_ID } fr
 import { Player } from "../dojo/createSystemCalls";
 import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs";
 import { PlayerState } from "../types/playerState";
-import { Building } from "../types";
+import { Building, Player2Player } from "../types";
 import { playerStore } from "../store/playerStore";
 import { actionStore } from "../store/actionstore";
 import { buildStore } from "../store/buildstore";
@@ -31,10 +31,10 @@ export default function ActionsUI() {
             },
         },
         networkLayer: {
-            
+
             components,
             systemCalls: { buyBuilding, buyBack, explode },
-            network:{graphSdk}
+            network: { graphSdk }
         },
     } = phaserLayer!;
 
@@ -128,23 +128,8 @@ export default function ActionsUI() {
         const events = await explode(account, parseInt(selectBomb))
         if (events) {
             if (events.length != 0) {
-                //TODO : check there is building
-                const entityId = parseInt(account.address) as EntityIndex
                 const player = events[0] as Player
-
-                setComponent(components.Player, entityId, {
-                    banks: player.banks,
-                    position: player.position,
-                    joined_time: player.joined_time,
-                    direction: player.direction,
-                    nick_name: player.nick_name,
-                    gold: player.gold,
-                    steps: player.steps,
-                    last_point: player.last_point,
-                    last_time: player.last_time,
-                    total_steps: player.total_steps,
-                    total_used_eth:player.total_used_eth
-                })
+                playerStore.setState({ player: player })
                 putTileAt({ x: coord.x, y: coord.y }, Tileset.Bomb, "Foreground");
                 actions.push("Place $" + selectBomb + " bomb at : " + player.position)
                 toastSuccess("Place $" + selectBomb + " bomb success")
@@ -203,20 +188,7 @@ export default function ActionsUI() {
             toastError("Build fail. Please refresh and retry.")
         } else {
             const playerEvent = events[0] as Player;
-            const entity = parseInt(events[0].entity.toString()) as EntityIndex;
-            setComponent(components.Player, entity, {
-                banks: playerEvent.banks,
-                nick_name: playerEvent.nick_name,
-                position: playerEvent.position,
-                joined_time: playerEvent.joined_time,
-                direction: playerEvent.direction,
-                gold: playerEvent.gold,
-                steps: playerEvent.steps,
-                last_point: playerEvent.last_point,
-                last_time: playerEvent.last_time,
-                total_steps: playerEvent.total_steps,
-                total_used_eth:playerEvent.total_used_eth
-            });
+            playerStore.setState({ player: playerEvent })
 
             putTileAt({ x: coord.x, y: coord.y }, id, "Foreground");
             putTileAt({ x: coord.x, y: coord.y }, Tileset.Heart, "Top");
@@ -249,7 +221,7 @@ export default function ActionsUI() {
                 toastWarning("Gold is not enough. Need $" + (building.price * 1.3).toFixed(0))
                 return
             }
-            if(building.type == LANDID_RESERVED){
+            if (building.type == LANDID_RESERVED) {
                 toastWarning("No Building here")
                 return
             }
@@ -263,20 +235,7 @@ export default function ActionsUI() {
             toastError("Buy back fail. Please refresh and retry.")
         } else {
             const playerEvent = events[0] as Player;
-            const entity = parseInt(events[0].entity.toString()) as EntityIndex;
-            setComponent(components.Player, entity, {
-                banks: playerEvent.banks,
-                nick_name: playerEvent.nick_name,
-                position: playerEvent.position,
-                joined_time: playerEvent.joined_time,
-                direction: playerEvent.direction,
-                gold: playerEvent.gold,
-                steps: playerEvent.steps,
-                last_point: playerEvent.last_point,
-                last_time: playerEvent.last_time,
-                total_steps: playerEvent.total_steps,
-                total_used_eth:playerEvent.total_used_eth
-            });
+            playerStore.setState({ player: playerEvent })
             toastSuccess("Buy back success")
             actions.push("Buy back " + (building.getName()) + " at : " + player.position + ", spend $" + (building.price * 1.3).toFixed(2))
         }
