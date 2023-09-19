@@ -10,7 +10,7 @@ export default function WalletUI() {
 
     return (<div style={{ width: 200, height: 80, lineHeight: 1, backgroundColor: "rgba(0, 0, 0, 0.5)", padding: 10, borderRadius: 15 }}>
         {/* <p>ETH : {ethers.utils.formatEther(balance as string)} ETH</p> */}
-        <p>ETH : {ethers.utils.formatEther(eth)} ETH</p>
+        <p>ETH : {parseFloat(ethers.utils.formatEther(eth)).toFixed(6)} ETH</p>
         <p>Gold : ${storePlayer?.gold}</p>
     </div>)
 }

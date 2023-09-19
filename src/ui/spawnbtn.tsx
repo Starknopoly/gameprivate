@@ -94,7 +94,7 @@ export const SpawnBtn = () => {
 
     const startGame = async () => {
         if (isDeploying) {
-            toastWarning("Waiting for creating wallet...")
+            toastError("Waiting for creating wallet...")
             return
         }
         if (!account) {

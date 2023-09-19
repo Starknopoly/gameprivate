@@ -19,7 +19,7 @@ export function defineContractComponents(world: World) {
           last_time: RecsType.Number,
           total_steps: RecsType.Number,
           banks: RecsType.Number,
-          total_used_eth: RecsType.Number,
+          total_used_eth: RecsType.String,
         },
         {
           metadata: {

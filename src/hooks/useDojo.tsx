@@ -22,7 +22,7 @@ export const useDojo = () => {
     );
 
     useEffect(() => {
-        console.log("usedojo account " + account);
+        console.log("usedojo account " + account?.address);
         store.setState({ account:account })
     }, [account])
 

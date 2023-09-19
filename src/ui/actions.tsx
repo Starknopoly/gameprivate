@@ -13,9 +13,7 @@ import { PlayerState } from "../types/playerState";
 import { Building } from "../types";
 import { playerStore } from "../store/playerStore";
 import { actionStore } from "../store/actionstore";
-import { useERC20Balance } from "../hooks/useERC20Balance";
 import { buildStore } from "../store/buildstore";
-import { ethers } from "ethers";
 
 export default function ActionsUI() {
     const { account, phaserLayer } = store();

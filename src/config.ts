@@ -5,7 +5,9 @@ export const HOTEL_ID = 1
 export const BANK_ID = 2
 export const STARKBUCKS_ID = 3
 
-export const EnergyPrice = 100
+export const EnergyPrice = 100;
+
+export const K: bigint = BigInt(10 * 1e18 * 40000);
 
 // type BUILDING_PRICES()
 export const BUILDING_PRICES = {

@@ -13,8 +13,6 @@ export function createSystemCalls(
   { execute, contractComponents }: SetupNetworkResult,
   { Player }: ClientComponents
 ) {
-
-
   const roll = async (signer: Account) => {
     try {
       console.log("roll start");
@@ -62,6 +60,29 @@ export function createSystemCalls(
     return events;
   };
 
+
+  const buyGold = async (
+    signer: Account,
+    amount: number
+  ) => {
+    const tx = await execute(signer, "buy_gold", [amount]);
+    console.log("buyGold signer:" + signer.address + ",amount:" + amount);
+
+    // TODO: override gold
+
+    console.log(tx);
+    const receipt = await signer.waitForTransaction(tx.transaction_hash, {
+      retryInterval: 100,
+    });
+
+    console.log(receipt);
+
+    const events = parseEvent(receipt);
+    console.log(events);
+
+    // return player,land
+    return events;
+  };
 
   const buyBuilding = async (
     signer: Account,
@@ -136,7 +157,7 @@ export function createSystemCalls(
         last_point: playerEvent.last_point,
         last_time: playerEvent.last_time,
         total_steps: playerEvent.total_steps,
-        total_used_eth:playerEvent.total_used_eth
+        total_used_eth: playerEvent.total_used_eth
       });
       return playerEvent;
       // store.setState({player})
@@ -212,7 +233,8 @@ export function createSystemCalls(
     buyBuilding,
     buyBack,
     explode,
-    adminRoll
+    adminRoll,
+    buyGold
   };
 }
 
@@ -231,6 +253,7 @@ export enum ComponentEvents {
   Player = "Player",
   Land = "Land",
   Townhall = "Townhall",
+  ETH="ETH"
 }
 
 export interface BaseEvent {
@@ -251,7 +274,7 @@ export interface Player extends BaseEvent {
   banks: number;
   hotels: number;
   startbucks: number;
-  total_used_eth:number;
+  total_used_eth: string;
 }
 
 export interface Land extends BaseEvent {
@@ -266,18 +289,14 @@ export interface Townhall extends BaseEvent {
   gold: number;
 }
 
-export interface Moves extends BaseEvent {
-  remaining: number;
-}
-
-export interface Position extends BaseEvent {
-  x: number;
-  y: number;
+export interface ETH extends BaseEvent {
+  id: number;
+  balance: bigint;
 }
 
 export const parseEvent = (
   receipt: GetTransactionReceiptResponse
-): Array<Player | Land | Townhall> => {
+): Array<Player | Land | ETH | Townhall> => {
   // if(typeof receipt == SuccessfulTransactionReceiptResponse)
   if (receipt.status == "NOT_RECEIVED" || receipt.status == "REJECTED" || receipt.status == "REVERTED") {
     return []
@@ -287,7 +306,7 @@ export const parseEvent = (
     throw new Error(`No events found`);
   }
 
-  let events: Array<Player | Land | Townhall> = [];
+  let events: Array<Player | Land | Townhall | ETH> = [];
 
   for (let raw of receipt.events) {
     const decodedEventType = shortString.decodeShortString(raw.data[0]);
@@ -310,7 +329,7 @@ export const parseEvent = (
           last_time: Number(raw.data[12]),
           total_steps: Number(raw.data[13]),
           banks: Number(raw.data[14]),
-          total_used_eth: Number(raw.data[15]),
+          total_used_eth: (raw.data[15]),
           hotels: 0,
           startbucks: 0
         };
@@ -319,7 +338,6 @@ export const parseEvent = (
         break;
 
       case ComponentEvents.Land:
-
         const landData: Land = {
           type: ComponentEvents.Land,
           entity: raw.data[2],
@@ -335,6 +353,16 @@ export const parseEvent = (
         events.push(landData);
         break;
 
+      case ComponentEvents.ETH:
+        const eth: ETH = {
+          type: ComponentEvents.ETH,
+          entity: raw.data[2],
+          id: Number(raw.data[2]),
+          balance: BigInt(raw.data[5]),
+        };
+
+        events.push(eth);
+        break;
       case ComponentEvents.Townhall:
         const townHall: Townhall = {
           type: ComponentEvents.Townhall,

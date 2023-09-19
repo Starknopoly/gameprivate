@@ -16,6 +16,13 @@ export default function PlayerPanel() {
     const { player: storePlayer, PlayerComponent } = playerStore()
     const { buildings } = buildStore()
 
+    const accountRef = useRef<string>()
+
+    useEffect(()=>{
+        if(account)
+        accountRef.current = account.address
+    },[account])
+
     const spriteListen = useRef<Map<EntityIndex, boolean>>(new Map())
     const [hotelAmount, setHotel] = useState(0)
     const [bucksAmount, setBucks] = useState(0)
@@ -48,10 +55,10 @@ export default function PlayerPanel() {
             }
             var myEntityId = -1 as EntityIndex
 
-            if (account) {
-                myEntityId = parseInt(account.address) as EntityIndex;
+            if (accountRef.current) {
+                myEntityId = parseInt(accountRef.current) as EntityIndex;
             }
-            console.log("defineSystem",entity,myEntityId);
+            console.log("defineSystem",entity,myEntityId,accountRef.current);
             if (entity == myEntityId) {
                 console.log("playerpanel is myself nick name", player_.nick_name);
                 const player = Player2Player(player_);

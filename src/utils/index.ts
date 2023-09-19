@@ -2,9 +2,10 @@ import { Coord } from "@latticexyz/utils";
 import { Direction } from "../dojo/createSystemCalls";
 import { MAP_WIDTH } from "../phaser/constants";
 import { Tileset } from "../artTypes/world";
-import { BANK_ID, BOMB_ID, HOTEL_ID, STARKBUCKS_ID } from "../config";
+import { BANK_ID, BOMB_ID, HOTEL_ID, K, STARKBUCKS_ID } from "../config";
 import { ToastContainer, toast } from 'react-toastify';
 import * as scure from "@scure/starknet"
+import { ethers } from "ethers";
 
 export function isValidArray(input: any): input is any[] {
     return Array.isArray(input) && input != null;
@@ -221,4 +222,15 @@ export const landCanBuild = (position: number) => {
     let hashStr = scure.poseidonHashMany([BigInt(position + 1), 2023n, 1024n])
     let hex = BigInt(hashStr.toString(10))
     return hex % 2n == 0n
+}
+
+export const calTotal = (gold: number, amount: number) => {
+    let eth_left = K / BigInt(gold)
+    let gold_left = gold - amount
+    let eth_left_new = K / BigInt(gold_left)
+    let eth_need = eth_left_new - eth_left
+    // console.log("calTotal",K,gold,amount);
+    // console.log("calTotal",ethers.utils.formatEther(eth_left),ethers.utils.formatEther(eth_left_new),ethers.utils.formatEther(eth_need));
+    
+    return eth_need
 }
