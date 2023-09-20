@@ -18,15 +18,15 @@ export default function PlayerPanel() {
 
     const accountRef = useRef<string>()
 
-    useEffect(()=>{
-        if(account)
-        accountRef.current = account.address
-    },[account])
+    useEffect(() => {
+        if (account)
+            accountRef.current = account.address
+    }, [account])
 
     const spriteListen = useRef<Map<EntityIndex, boolean>>(new Map())
     const [hotelAmount, setHotel] = useState(0)
     const [bucksAmount, setBucks] = useState(0)
-    const [defined,setDefined] = useState(false)
+    const [defined, setDefined] = useState(false)
 
     const {
         world,
@@ -39,17 +39,17 @@ export default function PlayerPanel() {
         if (!layer) {
             return
         }
-        if(defined){
+        if (defined) {
             return
         }
-        if(!account){
+        if (!account) {
             return
         }
-        console.log("defineSystem:"+getTimestamp());
+        console.log("defineSystem:" + getTimestamp());
         setDefined(true)
         defineSystem(world, [Has(PlayerComponent)], ({ entity }) => {
             const player_ = getComponentValue(PlayerComponent, entity);
-            console.log("defineSystem",entity,player_);
+            console.log("defineSystem", entity, player_);
             if (!player_) {
                 return;
             }
@@ -58,7 +58,7 @@ export default function PlayerPanel() {
             if (accountRef.current) {
                 myEntityId = parseInt(accountRef.current) as EntityIndex;
             }
-            console.log("defineSystem",entity,myEntityId,accountRef.current);
+            console.log("defineSystem", entity, myEntityId, accountRef.current);
             if (entity == myEntityId) {
                 console.log("playerpanel is myself nick name", player_.nick_name);
                 const player = Player2Player(player_);
@@ -167,15 +167,13 @@ export default function PlayerPanel() {
     }, [buildings.keys()])
 
     return (
-        <div>
-            <div style={{ width: 200, height: 230, lineHeight: 0.9, backgroundColor: "rgba(0, 0, 0, 0.5)", padding: 10, borderRadius: 15 }}>
-                <p>Name : {hexToString(storePlayer?.nick_name)}</p>
-                <p>Steps : {storePlayer?.total_steps}</p>
-                <p>Energy : {storePlayer?.steps}</p>
-                <p>Postion : {storePlayer?.position}</p>
-                <p>Bank : {storePlayer?.banks}</p>
-                <p>Hotel : {hotelAmount}</p>
-                <p>Starkbucks : {bucksAmount}</p>
-            </div>
+        <div style={{display:"flex",gap:"20px"}}>
+            <div>👨 : {hexToString(storePlayer?.nick_name)}</div>
+            <div style={{marginRight:20}}>🌟 : {storePlayer?.total_steps}</div>
+            <div>⚡ : {storePlayer?.steps}</div>
+            <div>📍 : {storePlayer?.position}</div>
+            <div>🏦 : {storePlayer?.banks}</div>
+            <div>🏨 : {hotelAmount}</div>
+            <div>☕ : {bucksAmount}</div>
         </div>)
 }

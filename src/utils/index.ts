@@ -194,7 +194,7 @@ export function toastWarning(msg: string) {
 
 export function toastInfo(msg: string) {
     toast.info(msg, {
-        position: "top-right",
+        position: "bottom-right",
         autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
@@ -207,7 +207,7 @@ export function toastInfo(msg: string) {
 
 export function toastSuccess(msg: string) {
     toast.success(msg, {
-        position: "top-right",
+        position: "bottom-right",
         autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,

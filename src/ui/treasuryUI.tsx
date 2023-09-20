@@ -106,8 +106,8 @@ export default function TreasuryUI() {
     return (
         <ClickWrapper style={{ display: "flex", flexDirection: "column" }}>
             <div style={{ width: 200, height: 130, lineHeight: 0.9, backgroundColor: "rgba(0, 0, 0, 0.5)", padding: 10, borderRadius: 15 }}>
-                <p>Treasury</p>
-                <p>Balance : {treasury} Gold</p>
+                <p>Treasury 🏫</p>
+                <p>Balance💰 : {treasury} Gold</p>
                 <p>Price : {getPrice} ETH</p>
                 <button onClick={() => clickBuy()}>Buy Gold</button>
             </div>
@@ -127,17 +127,17 @@ export default function TreasuryUI() {
                         </div>
                     </div>
                 }
-
+                
             </BuyBoxContainer>
+            
         </ClickWrapper>
     )
 }
 
 const BuyBoxContainer = styled.div`
     position: absolute;
-    bottom: -130px;
-    right: 150px;
-    transform: translate(-50%, -50%);
+    top: 0px;
+    right: 250px;
     color: white;
     display: flex;
     flex-direaction: row;

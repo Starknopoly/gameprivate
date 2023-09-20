@@ -1,10 +1,8 @@
 import styled from "styled-components";
 import { store } from "../store/store";
 import { Wrapper } from "./wrapper";
-import { SpawnBtn } from "./spawnbtn";
 import RollDice from "./rolldice";
 import ActionsUI from "./actions";
-import PlayerPanel from "./playerpanel";
 import LandStatusPanel from "./landstatuspanel";
 import BottomIcons from "./bottomicons";
 import NamesUI from "./names";
@@ -13,8 +11,9 @@ import ActionList from "./actionlist";
 import TreasuryUI from "./treasuryUI";
 import BuildingTip from "./buildingtip";
 import BuyEnergyUI from "./buyenergy";
-import WalletUI from "./walletui";
 import Leaderboard from "./leaderboard";
+import { VERSION } from "../config";
+import Header from "./header";
 
 export default function UI() {
     const layers = store((state) => {
@@ -28,14 +27,14 @@ export default function UI() {
 
     return (
         <Wrapper>
-            <TopLeftContainer>
-                <PlayerPanel />
-            </TopLeftContainer>
-            <HeaderContainer>
-                <SpawnBtn />
-            </HeaderContainer>
+            <TopHeaderContainer>
+                <Header/>
+            </TopHeaderContainer>
 
-            <BuyEnergyUI/>
+            {/* <TopLeftContainer>
+                <PlayerPanel />
+            </TopLeftContainer> */}
+            <BuyEnergyUI />
             <BottomContainer>
                 <RollDice />
             </BottomContainer>
@@ -44,7 +43,6 @@ export default function UI() {
             </RightContainer>
             <TopRightContainer>
                 <LandStatusPanel />
-                <WalletUI/>
             </TopRightContainer>
 
             <BottomRightContainer>
@@ -53,44 +51,44 @@ export default function UI() {
             <BottomLeftContainer>
                 <AdminUI />
             </BottomLeftContainer>
-            <LeftCenterContainer>
+            <ActionListContainer>
                 <ActionList />
-            </LeftCenterContainer>
+            </ActionListContainer>
             <TreasuryContainer>
                 <TreasuryUI />
             </TreasuryContainer>
             <NamesUI />
             <BuildingTip />
-            <Leaderboard/>
+            <Leaderboard />
+            <VersionContainer>
+                <p>version:{VERSION}</p>
+            </VersionContainer>
         </Wrapper>
     );
 };
 
-const HeaderContainer = styled.div`
+const TopHeaderContainer = styled.div`
     position: absolute;
-    top: 5%;
+    top: 30px;
     left: 50%;
     transform: translate(-50%, -50%);
     color: white;
     display: flex;
     flex-direaction: row;
-    gap: 20px;
+    width:100%;
+    height:60px;
 `;
 
-const TopLeftContainer = styled.div`
+const VersionContainer = styled.div`
     position: absolute;
-    top: 140px;
-    left: 130px;
-    transform: translate(-50%, -50%);
+    bottom: 0px;
+    right: 10px;
     color: white;
-    display: flex;
-    flex-direaction: row;
-    gap: 10px;
 `;
 
 const TreasuryContainer = styled.div`
 position: absolute;
-top: 240px;
+top: 140px;
 right: -80px;
 transform: translate(-50%, -50%);
 color: white;
@@ -99,11 +97,10 @@ flex-direaction: row;
 gap: 10px;
 `;
 
-const LeftCenterContainer = styled.div`
+const ActionListContainer = styled.div`
     position: absolute;
-    top: 430px;
-    left: 130px;
-    transform: translate(-50%, -50%);
+    bottom: 20px;
+    left: 30px;
     color: white;
     display: flex;
     flex-direaction: row;

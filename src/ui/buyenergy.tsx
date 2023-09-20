@@ -92,7 +92,7 @@ export default function BuyEnergyUI() {
     return (
         <ClickWrapper>
             <BottomContainer>
-                <button onClick={() => clickBuyEnergy()} style={{ marginTop: 15 }}>Buy Energy</button>
+                <button onClick={() => clickBuyEnergy()} style={{ marginTop: 15 }}>Buy Energy ⚡</button>
             </BottomContainer>
             <BuyBoxContainer>
                 {
@@ -121,7 +121,7 @@ export default function BuyEnergyUI() {
 const BuyBoxContainer = styled.div`
     position: absolute;
     bottom: 10%;
-    right: 5%;
+    right: 10%;
     transform: translate(-50%, -50%);
     color: white;
     display: flex;

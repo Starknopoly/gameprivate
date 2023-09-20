@@ -8,7 +8,6 @@ import { MAP_WIDTH, TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
 import { mapIdToBuildingId, positionToBuildingCoorp, positionToCoorp, toastError, toastInfo, toastSuccess, toastWarning } from "../utils";
 import { BANK_ID, BUILDING_PRICES, HOTEL_ID, LANDID_RESERVED, STARKBUCKS_ID } from "../config";
 import { Player } from "../dojo/createSystemCalls";
-import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs";
 import { PlayerState } from "../types/playerState";
 import { Building, Player2Player } from "../types";
 import { playerStore } from "../store/playerStore";
@@ -31,10 +30,7 @@ export default function ActionsUI() {
             },
         },
         networkLayer: {
-
-            components,
             systemCalls: { buyBuilding, buyBack, explode },
-            network: { graphSdk }
         },
     } = phaserLayer!;
 
@@ -45,11 +41,11 @@ export default function ActionsUI() {
         camera.centerOn(pixelPosition?.x!, pixelPosition?.y!);
     }, [])
 
-    const [selectBuild, setSelectBuild] = useState("Hotel")
+    const [selectBuild, setSelectBuild] = useState("Hotel🏨")
     const options: OptionType[] = [
-        { value: 'Hotel', label: 'Hotel($100)' },
-        { value: 'Bank', label: 'Bank($500)' },
-        { value: 'Starkbucks', label: 'Starkbucks($500)' }
+        { value: 'Hotel🏨', label: '🏨 Hotel($100)' },
+        { value: 'Bank🏦', label: '🏦 Bank($500)' },
+        { value: 'Starkbucks☕', label: '☕ Starkbucks($500)' }
     ];
 
     const [selectBomb, setSelectBomb] = useState("10")
@@ -171,9 +167,9 @@ export default function ActionsUI() {
         var id = Tileset.Bank
         var price = 0
         switch (selectBuild) {
-            case "Bank": id = Tileset.Bank; price = BUILDING_PRICES['Bank']; break;
-            case "Hotel": id = Tileset.Hotel; price = BUILDING_PRICES['Hotel']; break;
-            case "Starkbucks": id = Tileset.Starkbucks; price = BUILDING_PRICES['Starkbucks']; break;
+            case "Bank🏦": id = Tileset.Bank; price = BUILDING_PRICES['Bank']; break;
+            case "Hotel🏨": id = Tileset.Hotel; price = BUILDING_PRICES['Hotel']; break;
+            case "Starkbucks☕": id = Tileset.Starkbucks; price = BUILDING_PRICES['Starkbucks']; break;
         }
         console.log("buildClick gold:" + player.gold + ",price:" + price);
         console.log(coord);
@@ -239,7 +235,6 @@ export default function ActionsUI() {
             toastSuccess("Buy back success")
             actions.push("Buy back " + (building.getName()) + " at : " + player.position + ", spend $" + (building.price * 1.3).toFixed(2))
         }
-
     }
 
     const getBombLevel = useMemo(() => {

@@ -39,7 +39,7 @@ export default function BottomIcons() {
 
     return (
         <ClickWrapper style={{ display: "flex", flexDirection: "column" }}>
-            <button onClick={() => center()}>Find Me</button>
+            <button onClick={() => center()}>Zoom to Me</button>
             <img style={{ marginTop: 10 }} width={25} src={twitter} onClick={() => gotoTwitter()} />
         </ClickWrapper>)
 }

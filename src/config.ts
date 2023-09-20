@@ -1,3 +1,5 @@
+export const VERSION = "0.1.09201";
+
 // 1 为酒店，2为银行，3为 Starkbucks
 export const LANDID_RESERVED = -1
 export const BOMB_ID = 0

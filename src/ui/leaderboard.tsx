@@ -100,7 +100,7 @@ export default function Leaderboard() {
     return (
         <ClickWrapper>
             <BottomLeftContainer>
-                <button onClick={() => setShow(pre => !pre)}>Leaderboard</button>
+                <button onClick={() => setShow(pre => !pre)}>Leaderboard 🏆</button>
             </BottomLeftContainer>
 
             <CenterContainer>
@@ -163,7 +163,7 @@ const CenterContainer = styled.div`
 
 const BottomLeftContainer = styled.div`
     position: absolute;
-    bottom: 5%;
+    top: 15%;
     left: 5%;
     transform: translate(-50%, -50%);
     color: white;
