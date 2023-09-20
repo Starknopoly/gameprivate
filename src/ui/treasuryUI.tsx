@@ -108,7 +108,7 @@ export default function TreasuryUI() {
             <div style={{ width: 200, height: 130, lineHeight: 0.9, backgroundColor: "rgba(0, 0, 0, 0.5)", padding: 10, borderRadius: 15 }}>
                 <p>Treasury</p>
                 <p>Balance : {treasury} Gold</p>
-                <p>Price : 0.00001 ETH</p>
+                <p>Price : {getPrice} ETH</p>
                 <button onClick={() => clickBuy()}>Buy Gold</button>
             </div>
             <BuyBoxContainer>
