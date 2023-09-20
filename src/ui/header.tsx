@@ -164,20 +164,21 @@ export default function Header() {
     }, [isDeploying])
 
 
+
     return (
-        <ClickWrapper style={{ width: "100%", lineHeight: 0.9, backgroundColor: "rgba(0, 0, 0, 0.7)" }}>
+        <ClickWrapper style={{ height: "60px", width: "100%", lineHeight: 1, backgroundColor: "rgba(0, 0, 0, 0.7)" }}>
             <WalletContainer>
-                <div style={{ marginTop: 2, marginRight: 5, flexDirection: "column-reverse" }}>
+                <div style={{ marginTop: 2, marginRight: 4 }}>
                     💰Gold : ${player?.gold}
                 </div>
-                <div style={{ marginTop: 0, marginRight: 5 }}>
+                <div style={{ marginTop: 0, marginRight: 4 }}>
                     <img src={ethicon} width={16} height={16} />  {parseFloat(ethers.utils.formatEther(eth)).toFixed(5)} ETH
                 </div>
 
                 {
                     (account && !player) &&
-                    <div style={{height:40}}>
-                        <input value={nickName} onChange={inputChange} style={{height:20}} placeholder="input user name" />
+                    <div>
+                        <input value={nickName} onChange={inputChange} style={{ height: 20 }} placeholder="input user name" />
                         <button
                             style={{ marginLeft: 10, marginRight: 10 }}
                             onClick={() => {
@@ -188,25 +189,25 @@ export default function Header() {
                         </button>
                     </div>
                 }
-                <div className="">
-                    Account {" "}
+                <div>
                     {
                         // players.size != 0 &&
                         <select onChange={e => selectAccount(e)} value={account?.address}>
                             {list().map((account, index) => {
-                                return <option value={account.address} key={index}>{truncateString(account.address, 10, 10)}</option>
+                                return <option value={account.address} key={index}>{truncateString(account.address, 6, 6)}</option>
                             })}
                         </select>
                     }
-                    
+
                     {
-                        player && <button style={{ marginLeft: 10 }} onClick={() => createNew()}>{isDeploying ? "deploying..." : "new account"}</button>
+                        player && <button style={{ marginLeft: 10 }} onClick={() => createNew()}>{isDeploying ? "deploying..." : "create new"}</button>
+                    }
+                    {
+                        !account && <button onClick={createNew}>{isDeploying ? "deploying wallet" : "create wallet"}</button>
                     }
                 </div>
-                {
-                    account ? <></> : <button onClick={createNew}>{isDeploying ? "deploying wallet" : "create wallet"}</button>
-                }
-                <img src={starkicon} width={20} height={20}/>
+
+                <img src={starkicon} width={20} height={20} />
             </WalletContainer>
             <BalanceContainer>
                 <PlayerPanel />
@@ -215,24 +216,19 @@ export default function Header() {
     )
 }
 
-
 const WalletContainer = styled.div`
     position: absolute;
     top: 20px;
     right: 10px;
     color: white;
-    display: flex;
-    flex-direaction: row;
+    display:flex;
+    height:60px;
     gap: 20px;
-    height:40px;
 `;
-
 
 const BalanceContainer = styled.div`
     position: absolute;
-    top: 50%;
-    left: 120px;
-    transform: translate(-10%, -50%);
+    top: 20px;
+    left: 10px;
     color: white;
-    width : 1000px;
 `;

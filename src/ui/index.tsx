@@ -69,12 +69,9 @@ export default function UI() {
 
 const TopHeaderContainer = styled.div`
     position: absolute;
-    top: 30px;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 0px;
+    left: 0%;
     color: white;
-    display: flex;
-    flex-direaction: row;
     width:100%;
     height:60px;
 `;

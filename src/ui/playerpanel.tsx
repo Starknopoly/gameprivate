@@ -169,7 +169,7 @@ export default function PlayerPanel() {
     return (
         <div style={{display:"flex",gap:"20px"}}>
             <div>👨 {hexToString(storePlayer?.nick_name)}</div>
-            <div style={{marginRight:20}}>🌟 {storePlayer?.total_steps}</div>
+            <div style={{marginRight:10}}>🌟 {storePlayer?.total_steps}</div>
             <div>⚡ {storePlayer?.steps}</div>
             <div>📍 {storePlayer?.position}</div>
             <div>🏦 {storePlayer?.banks}</div>
