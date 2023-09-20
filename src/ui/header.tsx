@@ -168,10 +168,14 @@ export default function Header() {
     return (
         <ClickWrapper style={{ height: "60px", width: "100%", lineHeight: 1, backgroundColor: "rgba(0, 0, 0, 0.7)" }}>
             <WalletContainer>
-                <div style={{ marginTop: 2, marginRight: 4 }}>
+                <div data-tooltip-id="my-tooltip"
+                    data-tooltip-content="gold balance"
+                    data-tooltip-place="top" style={{ marginTop: 2, marginRight: 4 }}>
                     💰Gold : ${player?.gold}
                 </div>
-                <div style={{ marginTop: 0, marginRight: 4 }}>
+                <div data-tooltip-id="my-tooltip"
+                    data-tooltip-content="eth balance"
+                    data-tooltip-place="top" style={{ marginTop: 0, marginRight: 4 }}>
                     <img src={ethicon} width={16} height={16} />  {parseFloat(ethers.utils.formatEther(eth)).toFixed(5)} ETH
                 </div>
 
@@ -200,14 +204,20 @@ export default function Header() {
                     }
 
                     {
-                        player && <button style={{ marginLeft: 10 }} onClick={() => createNew()}>{isDeploying ? "deploying..." : "create new"}</button>
+                        player && <button  data-tooltip-id="my-tooltip"
+                        data-tooltip-content="create a new local wallet"
+                        data-tooltip-place="top" style={{ marginLeft: 10 }} onClick={() => createNew()}>{isDeploying ? "deploying..." : "create new"}</button>
                     }
                     {
-                        !account && <button onClick={createNew}>{isDeploying ? "deploying wallet" : "create wallet"}</button>
+                        !account && <button  data-tooltip-id="my-tooltip"
+                        data-tooltip-content="create a local wallet"
+                        data-tooltip-place="top" onClick={createNew}>{isDeploying ? "deploying wallet" : "create wallet"}</button>
                     }
                 </div>
 
-                <img src={starkicon} width={20} height={20} />
+                <img data-tooltip-id="my-tooltip"
+                    data-tooltip-content="Powered by Starknet and Dojo"
+                    data-tooltip-place="top" src={starkicon} width={20} height={20} />
             </WalletContainer>
             <BalanceContainer>
                 <PlayerPanel />

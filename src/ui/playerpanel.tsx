@@ -167,13 +167,31 @@ export default function PlayerPanel() {
     }, [buildings.keys()])
 
     return (
-        <div style={{display:"flex",gap:"20px"}}>
-            <div>👨 {hexToString(storePlayer?.nick_name)}</div>
-            <div style={{marginRight:10}}>🌟 {storePlayer?.total_steps}</div>
-            <div>⚡ {storePlayer?.steps}</div>
-            <div>📍 {storePlayer?.position}</div>
-            <div>🏦 {storePlayer?.banks}</div>
-            <div>🏨 {hotelAmount}</div>
-            <div>☕ {bucksAmount}</div>
+        <div style={{ display: "flex", gap: "20px" }}>
+            <div
+             data-tooltip-id="my-tooltip"
+             data-tooltip-content="user name"
+             data-tooltip-place="top"
+            >👨 {hexToString(storePlayer?.nick_name)}</div>
+            <div  data-tooltip-id="my-tooltip"
+                data-tooltip-content="total steps"
+                data-tooltip-place="top" style={{ marginRight: 10 }}>🌟 {storePlayer?.total_steps}</div>
+            <div data-tooltip-id="my-tooltip"
+                data-tooltip-content="left energy"
+                data-tooltip-place="top">⚡ {storePlayer?.steps}</div>
+            <div data-tooltip-id="my-tooltip"
+                data-tooltip-content="player position now"
+                data-tooltip-place="top">📍 {storePlayer?.position}</div>
+            <div
+             data-tooltip-id="my-tooltip"
+             data-tooltip-content="Your banks"
+             data-tooltip-place="top">🏦 {storePlayer?.banks}</div>
+            <div data-tooltip-id="my-tooltip"
+                data-tooltip-content="Your hotels"
+                data-tooltip-place="top">🏨 {hotelAmount}</div>
+            <div data-tooltip-id="my-tooltip"
+                data-tooltip-content="Your starkbucks"
+                data-tooltip-place="top">☕ {bucksAmount}</div>
+            
         </div>)
 }
