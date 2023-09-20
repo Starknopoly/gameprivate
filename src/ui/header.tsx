@@ -35,9 +35,9 @@ export default function Header() {
 
 
     useEffect(() => {
-        if (players.size != 0) {
-            return
-        }
+        // if (players.size != 0) {
+        //     return
+        // }
         fetchAllPlayers()
     }, [account])
 
@@ -176,8 +176,8 @@ export default function Header() {
 
                 {
                     (account && !player) &&
-                    <div>
-                        <input value={nickName} onChange={inputChange} placeholder="input user name" />
+                    <div style={{height:40}}>
+                        <input value={nickName} onChange={inputChange} style={{height:20}} placeholder="input user name" />
                         <button
                             style={{ marginLeft: 10, marginRight: 10 }}
                             onClick={() => {
@@ -218,14 +218,13 @@ export default function Header() {
 
 const WalletContainer = styled.div`
     position: absolute;
-    top: 50%;
-    right: 0px;
-    transform: translate(-2%, -50%);
+    top: 20px;
+    right: 10px;
     color: white;
     display: flex;
     flex-direaction: row;
     gap: 20px;
-    height:20px;
+    height:40px;
 `;
 
 
