@@ -258,6 +258,6 @@ export default function ActionsUI() {
         <BuildingList options={bomboptions} onChange={(value) => setSelectBomb(value)} defaultValue="10" />
         <button onClick={() => placeBomb()} >Place Bomb {getBombLevel}</button>
 
-        <button onClick={() => buyBackClick()} style={{ marginTop: 15 }}>Buy Back Building</button>
+        <button onClick={() => buyBackClick()} style={{ marginTop: 15 }}>Takeover Building</button>
     </ClickWrapper>)
 }

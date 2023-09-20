@@ -189,7 +189,7 @@ export default function Header() {
                     </div>
                 }
                 <div className="">
-                    Account : {" "}
+                    Account {" "}
                     {
                         // players.size != 0 &&
                         <select onChange={e => selectAccount(e)} value={account?.address}>
@@ -225,6 +225,7 @@ const WalletContainer = styled.div`
     display: flex;
     flex-direaction: row;
     gap: 20px;
+    height:20px;
 `;
 
 
