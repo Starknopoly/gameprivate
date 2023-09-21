@@ -9,6 +9,7 @@ import { BANK_ID, HOTEL_ID, STARKBUCKS_ID } from "../config";
 import { Player } from "../dojo/createSystemCalls";
 import { store } from "../store/store";
 type SortOrder = 'asc' | 'desc';
+import twitter from "/twitterlogo.png"
 
 export default function Leaderboard() {
     const [showPanel, setShow] = useState(false)
@@ -97,10 +98,15 @@ export default function Leaderboard() {
 
     }, [page, sortedData])
 
+    const gotoGitbook = ()=>{
+        window.open("https://starknopoly.gitbook.io/starknopoly/how-to-play/quick-start")
+    }
+
     return (
         <ClickWrapper>
             <BottomLeftContainer>
                 <button onClick={() => setShow(pre => !pre)}>Leaderboard 🏆</button>
+                <button onClick={()=>gotoGitbook()}>How to Play 📖</button>
             </BottomLeftContainer>
 
             <CenterContainer>
@@ -164,10 +170,9 @@ const CenterContainer = styled.div`
 const BottomLeftContainer = styled.div`
     position: absolute;
     top: 15%;
-    left: 5%;
-    transform: translate(-50%, -50%);
+    left: 3%;
     color: white;
     display: flex;
-    flex-direaction: row;
+    flex-direction: column;
     gap: 20px;
 `;

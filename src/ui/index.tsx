@@ -129,9 +129,8 @@ const BottomContainer = styled.div`
 
 const BottomRightContainer = styled.div`
     position: absolute;
-    bottom: 2%;
+    bottom: 8%;
     right: 2%;
-    transform: translate(-50%, -50%);
     color: white;
     display: flex;
     flex-direaction: row;

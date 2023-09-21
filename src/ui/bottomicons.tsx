@@ -5,6 +5,7 @@ import { TILE_HEIGHT, TILE_WIDTH } from "../phaser/constants";
 import { positionToCoorp, toastError } from "../utils";
 import { EntityIndex, getComponentValue, getComponentValueStrict } from "@latticexyz/recs";
 import twitter from "/twitterlogo.png"
+import telegram from "/telegram.png"
 
 export default function BottomIcons() {
     const { account,phaserLayer } = store()
@@ -34,12 +35,21 @@ export default function BottomIcons() {
     }
 
     const gotoTwitter = () => {
-        window.open("https://twitter.com/")
+        window.open("https://twitter.com/stark_nopoly/")
+    }
+
+    const gotoTelegram = () => {
+        window.open("https://t.me/starknopoly")
     }
 
     return (
         <ClickWrapper style={{ display: "flex", flexDirection: "column" }}>
+
             <button onClick={() => center()}>Zoom to Me</button>
-            <img style={{ marginTop: 10 }} width={25} src={twitter} onClick={() => gotoTwitter()} />
+            <div>
+            <img style={{cursor:"pointer", marginTop: 15,marginRight:10 }} width={25} src={twitter} onClick={() => gotoTwitter()} />
+            <img style={{cursor:"pointer", marginTop: 15 }} width={25} src={telegram} onClick={() => gotoTelegram()} />
+            </div>
+
         </ClickWrapper>)
 }
