@@ -27,7 +27,7 @@ export default function AdminUI() {
         input.onKeyPress(
             keys => keys.has("M"),
             () => {
-                setTestmode(pre=>!pre)
+                // setTestmode(pre=>!pre)
             });
     },[])
 
