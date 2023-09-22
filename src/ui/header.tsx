@@ -12,6 +12,7 @@ import { ethers } from "ethers";
 import PlayerPanel from "./playerpanel";
 import ethicon from "../../public/ethereum.png"
 import starkicon from "../../public/starkneticon.png"
+import avatar from "../../public/avatar.png"
 
 export default function Header() {
     const { account, networkLayer } = store();
@@ -204,14 +205,14 @@ export default function Header() {
                     }
 
                     {
-                        player && <button  data-tooltip-id="my-tooltip"
-                        data-tooltip-content="create a new local wallet"
-                        data-tooltip-place="top" style={{ marginLeft: 10 }} onClick={() => createNew()}>{isDeploying ? "deploying..." : "create new"}</button>
+                        player && <button data-tooltip-id="my-tooltip"
+                            data-tooltip-content="create a new local wallet"
+                            data-tooltip-place="top" style={{ marginLeft: 10 }} onClick={() => createNew()}>{isDeploying ? "deploying..." : "create new"}</button>
                     }
                     {
-                        !account && <button  data-tooltip-id="my-tooltip"
-                        data-tooltip-content="create a local wallet"
-                        data-tooltip-place="top" onClick={createNew}>{isDeploying ? "deploying wallet" : "create wallet"}</button>
+                        !account && <button data-tooltip-id="my-tooltip"
+                            data-tooltip-content="create a local wallet"
+                            data-tooltip-place="top" onClick={createNew}>{isDeploying ? "deploying wallet" : "create wallet"}</button>
                     }
                 </div>
 
@@ -219,6 +220,7 @@ export default function Header() {
                     data-tooltip-content="Powered by Starknet and Dojo"
                     data-tooltip-place="top" src={starkicon} width={20} height={20} />
             </WalletContainer>
+            <img src={avatar} width={35} style={{ marginLeft: 10, marginTop: 10 }} />
             <BalanceContainer>
                 <PlayerPanel />
             </BalanceContainer>
@@ -239,6 +241,6 @@ const WalletContainer = styled.div`
 const BalanceContainer = styled.div`
     position: absolute;
     top: 20px;
-    left: 10px;
+    left: 55px;
     color: white;
 `;

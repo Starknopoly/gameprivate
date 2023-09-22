@@ -172,7 +172,7 @@ export default function PlayerPanel() {
              data-tooltip-id="my-tooltip"
              data-tooltip-content="user name"
              data-tooltip-place="top"
-            >👨 {hexToString(storePlayer?.nick_name)}</div>
+            >{hexToString(storePlayer?.nick_name)}</div>
             <div  data-tooltip-id="my-tooltip"
                 data-tooltip-content="total steps"
                 data-tooltip-place="top" style={{ marginRight: 10 }}>🌟 {storePlayer?.total_steps}</div>
