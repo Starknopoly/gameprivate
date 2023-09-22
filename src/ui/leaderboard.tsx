@@ -169,7 +169,7 @@ const CenterContainer = styled.div`
 
 const BottomLeftContainer = styled.div`
     position: absolute;
-    top: 15%;
+    top: 20%;
     left: 3%;
     color: white;
     display: flex;
