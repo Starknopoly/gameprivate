@@ -14,6 +14,7 @@ import BuyEnergyUI from "./buyenergy";
 import Leaderboard from "./leaderboard";
 import { VERSION } from "../config";
 import Header from "./header";
+import RoundUI from "./roundUI";
 
 export default function UI() {
     const layers = store((state) => {
@@ -27,6 +28,7 @@ export default function UI() {
 
     return (
         <Wrapper>
+            <RoundUI/>
             <TopHeaderContainer>
                 <Header/>
             </TopHeaderContainer>
@@ -63,6 +65,7 @@ export default function UI() {
             <VersionContainer>
                 <p>version:{VERSION}</p>
             </VersionContainer>
+
         </Wrapper>
     );
 };
