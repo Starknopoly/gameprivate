@@ -11,10 +11,10 @@ function AppTest() {
     return (
         <Container>
             <div style={{ fontSize: 30 }}>
-                Game is updating...
+                Starknopoly is updating... 😊
             </div>
             <div>
-                <img style={{ cursor: "pointer",marginLeft:100,marginTop:20 }} width={30} src={twitter} onClick={() => gotoTwitter()} />
+                <img style={{ cursor: "pointer",marginLeft:150,marginTop:20 }} width={30} src={twitter} onClick={() => gotoTwitter()} />
             </div>
         </Container>
     );
@@ -22,7 +22,7 @@ function AppTest() {
 const Container = styled.div`
     position: absolute;
     top: 50%;
-    right: 40%;
+    right: 20%;
     transform: translate(-50%, -50%);
     color: black;
     gap: 10px;
