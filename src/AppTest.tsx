@@ -1,15 +1,23 @@
 import './App.css';
 import styled from "styled-components";
+import twitter from "../public/twitterlogo.png"
 
 function AppTest() {
-  
-  return (
-    <Container>
-        <div style={{fontSize:30}}>
-            Game is updating...
-        </div>
-    </Container>
-  );
+
+
+    const gotoTwitter = () => {
+        window.open("https://twitter.com/stark_nopoly/")
+    }
+    return (
+        <Container>
+            <div style={{ fontSize: 30 }}>
+                Game is updating...
+            </div>
+            <div>
+                <img style={{ cursor: "pointer",marginLeft:100,marginTop:20 }} width={30} src={twitter} onClick={() => gotoTwitter()} />
+            </div>
+        </Container>
+    );
 }
 const Container = styled.div`
     position: absolute;
@@ -17,8 +25,6 @@ const Container = styled.div`
     right: 40%;
     transform: translate(-50%, -50%);
     color: black;
-    display: flex;
-    flex-direaction: row;
     gap: 10px;
 `;
 
