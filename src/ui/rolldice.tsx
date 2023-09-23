@@ -14,7 +14,7 @@ import { store } from "../store/store";
 import { EntityIndex, getComponentValue, setComponent } from "@latticexyz/recs"
 import { MAP_WIDTH } from "../phaser/constants"
 import { Account } from "starknet"
-import { BOMB_ID, HOTEL_ID } from "../config"
+import { BOMB_ID, HOTEL_ID, PAUSE } from "../config"
 import { PlayerState } from "../types/playerState"
 import { playerStore } from "../store/playerStore"
 import { actionStore } from "../store/actionstore"
@@ -132,6 +132,10 @@ export default function RollDice() {
     }
 
     const rollDice = async () => {
+        if(PAUSE){
+            toastInfo("System is updating...")
+            return
+        }
         if (!account) {
             toastError("Create burner wallet first.")
             return

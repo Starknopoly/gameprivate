@@ -15,6 +15,7 @@ import Leaderboard from "./leaderboard";
 import { VERSION } from "../config";
 import Header from "./header";
 import RoundUI from "./roundUI";
+import NotificationUI from "./NotificationUI";
 
 export default function UI() {
     const layers = store((state) => {
@@ -28,6 +29,7 @@ export default function UI() {
 
     return (
         <Wrapper>
+            <NotificationUI/>
             <RoundUI/>
             <TopHeaderContainer>
                 <Header/>
