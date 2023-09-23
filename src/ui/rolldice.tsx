@@ -141,7 +141,7 @@ export default function RollDice() {
             return
         }
         if (!player) {
-            toastError("Start game first.")
+            toastError("Mint player first.")
             return
         }
         console.log("rolldice " + rollCountRef.current);
