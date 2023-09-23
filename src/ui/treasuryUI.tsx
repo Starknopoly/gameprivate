@@ -12,7 +12,7 @@ export default function TreasuryUI() {
     const { account, treasury, networkLayer } = store();
     const [showBox, setShow] = useState(false)
     const [buyAmount, setBuyAmount] = useState<number>(1)
-    const { player,PlayerComponent,eth } = playerStore()
+    const { player, PlayerComponent, eth } = playerStore()
 
     const {
         network: { graphSdk },
@@ -46,7 +46,7 @@ export default function TreasuryUI() {
             toastWarning("Can't buy more than 10000gold")
             return
         }
-        if(eth<calTotal(treasury,buyAmount)){
+        if (eth < calTotal(treasury, buyAmount)) {
             toastWarning("ETH is not enough")
             return
         }
@@ -58,7 +58,7 @@ export default function TreasuryUI() {
             const playerEvent = result[0] as Player
             playerStore.setState({ player: playerEvent })
             const eth = result[1] as ETH
-            playerStore.setState({eth:eth.balance})
+            playerStore.setState({ eth: eth.balance })
         } else {
             toastError("Buy Failed")
         }
@@ -67,11 +67,20 @@ export default function TreasuryUI() {
 
     const inputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value
-        // setNickName(value);
-        if (value) {
-            setBuyAmount(parseFloat(value))
-        } else {
-            setBuyAmount(0)
+        console.log("inputChange",value,value.includes('.'));
+
+        try {
+            if (value.includes(".")) {
+                setBuyAmount(parseInt(value))
+                return
+            }
+            if (value) {
+                setBuyAmount(parseInt(value))
+            } else {
+                setBuyAmount(0)
+            }
+        } catch (error) {
+
         }
     }
 
@@ -98,7 +107,7 @@ export default function TreasuryUI() {
     }, [treasury, buyAmount])
 
 
-    const clickBuy = ()=>{
+    const clickBuy = () => {
         setShow(pre => !pre)
         setBuyAmount(1)
     }
@@ -127,9 +136,9 @@ export default function TreasuryUI() {
                         </div>
                     </div>
                 }
-                
+
             </BuyBoxContainer>
-            
+
         </ClickWrapper>
     )
 }
