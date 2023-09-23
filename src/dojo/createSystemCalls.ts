@@ -37,6 +37,29 @@ export function createSystemCalls(
     return undefined;
   };
 
+  const recoverEnergy = async (signer: Account) => {
+    try {
+      console.log("recoverEnergy start");
+      const tx = await execute(signer, "claim_energy", []);
+
+      const receipt = await signer.waitForTransaction(tx.transaction_hash, {
+        retryInterval: 100,
+      });
+      console.log("roll receipt:", receipt);
+      const events = parseEvent(receipt);
+      console.log(events);
+      return events;
+    } catch (e) {
+      console.log(e);
+      // Position.removeOverride(positionId);
+      // Moves.removeOverride(movesId);
+    } finally {
+      // Position.removeOverride(positionId);
+      // Moves.removeOverride(movesId);
+    }
+    return undefined;
+  };
+
   const buyEnergy = async (
     signer: Account,
     amount: number
@@ -227,6 +250,7 @@ export function createSystemCalls(
   };
 
   return {
+    recoverEnergy,
     buyEnergy,
     spawn,
     roll,
@@ -374,8 +398,8 @@ export const parseEvent = (
         events.push(townHall);
         break;
 
-      default:
-        throw new Error("Unsupported event type.");
+      default:break;
+        // throw new Error("Unsupported event type.");
     }
   }
 

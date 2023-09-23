@@ -16,6 +16,7 @@ import { VERSION } from "../config";
 import Header from "./header";
 import RoundUI from "./roundUI";
 import NotificationUI from "./NotificationUI";
+import RecoverEnergyUI from "./recoverenergyUI";
 
 export default function UI() {
     const layers = store((state) => {
@@ -29,6 +30,7 @@ export default function UI() {
 
     return (
         <Wrapper>
+            <RecoverEnergyUI/>
             <NotificationUI/>
             <RoundUI/>
             <TopHeaderContainer>
