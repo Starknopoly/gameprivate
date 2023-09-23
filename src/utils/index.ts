@@ -102,7 +102,7 @@ export function buildingCoorpToPosition(coord: Coord): number {
     if (x >= size) {
         return position
     }
-    if(x<0){
+    if (x < 0) {
         return position
     }
 
@@ -231,6 +231,6 @@ export const calTotal = (gold: number, amount: number) => {
     let eth_need = eth_left_new - eth_left
     // console.log("calTotal",K,gold,amount);
     // console.log("calTotal",ethers.utils.formatEther(eth_left),ethers.utils.formatEther(eth_left_new),ethers.utils.formatEther(eth_need));
-    
+
     return eth_need
 }

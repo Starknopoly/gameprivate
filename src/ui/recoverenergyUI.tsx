@@ -59,6 +59,4 @@ const TopHeaderContainer = styled.div`
     top: 32%;
     left: 2%;
     color: white;
-    width:100%;
-    height:60px;
 `;

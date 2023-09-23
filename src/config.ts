@@ -1,6 +1,6 @@
 export const VERSION = "0.1.0922.1";
 
-export const PAUSE = true;
+export const PAUSE = false;
 
 // 1 为酒店，2为银行，3为 Starkbucks
 export const LANDID_RESERVED = -1
